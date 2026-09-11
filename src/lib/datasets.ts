@@ -1,6 +1,7 @@
 import type { Provider } from "./stations.ts";
 
-export type Row = [string, number | null, number];
+// GHCN rows additionally preserve their original measurement, quality and source flags.
+export type Row = [string, number | null, number, string?];
 
 export type Dataset = {
   schemaVersion: 1;
@@ -38,9 +39,10 @@ export function validateRows(rows: unknown, from: string, to: string): asserts r
   if (!Array.isArray(rows) || rows.length !== count) throw new Error("Incomplete data period.");
   rows.forEach((row, index) => {
     const date = new Date(start + index * 86_400_000).toISOString().slice(0, 10);
-    if (!Array.isArray(row) || row.length !== 3 || row[0] !== date ||
+    if (!Array.isArray(row) || (row.length !== 3 && row.length !== 4) || row[0] !== date ||
         !(row[1] === null || (typeof row[1] === "number" && Number.isFinite(row[1]) && row[1] >= 0)) ||
-        !Number.isInteger(row[2]) || row[2] < 0 || row[2] > 10) {
+        !Number.isInteger(row[2]) || row[2] < 0 || row[2] > 10 ||
+        (row.length === 4 && (typeof row[3] !== 'string' || !/^[\x20-\x7e]{3}$/.test(row[3])))) {
       throw new Error(`Invalid daily value or date sequence: ${date}.`);
     }
   });
@@ -55,10 +57,24 @@ export function validateDataset(value: unknown, stationId: string): Dataset {
     throw new Error("Station ID or data format does not match.");
   }
   validateRows(data.rows, data.from, data.to);
+  if (stationId.startsWith('ghcn-') && data.rows.some(row => row[2] !== (row[1] === null ? 0 : ghcnQuality(row[1], row[3] ?? '')))) {
+    throw new Error('GHCN quality status does not match the original flags.');
+  }
   return data;
+}
+
+// Status 1 = usable amount, 2 = trace (stored as zero), 0 = missing/rejected.
+// These internal statuses are distinct from JMA and DWD quality codes.
+export function ghcnQuality(rain: number, flags: string) {
+  if (!/^[ BDPT]$/.test(flags[0] ?? '') || flags.length !== 3 || flags[1] !== ' ' || flags[2] === ' ' || flags[0] === 'P') return 0;
+  if (flags[0] === 'T') return rain === 0 ? 2 : 0;
+  return 1;
 }
 
 // DWD QN describes the checking procedure, not the JMA per-value quality flag.
 export function usableRow(row: Row, provider: Provider = "jma") {
-  return row[1] !== null && (provider === "jma" ? row[2] === 8 : [1, 2, 3, 5, 7, 8, 9, 10].includes(row[2]));
+  if (row[1] === null) return false;
+  if (provider === 'jma') return row[2] === 8;
+  if (provider === 'dwd') return [1, 2, 3, 5, 7, 8, 9, 10].includes(row[2]);
+  return row[2] === 1 || row[2] === 2;
 }

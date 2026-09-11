@@ -1,6 +1,6 @@
 # Ame — Niederschlag im historischen Vergleich
 
-Eine statische React-Webseite für tägliche Niederschlagsmessungen aus Japan und Deutschland. Sie vergleicht das laufende Jahr mit vollständigen historischen Kalenderjahren derselben Station.
+Eine statische React-Webseite für tägliche Niederschlagsmessungen aus acht Ländern. Sie vergleicht das laufende Jahr mit vollständigen historischen Kalenderjahren derselben Station.
 
 ## Entwicklung
 
@@ -18,9 +18,13 @@ Vite startet lokal auf `http://localhost:5173`; die Vorschau des Produktionsbuil
 
 ## Oberfläche
 
-- Native Stationsauswahl, nach Japan und Deutschland gruppiert, plus Karten-Button. Der Base-UI-Dialog zeigt links die Länderwahl und rechts den Landesumriss mit direkt auswählbaren Stationen. Auf kleinen Displays steht die Länderwahl über der Karte.
+- Native Stationsauswahl, nach Land gruppiert, plus Karten-Button. Der Base-UI-Dialog zeigt links die Länderwahl und rechts den Landesumriss mit direkt auswählbaren Stationen. Auf kleinen Displays steht die Länderwahl über der Karte.
 - Japan: Tokyo, Kyoto, Osaka, Sapporo, Fukuoka und Naha (JMA).
 - Deutschland: Berlin-Tempelhof, Hamburg-Fuhlsbüttel, München-Stadt, Frankfurt/Main, Köln/Bonn und Dresden-Klotzsche (DWD).
+- USA: New York, Seattle, Los Angeles, San Francisco, Chicago und Miami (NOAA GHCN-Daily).
+- Australien: Perth, Melbourne, Darwin, Brisbane, Sydney und Hobart (NOAA GHCN-Daily/Bureau of Meteorology).
+- Niederlande: De Bilt, De Kooy, Amsterdam Schiphol, Groningen Eelde, Vlissingen und Maastricht (KNMI).
+- Frankreich: Paris Orly, Marseille, Rennes und Nice; Großbritannien: Oxford, Eskdalemuir, Lerwick und Stornoway; Schweden: Lund, Uppsala, Kiruna und Sveg (NOAA GHCN-Daily).
 - Native Jahresauswahl mit Minus-/Plus-Buttons für verfügbare Messjahre. Standard ist das laufende Jahr; die Auswahl bleibt beim Stationswechsel erhalten, soweit dort verfügbar.
 - Kumulierte Jahressummen oder geglätteter Tagesverlauf mit Gauß-Kernel (σ = 11 Tage).
 - Historischer Median, mittlere 50 % und 90 %, Min–Max; Referenz alle vollständigen Jahre oder 1991–2020.
@@ -44,11 +48,13 @@ JMA-Dateien beginnen im Abruffenster 1876; das ist keine Aussage über den tats�
 
 DWD-Dateien beginnen beim veröffentlichten Stationsbeginn. Der Importer liest die ZIP-Archive mit `fflate`, übernimmt `RSK` in mm und bewahrt die ursprünglichen `QN_4`-Prüfverfahrenscodes. Historische Archive werden bei jedem Lauf neu gelesen, damit auch jährliche Korrekturen übernommen werden. Nur `historical` geht in die Referenz ein; ein noch nicht im Archiv veröffentlichtes Vorjahr bleibt fehlend. `recent` liefert das laufende Jahr und ist ausdrücklich vorläufig. Zeiträume richten sich nach `Asia/Tokyo` beziehungsweise `Europe/Berlin`; die Tagesdatierung der Quelle bleibt unverändert.
 
+NOAA GHCN-Daily und KNMI werden als vollständige Stationsarchive bei jedem Lauf erneut gelesen. Einheiten, Spuren, Qualitätsflags und Veröffentlichungsverzögerungen sind in [Internationale Daten](docs/international-data.md) dokumentiert. Länder und Datenanbieter sind getrennt modelliert; insgesamt stehen 42 Stationen zur Verfügung.
+
 Stationskennungen, Zahlen, Qualitätscodes und Datumsfolgen werden geprüft. Fehlende DWD-Tage und der Fehlwert `-999` bleiben `null`; ein fehlendes Qualitätskennzeichen `-999` wird intern als 0 gespeichert. Ein fehlgeschlagener Abruf oder ein Rückgang verwendbarer Tageswerte bricht den gesamten Import vor dem Schreiben ab. Die veröffentlichten Dateien bleiben dann unverändert.
 
-Alle Daten liegen unter `public/data/`, getrennt nach Station und historischem/aktuellem Zeitraum. Japanische IDs bleiben unverändert; DWD-IDs tragen das Präfix `dwd-`. Ein Manifest enthält Zeiträume und SHA-256-Inhaltsrevisionen. Der Browser lädt ausschließlich diese vorbereiteten Dateien und speichert sie nach Revision in IndexedDB. Bei Netzfehlern bleibt der lokale Stand sichtbar. „Aktualisieren“ prüft den veröffentlichten Stand erneut; es startet keinen Import.
+Alle Daten liegen unter `public/data/`, getrennt nach Station und historischem/aktuellem Zeitraum. Japanische IDs bleiben unverändert; DWD-, GHCN- und KNMI-IDs tragen die Präfixe `dwd-`, `ghcn-` beziehungsweise `knmi-`. Ein Manifest enthält Zeiträume und SHA-256-Inhaltsrevisionen. Der Browser lädt ausschließlich diese vorbereiteten Dateien und speichert sie nach Revision in IndexedDB. Bei Netzfehlern bleibt der lokale Stand sichtbar. „Aktualisieren“ prüft den veröffentlichten Stand erneut; es startet keinen Import.
 
-Die Karten verwenden gemeinfreie [Natural-Earth-Umrisse](https://www.naturalearthdata.com/) und aktuelle JMA-/DWD-Stationskoordinaten. Es werden keine externen Kartenkacheln geladen. [Geometrie und Quellen](src/assets/maps/README.md).
+Die Karten verwenden gemeinfreie [Natural-Earth-Umrisse](https://www.naturalearthdata.com/) und offizielle JMA-, DWD-, NOAA- und KNMI-Stationskoordinaten. Es werden keine externen Kartenkacheln geladen. [Geometrie und Quellen](src/assets/maps/README.md).
 
 ## Methodik und Grenzen
 
@@ -61,6 +67,8 @@ Quantile werden pro Kalendertag mit linearer Interpolation (Typ 7) berechnet. Di
 ## Quellen und Lizenz
 
 - [Japan Meteorological Agency: Datenabruf](https://www.data.jma.go.jp/risk/obsdl/)
+- [NOAA NCEI: GHCN-Daily v3](https://doi.org/10.7289/V5D21VHZ)
+- [KNMI: tägliche Stationsarchive](https://www.knmi.nl/nederland-nu/klimatologie/daggegevens)
 - [DWD Climate Data Center: tägliche Stationsbeobachtungen](https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/)
 - [DWD-Datensatzbeschreibung und Qualitätsverfahren](https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/BESCHREIBUNG_obsgermany-climate-daily-kl_de.pdf)
 
@@ -76,10 +84,12 @@ src/lib/                   Stationskatalog, Datenformat, Cache und Statistik
 src/styles/                Styles und übernommene Styles mit Lizenz
 scripts/jma.ts             JMA-CSV-Adapter
 scripts/dwd.ts             DWD-Archiv- und Tageswerte-Adapter
+scripts/ghcn.ts            NOAA-Festbreitenformat mit ursprünglichen Flags
+scripts/knmi.ts            KNMI-ZIP-Archive und RH-Tageswerte
 scripts/dataset.ts         Inhaltsrevisionen und Schutz vor Datenverlust
 scripts/update-data.ts     Gemeinsamer Import und atomare Veröffentlichung
 scripts/validate-data.ts   Prüfung aller veröffentlichten Dateien
-public/data/               Messwerte und Manifest der zwölf Stationen
+public/data/               Messwerte und Manifest der 42 Stationen
 tests/                     Parser, Qualität, Statistik, Jahreswechsel und Fehlerfälle
 .github/workflows/         CI, Datenimport und GitHub Pages
 ```

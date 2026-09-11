@@ -6,6 +6,8 @@ import { validateDataset, type Dataset, type DatasetReference, type StationManif
 import { endpoint, fetchJMA } from "./jma.ts";
 import { assertNoRegression, makeDataset } from "./dataset.ts";
 import { fetchDWD, fetchDWDIndex } from "./dwd.ts";
+import { fetchGHCN } from "./ghcn.ts";
+import { fetchKNMI } from "./knmi.ts";
 
 const dataDirectory = fileURLToPath(new URL("../public/data/", import.meta.url));
 
@@ -39,10 +41,12 @@ function reference(data: Dataset, period: string): DatasetReference {
 export async function updateData({
   directory = dataDirectory, now = new Date(), selectedStations = stations,
   fetchRows = fetchJMA, refreshHistory = false, fetchGermanData = fetchDWD, loadGermanIndex = fetchDWDIndex,
+  fetchGlobalData = fetchGHCN, fetchDutchData = fetchKNMI,
 }: {
   directory?: string; now?: Date; selectedStations?: Station[];
   fetchRows?: typeof fetchJMA; refreshHistory?: boolean;
   fetchGermanData?: typeof fetchDWD; loadGermanIndex?: typeof fetchDWDIndex;
+  fetchGlobalData?: typeof fetchGHCN; fetchDutchData?: typeof fetchKNMI;
 } = {}) {
   const { historyEnd } = dateBounds(now);
   const manifest: StationManifest = {
@@ -60,6 +64,10 @@ export async function updateData({
     let current: Dataset;
     if (station.provider === "dwd") {
       ({ history, current } = await fetchGermanData(station, bounds, now, germanIndex));
+    } else if (station.provider === 'ghcn') {
+      ({ history, current } = await fetchGlobalData(station, bounds, now));
+    } else if (station.provider === 'knmi') {
+      ({ history, current } = await fetchDutchData(station, bounds, now));
     } else {
       if (previousHistory && (previousHistory.from !== station.historyStart || previousHistory.to > historyEnd)) {
         throw new Error(`Unexpected historical coverage for ${station.id}.`);

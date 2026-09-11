@@ -1,7 +1,7 @@
 import { unzipSync } from 'fflate';
-import { validateRows, type Row } from '../src/lib/datasets.ts';
+import type { Row } from '../src/lib/datasets.ts';
 import type { Station } from '../src/lib/stations.ts';
-import { makeDataset } from './dataset.ts';
+import { fillDays, makeDataset } from './dataset.ts';
 
 export const dwdBase = 'https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/kl/';
 
@@ -31,16 +31,6 @@ export function parseDWD(text: string, stationId: string): Row[] {
   });
 }
 
-export function fillDays(rows: Row[], from: string, to: string): Row[] {
-  const byDate = new Map(rows.map(row => [row[0], row]));
-  const result: Row[] = [];
-  for (let day = Date.parse(from); day <= Date.parse(to); day += 86_400_000) {
-    const date = new Date(day).toISOString().slice(0, 10);
-    result.push(byDate.get(date) ?? [date, null, 0]);
-  }
-  validateRows(result, from, to);
-  return result;
-}
 
 export function historicalArchive(index: string, stationId: string) {
   if (!/^\d{5}$/.test(stationId)) throw new Error('DWD: Ungültige Stationskennung.');

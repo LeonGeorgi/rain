@@ -35,7 +35,7 @@ jobs:
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
-      - name: Fetch and validate JMA and DWD measurements
+      - name: Fetch and validate JMA, DWD, NOAA and KNMI measurements
         env:
           REFRESH_HISTORY: ${{ inputs.refresh_history || false }}
         run: |

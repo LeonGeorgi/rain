@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-11T16:09:26.980Z",
+  "updatedAt": "2026-09-11T17:03:03.528Z",
   "historyEndYear": 2025,
   "stations": [
     {
@@ -17,7 +17,7 @@
       "current": {
         "path": "47662/current.json",
         "revision": "c14dc0d668039e720c07a0ae2a075db87d71cd78d69764822f06f33f18991f14",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -36,7 +36,7 @@
       "current": {
         "path": "47759/current.json",
         "revision": "e11fe8313ca7a5e3e895b08aacb8ced3e0ff030a8f7f294d101faa10a30e6dd7",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -55,7 +55,7 @@
       "current": {
         "path": "47772/current.json",
         "revision": "856be5f67b21acc342fd194d4b262ef15caa1600d9c23c2db7d1a71918ccfcc3",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -74,7 +74,7 @@
       "current": {
         "path": "47412/current.json",
         "revision": "56876fbd9ad466de1ba98db116d8c1de69e1d9b19857954846a26e56bee28140",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -93,7 +93,7 @@
       "current": {
         "path": "47807/current.json",
         "revision": "ea547ab5c3eb4d4359b18c76ed27e0bc604dce38718a43448bf8e0ce56997a19",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -112,7 +112,7 @@
       "current": {
         "path": "47936/current.json",
         "revision": "1d3c8e713142ae692e7d9caee7a0973f80e37cb92295e2f0d342d7630026082d",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -123,14 +123,14 @@
       "history": {
         "path": "dwd-00433/history.json",
         "revision": "4333373f3d1bf36dea10853cb44321e1365defed692ac3fa0b7cd2587b2a91a6",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "1948-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-00433/current.json",
         "revision": "bb7e9894b883728f00c34e5c5de3049f1ce92a03c6eb3716a29e146605815ff8",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-10"
       }
@@ -141,14 +141,14 @@
       "history": {
         "path": "dwd-01975/history.json",
         "revision": "7eb891807fa3114b460c6beca068fbf6fdfc5ac7f015745a7f88ae2543564cda",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "1936-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-01975/current.json",
         "revision": "a42afc403e4a8e6a0ec5ff269ca96245d871170b739213b3ac6eb88bfea5001a",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-10"
       }
@@ -159,14 +159,14 @@
       "history": {
         "path": "dwd-03379/history.json",
         "revision": "18e7f27f2ac197516558ca95cae27051666d9e411dc1ce870c871b05d635b364",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "1954-06-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-03379/current.json",
         "revision": "19923282a1ec11ad15c78279b011e5939860aaa8559013ac7cb676422c4b3081",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-10"
       }
@@ -177,14 +177,14 @@
       "history": {
         "path": "dwd-01420/history.json",
         "revision": "59482712c31b047206fb54f755fbe5cf19885dcc3986676a85f080e18a1f13c8",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "1935-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-01420/current.json",
         "revision": "21f51fa2dc6f2acf12424624b0e721489e402d38f58ed38e2ac16ec286218cf6",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-10"
       }
@@ -195,14 +195,14 @@
       "history": {
         "path": "dwd-02667/history.json",
         "revision": "90f94eaf0cad105fa808759caa6f3717b7c0c6963264693e4cb79bf0419212dc",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "1957-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-02667/current.json",
         "revision": "9fe3a7fc7251be7ffd02755963b8389638f8f680dd50a5250a28899c1f90a22f",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-10"
       }
@@ -213,14 +213,554 @@
       "history": {
         "path": "dwd-01048/history.json",
         "revision": "0509546625772d93d565e3ce726c03718d82a68756391041327c6fbed245afe3",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "1934-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-01048/current.json",
         "revision": "d386cf5999693a942611bf77675ffac8c21ba5f7c59bf635811b19e104dd1f30",
-        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "ghcn-USW00094728",
+      "name": "New York (Central Park)",
+      "history": {
+        "path": "ghcn-USW00094728/history.json",
+        "revision": "cbedc870b0611c7f33157a9e1180ff832c008013d9c42ab690481a5cd900c10b",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1869-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-USW00094728/current.json",
+        "revision": "c3ac8caa108f29f854567a6265ddc354165345b5b55b695157d75f94075093ca",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-08"
+      }
+    },
+    {
+      "id": "ghcn-USW00024233",
+      "name": "Seattle–Tacoma Airport",
+      "history": {
+        "path": "ghcn-USW00024233/history.json",
+        "revision": "1b1319bc5a92451f61d215bcf93965f8cac957876a1fd50a2c19797097495efe",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1948-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-USW00024233/current.json",
+        "revision": "3e35ff6b67f9b9367cdb1edd010a8413f189912228a1fcd99fa9411f3e217d14",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-08"
+      }
+    },
+    {
+      "id": "ghcn-ASN00009021",
+      "name": "Perth Airport",
+      "history": {
+        "path": "ghcn-ASN00009021/history.json",
+        "revision": "2d222ee7ac30f7d86d9435a012fda596642e2be988833b11a7a1a92ea2ccc4cd",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1944-05-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-ASN00009021/current.json",
+        "revision": "5eafe919a515f4f147a2b9dee20b4fdae74bcd15609c4fb5af346ba293b8ab1c",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-03"
+      }
+    },
+    {
+      "id": "ghcn-ASN00086282",
+      "name": "Melbourne Airport",
+      "history": {
+        "path": "ghcn-ASN00086282/history.json",
+        "revision": "71c04e174a540f4fbda7de6676f55d0f1fbf0c92c5255262b802b0b894c7398c",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1970-07-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-ASN00086282/current.json",
+        "revision": "05c4e50f66c003aa41b92aceda86772d9f8d9a7c0cc8af51398deefaf33d5e77",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-03"
+      }
+    },
+    {
+      "id": "ghcn-USW00023174",
+      "name": "Los Angeles Airport",
+      "history": {
+        "path": "ghcn-USW00023174/history.json",
+        "revision": "89a6736a18f74c226a53183cb643b04ccaaab0bad95e720902305e1fe6491f64",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1944-08-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-USW00023174/current.json",
+        "revision": "0623683d6a5cadf16e13fb3d2c80d00754280e87cf9377bafeb1f6a9880bdcb2",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-08"
+      }
+    },
+    {
+      "id": "ghcn-USW00023234",
+      "name": "San Francisco Airport",
+      "history": {
+        "path": "ghcn-USW00023234/history.json",
+        "revision": "28095aaa49249e66968cc5e8f48ac176376d8409a274042f6dbabc76e9558c7a",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1945-07-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-USW00023234/current.json",
+        "revision": "1137306a91b4099d777f00cc71207182f95bb1497432584081d3b7e84d961294",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-08"
+      }
+    },
+    {
+      "id": "ghcn-USW00094846",
+      "name": "Chicago O’Hare Airport",
+      "history": {
+        "path": "ghcn-USW00094846/history.json",
+        "revision": "3af1de6e840bed7e321ac2278fe681e9b14918c464ca528515cdc4e84acba699",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1958-11-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-USW00094846/current.json",
+        "revision": "b6c4e0a2700a26602952ccf6743d12cb6db30e222db6bb5d869d2ee809b694e6",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-08"
+      }
+    },
+    {
+      "id": "ghcn-USW00012839",
+      "name": "Miami Airport",
+      "history": {
+        "path": "ghcn-USW00012839/history.json",
+        "revision": "fda9af6bdb5c91304d267680855a30aaed8b241dbfdebd00ee12980b8c238646",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1948-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-USW00012839/current.json",
+        "revision": "11b37fd696054661320e946e6e1f35446fc622f7e014ad6147d13b0966c7a842",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-08"
+      }
+    },
+    {
+      "id": "ghcn-ASN00014015",
+      "name": "Darwin Airport",
+      "history": {
+        "path": "ghcn-ASN00014015/history.json",
+        "revision": "e8e27a7b8f62920d1570d7cf42e8db87b5178bd020a35804d8e12749277e4c3c",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1941-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-ASN00014015/current.json",
+        "revision": "50ee698c69cf7372f4c6da8a28a5ae2ddaf40cf09f4403e632c01d2cd430640b",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-04"
+      }
+    },
+    {
+      "id": "ghcn-ASN00040842",
+      "name": "Brisbane Airport",
+      "history": {
+        "path": "ghcn-ASN00040842/history.json",
+        "revision": "ed968e82c64c30c36086c6dccd119acd50e29801b37b2e5dda214a7b93670dde",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1994-07-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-ASN00040842/current.json",
+        "revision": "f337ab8234096f60c644747ada40de95c860e2286446377aa45057786ccecbc3",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-04"
+      }
+    },
+    {
+      "id": "ghcn-ASN00066037",
+      "name": "Sydney Airport",
+      "history": {
+        "path": "ghcn-ASN00066037/history.json",
+        "revision": "9b7df2d70d980acdbb86e3a6583cffc2c44d7186637bb2756347db5cab87aee3",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1929-09-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-ASN00066037/current.json",
+        "revision": "26bb85d58f911589536aadd13387f5fcb556c3f14e8400b40c87bc730385cb45",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-03"
+      }
+    },
+    {
+      "id": "ghcn-ASN00094029",
+      "name": "Hobart (Ellerslie Road)",
+      "history": {
+        "path": "ghcn-ASN00094029/history.json",
+        "revision": "b5fe4ab830f215c6a915e4f6174e6076166cd9182d846750bad2f4105b47b5ff",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1893-06-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-ASN00094029/current.json",
+        "revision": "7ca97b9fc21187dd352548e8a792f9a60c8290a48ea01d70719f6df37b0c644e",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-04"
+      }
+    },
+    {
+      "id": "ghcn-FRM00007149",
+      "name": "Paris Orly Airport",
+      "history": {
+        "path": "ghcn-FRM00007149/history.json",
+        "revision": "2e170687e428b670f62f60beeb9fce9297ace652cfc34750a00bb3d558ffe3d8",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1921-03-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-FRM00007149/current.json",
+        "revision": "f8151b2cde17f997aa9e1bee5c5df2759d1ce36d9b56d20b9aea21c6a1cf479c",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-FR000007650",
+      "name": "Marseille–Marignane",
+      "history": {
+        "path": "ghcn-FR000007650/history.json",
+        "revision": "da410021f8c33336d455f0e5f5159c65388ac1d731d127d0adff388a6aa8601f",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1921-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-FR000007650/current.json",
+        "revision": "568b8ad8936a06c36a7a5718e063eda41c83e9f1d37d78d96700014ddcd01df7",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-FR000007130",
+      "name": "Rennes–Saint-Jacques",
+      "history": {
+        "path": "ghcn-FR000007130/history.json",
+        "revision": "9e337f7bc9bf7a92e6f53b97aeb924aae77f99923f7be91ff3f9a31e3984d9ac",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1944-11-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-FR000007130/current.json",
+        "revision": "701d00e0d19365c45aeb2716b74c60a2e0733e82e3145ebe612a93ae0e7ddd21",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-FRE00104120",
+      "name": "Nice Airport",
+      "history": {
+        "path": "ghcn-FRE00104120/history.json",
+        "revision": "4b843589ead0993c4187d8e4684689e4cda7ca09a46204ba7ed472223e023d1e",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1942-07-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-FRE00104120/current.json",
+        "revision": "bd5c001e3ba7b36fcbc18dfbda23c8e3104f457732cde04dcd1d3e87c2893a21",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-UK000056225",
+      "name": "Oxford",
+      "history": {
+        "path": "ghcn-UK000056225/history.json",
+        "revision": "eb8d22394aa9f10eb25180b9fd4a4b0a4065d48fea39aeb4030a5174ec12e47a",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1827-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-UK000056225/current.json",
+        "revision": "306cc3ddde0af46a2d7fff61d02b5c2b6bf4445b7f24776c126575eda3a26dbf",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-29"
+      }
+    },
+    {
+      "id": "ghcn-UK000003162",
+      "name": "Eskdalemuir",
+      "history": {
+        "path": "ghcn-UK000003162/history.json",
+        "revision": "55f2bf3f09caa90bc275328b71decc8ae09582711d7213e9618be00f94642254",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1931-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-UK000003162/current.json",
+        "revision": "c21a700f56c9c01afea4f9368a3cbff3e7ae34473bacf07a31320fc2751e9408",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-UK000003005",
+      "name": "Lerwick",
+      "history": {
+        "path": "ghcn-UK000003005/history.json",
+        "revision": "bfadeb6d415194f71c4b24d756492c70744047ca657013883217fb4d60702656",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1930-12-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-UK000003005/current.json",
+        "revision": "928b67d01d53cdbb9558cafff128cd00d02f834d2917119e3b4e58443f48b7ce",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-UK000003026",
+      "name": "Stornoway Airport",
+      "history": {
+        "path": "ghcn-UK000003026/history.json",
+        "revision": "1777cafda5aa68b080dc8553aae4d776955c38721cf55177d05ed4215f55d944",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1930-12-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-UK000003026/current.json",
+        "revision": "f801fed524518bbf74e30049dc62c1ec66cffb3555e7e8433e71b5a7a22d2c70",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-SWE00137568",
+      "name": "Lund",
+      "history": {
+        "path": "ghcn-SWE00137568/history.json",
+        "revision": "0afb6f158d32b4e8c7f365e38097014fc71bbcdc564da67dda103980e1a4fda5",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1863-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-SWE00137568/current.json",
+        "revision": "8c1ac343e69f4b02c91581d68b14d38ec9b235b0f6e88a9fb40cbd16ce8c0165",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-SWE00139148",
+      "name": "Uppsala",
+      "history": {
+        "path": "ghcn-SWE00139148/history.json",
+        "revision": "efcf18306f309255fb53569f57c93043344c92c8c9562859ecbdd8eb4ee781c0",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1836-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-SWE00139148/current.json",
+        "revision": "e290d29f7319d65daf9629d4a7e46c9a535bf93aa8e4ad32c441fc4ea5731676",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-SWE00140908",
+      "name": "Kiruna",
+      "history": {
+        "path": "ghcn-SWE00140908/history.json",
+        "revision": "1582f5f3005982d253be71f1cbfae119e2b239c46fae5bd50abb719e57bf218e",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1898-08-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-SWE00140908/current.json",
+        "revision": "c65c0337681233b76e4b8762a9a36573badbac9c87fe994f144f2b3578e59381",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "ghcn-SWE00139720",
+      "name": "Sveg",
+      "history": {
+        "path": "ghcn-SWE00139720/history.json",
+        "revision": "541edf45cc2af9cf5795cfa84dae1d49e59eac74ec0514fe534233de1510039c",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1875-07-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "ghcn-SWE00139720/current.json",
+        "revision": "533e7a7c4714cb5a05a712a127facaeaa4fc3a3574df79c1f2586a5cbd3565ac",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-07-31"
+      }
+    },
+    {
+      "id": "knmi-260",
+      "name": "De Bilt",
+      "history": {
+        "path": "knmi-260/history.json",
+        "revision": "dd811f7a5399e607aebf2e57fc8ac9c9624ee573855e59c37a761b1b286e11ee",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1901-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "knmi-260/current.json",
+        "revision": "05c97f3b4b8896ac3db4dd7af472dad5ede1a59b098ea6d9fef5c72507ea6081",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "knmi-235",
+      "name": "De Kooy (Den Helder)",
+      "history": {
+        "path": "knmi-235/history.json",
+        "revision": "06c83822bf06ef5e06508aaa27921efb9151d99b11d5f2c218082608e73dd48f",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1906-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "knmi-235/current.json",
+        "revision": "8c4c7438976b86853205e0c20338a3c02190765cf41a8383cccf0f8b09755072",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "knmi-240",
+      "name": "Amsterdam Schiphol Airport",
+      "history": {
+        "path": "knmi-240/history.json",
+        "revision": "f35e2903fd533b12ec1ec27999fce4ff0faec3ac823f2b5a722d351014ed4767",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1951-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "knmi-240/current.json",
+        "revision": "06b2d33db11bfb99f90a6042dddb490505a27764e558aab6dd06cabcfe4f235c",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "knmi-280",
+      "name": "Groningen Airport Eelde",
+      "history": {
+        "path": "knmi-280/history.json",
+        "revision": "ea00ecacc45b7ade149b243edbccb5b69e4a2173a1bb449fcdc45f4fa8b27635",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1906-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "knmi-280/current.json",
+        "revision": "19b09d535f71e08a58c68f83e0846f66b1da684247f330c787bcca9dbe7d1ca1",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "knmi-310",
+      "name": "Vlissingen",
+      "history": {
+        "path": "knmi-310/history.json",
+        "revision": "01a1a5485756346f896849625622a2b678b69a48aa3356f5179ffeba360a044d",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1906-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "knmi-310/current.json",
+        "revision": "f100feaa6b3ee92c43309772b5e1ada3eb2403ce0500e0509d13aa59e31b980d",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "knmi-380",
+      "name": "Maastricht Airport",
+      "history": {
+        "path": "knmi-380/history.json",
+        "revision": "b58701e719dc1ab63413bf5973484986cde1a91bd28142baa6b3c764f4eed4ec",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
+        "from": "1906-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "knmi-380/current.json",
+        "revision": "efcd53358270d51b7a9226b614b4fb5e580760dbf4c6713b4d5562a95932c456",
+        "fetchedAt": "2026-09-11T17:03:03.528Z",
         "from": "2026-01-01",
         "to": "2026-09-10"
       }

@@ -4,7 +4,7 @@ import {Methodology} from '@/components/Methodology';
 import {Tabs,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {Checkbox} from '@/components/ui/checkbox';
 import {analyze,availableYears,monthNames,monthTicks,stationToday} from '@/lib/rain';
-import {stations} from '@/lib/stations';
+import {countries,stations,providerNames} from '@/lib/stations';
 import type {Dataset} from '@/lib/datasets';
 import {loadStationData} from '@/lib/published-data';
 type Analysis=ReturnType<typeof analyze>;
@@ -92,8 +92,8 @@ export default function App(){
   const rows=data.points.map((point,index)=>[
    index+1,point.date,data.series.length,point.median,point.low50,point.high50,point.low90,point.high90,point.min,point.max,point.current,
    ...years.map(year=>data.series.find(series=>series.year===year)?.values[index]),
-   `${station.provider.toUpperCase()} ${station.sourceId} ${station.name}`,history?.source,selectedSource,
-   station.provider==='dwd'?'Source: DWD CDC; processed; https://creativecommons.org/licenses/by/4.0/':'',
+   `${providerNames[station.provider]} ${station.sourceId} ${station.name}`,history?.source,selectedSource,
+   station.provider==='dwd'?'Source: DWD CDC; processed; https://creativecommons.org/licenses/by/4.0/':station.provider==='knmi'?'Source: KNMI; processed; CC0; KNMI is not involved and does not necessarily endorse this work; https://www.knmi.nl/copyright':station.provider==='ghcn'?`Menne et al. (2012), GHCN-Daily v3; NOAA NCEI; https://doi.org/10.7289/V5D21VHZ; accessed ${history?.fetchedAt.slice(0,10)}`:'',
   ].map(cell).join(','));
   download(new Blob([header.join(',')+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'}),`${exportName}.csv`);
  };
@@ -115,10 +115,12 @@ export default function App(){
    ctx.fillStyle='#292d30';ctx.font='600 20px system-ui';
    ctx.fillText(`${station.name} · ${selectedYear} · ${mode==='cumulative'?'Cumulative precipitation':'Precipitation · Gaussian σ = 11 days'}`,25,30);
    ctx.font='12px system-ui';
-   ctx.fillText(`${station.provider.toUpperCase()} ${station.sourceId} · ${data.series.length} complete years · Through ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Comparison ${years.join(', ')||'off'}`,25,53);
+   ctx.fillText(`${providerNames[station.provider]} ${station.sourceId} · ${data.series.length} complete years · Through ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Comparison ${years.join(', ')||'off'}`,25,53,img.width-50);
    ctx.fillText(station.provider==='dwd'
     ? `Source: DWD CDC · processed · CC BY 4.0 (creativecommons.org/licenses/by/4.0/)${selectedYear===latestYear?' · Provisional values':''}`
-    : 'Source: Japan Meteorological Agency · data.jma.go.jp/risk/obsdl/',25,75);
+    : station.provider==='ghcn' ? 'Source: NOAA NCEI · GHCN-Daily v3 · Menne et al. (2012) · doi.org/10.7289/V5D21VHZ'
+    : station.provider==='knmi' ? 'Source: KNMI · CC0 · processed · KNMI is not involved and does not necessarily endorse this work'
+    : 'Source: Japan Meteorological Agency · data.jma.go.jp/risk/obsdl/',25,75,img.width-50);
    ctx.drawImage(img,0,100);
    canvas.toBlob(blob=>{if(blob)download(blob,`${exportName}.png`);},'image/png');
   } catch {
@@ -131,15 +133,15 @@ export default function App(){
  return (
   <div className="app">
    <main>
-    <h1 className="sr-only">Precipitation in Japan and Germany</h1>
+    <h1 className="sr-only">Daily precipitation compared with historical records</h1>
     <div className="toolbar">
      <div className="station-picker">
       <label htmlFor="station">Station</label>
       <div className="station-controls">
       <select id="station" aria-label="Select weather station" value={stationId} onChange={event=>setStationId(event.target.value)}>
-       {(['jma','dwd'] as const).map(provider=>(
-        <optgroup key={provider} label={provider==='jma'?'Japan':'Germany'}>
-         {stations.filter(s=>s.provider===provider).map(s=><option key={s.id} value={s.id}>{s.name}{s.jp?` · ${s.jp}`:''}</option>)}
+       {countries.map(country=>(
+        <optgroup key={country.id} label={country.name}>
+         {stations.filter(s=>s.country===country.id).map(s=><option key={s.id} value={s.id}>{s.name}{s.jp?` · ${s.jp}`:''}</option>)}
         </optgroup>
        ))}
       </select>
@@ -222,7 +224,7 @@ export default function App(){
      </div>
     </section>
     <div className="data-status" aria-live="polite">
-     <span>{status}{station.provider==='dwd'&&current&&selectedYear===latestYear?' · Current DWD values are provisional':''}</span>
+     <span>{status}{station.provider==='dwd'&&current&&selectedYear===latestYear?' · Current DWD values are provisional':station.provider==='ghcn'?' · GHCN-Daily observations may be revised':''}</span>
      <button disabled={busy} onClick={()=>setReload(v=>v+1)}>Refresh</button>
     </div>
     {error&&<div role="alert" className="notice">{error}{history?' Previously loaded data remains available.':''}</div>}

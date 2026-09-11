@@ -8,7 +8,7 @@ const maps=JSON.parse(await readFile(new URL('../src/assets/maps/country-outline
 
 test('country projection preserves east/west and north/south orientation and keeps stations within their country extent',()=>{
   for(const station of stations){
-    const {bounds,path}=maps[station.provider];
+    const {bounds,path}=maps[station.country];
     const [west,south,east,north]=bounds;
     assert.ok(station.longitude>=west&&station.longitude<=east,station.name);
     assert.ok(station.latitude>=south&&station.latitude<=north,station.name);
@@ -22,7 +22,7 @@ test('country projection preserves east/west and north/south orientation and kee
 });
 
 test('Japan includes Okinawa and separates the nearby Kyoto and Osaka station coordinates',()=>{
-  const position=(id:string)=>{const station=stations.find(station=>station.id===id)!;return projectMapPoint(station.longitude,station.latitude,maps.jma.bounds);};
+  const position=(id:string)=>{const station=stations.find(station=>station.id===id)!;return projectMapPoint(station.longitude,station.latitude,maps.jp.bounds);};
   assert.ok(position('47936').y>position('47807').y);
   assert.ok(position('47759').y<position('47772').y);
   assert.ok(position('47759').x>position('47772').x);

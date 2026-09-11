@@ -67,8 +67,8 @@
   .station-map-dialog { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); }
   .station-map-header { padding: 10px 12px; }
   .station-map-layout { grid-template-columns: minmax(0, 1fr); }
-  .country-list { flex-direction: row; border-right: 0; border-bottom: 1px solid var(--border); padding: 8px 12px; gap: 8px; }
-  .country-list button { flex: 1; text-align: center; }
+  .country-list { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--border); padding: 8px 12px; gap: 8px; }
+  .country-list button { flex: 1 1 auto; text-align: center; padding: 8px; }
   .country-panel { padding: 8px 8px 12px; }
   .station-map-label { padding: 5px; font-size: 11px; }
   .map-source { font-size: 10px; text-align: center; }
