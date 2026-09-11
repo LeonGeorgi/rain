@@ -43,7 +43,7 @@ export function parseKNMIArchive(bytes: Uint8Array, stationId: string) {
 export async function fetchKNMI(station: Station, bounds: Parameters<typeof splitDailyArchive>[2], now: Date) {
   if (!/^\d{3}$/.test(station.sourceId)) throw new Error('KNMI: Invalid station ID.');
   const source = `${knmiBase}etmgeg_${station.sourceId}.zip`;
-  const response = await fetch(source, {signal:AbortSignal.timeout(120_000), headers:{'User-Agent':'Ame rainfall comparison (github.com/LeonGeorgi/rain)'}});
+  const response = await fetch(source, {signal:AbortSignal.timeout(120_000), headers:{'User-Agent':'Rain precipitation comparison (github.com/LeonGeorgi/rain)'}});
   if (!response.ok) throw new Error(`KNMI: HTTP ${response.status} for ${station.id}.`);
   return splitDailyArchive(station, parseKNMIArchive(new Uint8Array(await response.arrayBuffer()), station.sourceId), bounds, now, source);
 }

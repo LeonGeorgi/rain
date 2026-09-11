@@ -1,4 +1,4 @@
-# Ame — Niederschlag im historischen Vergleich
+# Rain — Niederschlag im historischen Vergleich
 
 Eine statische React-Webseite für tägliche Niederschlagsmessungen aus acht Ländern. Sie vergleicht das laufende Jahr mit vollständigen historischen Kalenderjahren derselben Station.
 
