@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=24"
   },
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,10 @@
     "start": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "check": "pnpm typecheck && pnpm lint"
+    "check": "pnpm typecheck && pnpm lint && pnpm test",
+    "test": "node --test tests/*.test.ts",
+    "data:update": "node scripts/update-data.ts",
+    "data:validate": "node scripts/validate-data.ts"
   },
   "dependencies": {
     "class-variance-authority": "0.7.1",

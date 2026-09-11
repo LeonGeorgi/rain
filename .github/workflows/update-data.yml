@@ -1,0 +1,66 @@
+name: Update JMA data
+
+on:
+  schedule:
+    - cron: '23 0,12 * * *'
+  workflow_dispatch:
+    inputs:
+      refresh_history:
+        description: Re-fetch historical data for all stations
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: jma-data-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    outputs:
+      commit: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - name: Fetch and validate JMA measurements
+        env:
+          REFRESH_HISTORY: ${{ inputs.refresh_history || false }}
+        run: |
+          if [ "$REFRESH_HISTORY" = true ]; then
+            pnpm data:update --refresh-history
+          else
+            pnpm data:update
+          fi
+      - run: pnpm data:validate
+      - name: Save the validated data in Git
+        id: commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update published JMA measurements'
+            git push origin HEAD
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  # GITHUB_TOKEN commits do not trigger another push workflow. Invoke the
+  # deployment explicitly with the exact data commit from the successful job.
+  deploy:
+    needs: update
+    uses: ./.github/workflows/pages.yml
+    with:
+      ref: ${{ needs.update.outputs.commit }}

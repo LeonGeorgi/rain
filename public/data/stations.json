@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-11T15:38:48.830Z",
+  "historyEndYear": 2025,
+  "stations": [
+    {
+      "id": "47662",
+      "name": "Tokyo",
+      "jp": "東京",
+      "history": {
+        "path": "47662/history.json",
+        "revision": "81d3734523e15231e7abef714cc95885c7e89fb79a4fe4a0fff371c7d9cba5d3",
+        "fetchedAt": "2026-09-10T00:00:00.000Z",
+        "from": "1876-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "47662/current.json",
+        "revision": "c14dc0d668039e720c07a0ae2a075db87d71cd78d69764822f06f33f18991f14",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "2026-01-01",
+        "to": "2026-09-11"
+      }
+    },
+    {
+      "id": "47759",
+      "name": "Kyoto",
+      "jp": "京都",
+      "history": {
+        "path": "47759/history.json",
+        "revision": "f9dc49be2082a455b67d363ca9535c3295caf3a90527b70e4b76c75173748dbc",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "1876-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "47759/current.json",
+        "revision": "e11fe8313ca7a5e3e895b08aacb8ced3e0ff030a8f7f294d101faa10a30e6dd7",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "2026-01-01",
+        "to": "2026-09-11"
+      }
+    },
+    {
+      "id": "47772",
+      "name": "Osaka",
+      "jp": "大阪",
+      "history": {
+        "path": "47772/history.json",
+        "revision": "7c53f0ffe240f8656639e27d3bf9a53363c83892cd12e7bd83c05768b598079e",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "1876-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "47772/current.json",
+        "revision": "856be5f67b21acc342fd194d4b262ef15caa1600d9c23c2db7d1a71918ccfcc3",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "2026-01-01",
+        "to": "2026-09-11"
+      }
+    },
+    {
+      "id": "47412",
+      "name": "Sapporo",
+      "jp": "札幌",
+      "history": {
+        "path": "47412/history.json",
+        "revision": "cf52b26223640be8c9545e3c3d787f0de5b6474115ad54c4876dd7a8fc28329f",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "1876-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "47412/current.json",
+        "revision": "56876fbd9ad466de1ba98db116d8c1de69e1d9b19857954846a26e56bee28140",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "2026-01-01",
+        "to": "2026-09-11"
+      }
+    },
+    {
+      "id": "47807",
+      "name": "Fukuoka",
+      "jp": "福岡",
+      "history": {
+        "path": "47807/history.json",
+        "revision": "0932fc6df0de3ded0c5c942bf57c16639b793117bc25b0c124684f492e756bb6",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "1876-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "47807/current.json",
+        "revision": "ea547ab5c3eb4d4359b18c76ed27e0bc604dce38718a43448bf8e0ce56997a19",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "2026-01-01",
+        "to": "2026-09-11"
+      }
+    },
+    {
+      "id": "47936",
+      "name": "Naha",
+      "jp": "那覇",
+      "history": {
+        "path": "47936/history.json",
+        "revision": "48533d649cebf1d6d60dc6f9d283d865ca4c4cf64570f8b8bf551e7b26a6de1e",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "1876-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "47936/current.json",
+        "revision": "1d3c8e713142ae692e7d9caee7a0973f80e37cb92295e2f0d342d7630026082d",
+        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "from": "2026-01-01",
+        "to": "2026-09-11"
+      }
+    }
+  ]
+}

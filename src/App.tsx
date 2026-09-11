@@ -3,7 +3,10 @@ import {Download,RefreshCw,MapPin,ArrowUpRight,CloudRain,ChevronDown,Database} f
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/components/ui/select';
 import {Tabs,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {Checkbox} from '@/components/ui/checkbox';
-import {analyze,cacheGet,cachePut,fetchJMA,stations,monthNames,monthTicks,yesterday,japanToday,type Dataset} from '@/lib/rain';
+import {analyze,monthNames,monthTicks,japanToday} from '@/lib/rain';
+import {stations} from '@/lib/stations';
+import type {Dataset} from '@/lib/datasets';
+import {loadStationData} from '@/lib/published-data';
 type Analysis=ReturnType<typeof analyze>;
 const fmt=(v:number|null|undefined,d=0)=>v==null?'—':v.toLocaleString('de-DE',{maximumFractionDigits:d,minimumFractionDigits:d});
 const dateLabel=(d?:string)=>d?new Date(d+'T00:00:00Z').toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}):'—';
@@ -42,27 +45,32 @@ export default function App(){
  const [stationId,setStationId]=useState('47662');const [history,setHistory]=useState<Dataset|null>(null);const [current,setCurrent]=useState<Dataset|null>(null);
  const [status,setStatus]=useState('Tokyo-Daten werden geladen …');const [error,setError]=useState('');const [storageWarning,setStorageWarning]=useState(false);const [busy,setBusy]=useState(true);const [reload,setReload]=useState(0);
  const [mode,setMode]=useState<'cumulative'|'gaussian'>('cumulative');const [reference,setReference]=useState<'all'|'normal'>('all');const [bands,setBands]=useState(['50','90','range']);const [compare,setCompare]=useState(true);
- const lastRefresh=useRef(0);const svgRef=useRef<SVGSVGElement>(null);const station=stations.find(s=>s.id===stationId)!;
- useEffect(()=>{const abort=new AbortController();let active=true;const force=reload!==lastRefresh.current;lastRefresh.current=reload;
-  const put=async(key:string,d:Dataset)=>{if(!await cachePut(key,d)&&active)setStorageWarning(true);};
-  async function run(){setBusy(true);setError('');setStatus('Gespeicherte Daten werden gelesen …');setHistory(null);setCurrent(null);
-   try{
-    let hist=await cacheGet(stationId+':history:2025');
-    if(!hist&&stationId==='47662'){const r=await fetch(`${import.meta.env.BASE_URL}data/tokyo-history.json`,{signal:abort.signal});if(!r.ok)throw new Error('Tokyo-Ausgangsdaten konnten nicht geladen werden.');hist=await r.json();await put(stationId+':history:2025',hist!);}
-    if(!hist){const rows:Dataset['rows']=[];for(let start=1876;start<=2025;start+=30){if(!active)return;const end=Math.min(start+29,2025),key=`${stationId}:block:${start}:${end}`;setStatus(`JMA · ${start}–${end} wird geladen (${Math.floor((start-1876)/30)+1}/5) …`);let block=await cacheGet(key);if(!block){block=await fetchJMA(stationId,`${start}-01-01`,`${end}-12-31`,abort.signal);await put(key,block);}rows.push(...block.rows);}
-     hist={rows,fetchedAt:new Date().toISOString(),stationId};await put(stationId+':history:2025',hist);
-    }
-    if(!active)return;setHistory(hist!);
-    const year=japanToday().slice(0,4),key=stationId+':current:'+year;let now=await cacheGet(key);
-    if(!now&&stationId==='47662'&&year==='2026'){const r=await fetch(`${import.meta.env.BASE_URL}data/tokyo-current.json`,{signal:abort.signal});if(r.ok){now=await r.json();await put(key,now!);}}
-    if(!active)return;if(now)setCurrent(now);
-    if(!now||force||Date.now()-Date.parse(now.fetchedAt)>12*3600000){setStatus('Aktuelle Tageswerte werden bei JMA abgerufen …');const to=yesterday();if(to>=`${year}-01-01`){const fresh=await fetchJMA(stationId,`${year}-01-01`,to,abort.signal);if(now&&fresh.rows.filter(r=>r[2]===8&&r[1]!==null).length<now.rows.filter(r=>r[2]===8&&r[1]!==null).length)throw new Error('JMA liefert derzeit weniger vollständige Tage. Der bisherige Stand bleibt erhalten.');await put(key,fresh);if(active)setCurrent(fresh);}}
-    if(active)setStatus('Lokal gespeichert');
-   }catch(e){if(active){setError(e instanceof Error&&e.name!=='TypeError'?e.message:'Der direkte JMA-Abruf ist fehlgeschlagen. Prüfe die Internetverbindung oder versuche es später erneut. Browser oder JMA können den Zugriff blockieren.');setStatus('Letzter verfügbarer Stand');}}
-   finally{if(active)setBusy(false);}
+ const svgRef=useRef<SVGSVGElement>(null);const station=stations.find(s=>s.id===stationId)!;
+ useEffect(() => {
+  const abort = new AbortController();
+  async function run() {
+   setBusy(true); setError(''); setHistory(null); setCurrent(null);
+   setStatus('Veröffentlichte Stationsdaten werden geladen …');
+   try {
+    const data = await loadStationData(stationId, abort.signal, (history, current) => {
+     if (abort.signal.aborted) return;
+     if (history) setHistory(history);
+     if (current) setCurrent(current);
+    });
+    if (abort.signal.aborted) return;
+    setHistory(data.history); setCurrent(data.current); setStorageWarning(data.storageWarning);
+    setStatus(`Veröffentlicht am ${dateLabel(data.updatedAt.slice(0, 10))}`);
+   } catch (error) {
+    if (abort.signal.aborted) return;
+    setError(error instanceof Error ? error.message : 'Der veröffentlichte Datenstand konnte nicht geladen werden.');
+    setStatus('Letzter lokal gespeicherter Stand');
+   } finally {
+    if (!abort.signal.aborted) setBusy(false);
+   }
   }
-  void run();return()=>{active=false;abort.abort();};
- },[stationId,reload]);
+  void run();
+  return () => abort.abort();
+ }, [stationId, reload]);
  const data=useMemo(()=>analyze(history?.rows??[],current?.rows??[],reference,mode),[history,current,reference,mode]);
  const cumulative=useMemo(()=>mode==='cumulative'?data:analyze(history?.rows??[],current?.rows??[],reference,'cumulative'),[history,current,reference,mode,data]);
  const topYears=cumulative.ranking.slice(0,3).map(r=>r.year);const years=compare?topYears:[];
@@ -75,10 +83,10 @@ export default function App(){
   <header className="masthead"><a href={import.meta.env.BASE_URL} className="brand" aria-label="Ame Startseite"><span className="brand-icon"><CloudRain size={22}/></span><b>ame<span>雨</span></b></a><span className="masthead-note">Niederschlag in Japan</span><a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noreferrer" className="source-link">JMA-Daten <ArrowUpRight size={15}/></a></header>
   <main>
    <div className="page-title"><div><p className="eyebrow">HISTORISCHE PERSPEKTIVE</p><h1>Wie viel Regen ist viel?</h1></div><div className="station-picker"><MapPin size={18}/><Select value={stationId} onValueChange={setStationId}><SelectTrigger aria-label="Wetterstation auswählen"><SelectValue/></SelectTrigger><SelectContent>{stations.map(s=><SelectItem key={s.id} value={s.id}>{s.name} · {s.jp}</SelectItem>)}</SelectContent></Select></div></div>
-   <div className="toolbar"><Tabs value={mode} onValueChange={v=>setMode(v as typeof mode)}><TabsList><TabsTrigger value="cumulative">Kumulativ</TabsTrigger><TabsTrigger value="gaussian">Tagesverlauf</TabsTrigger></TabsList></Tabs><div className="reference"><span>Referenz</span><Select value={reference} onValueChange={v=>setReference(v as typeof reference)}><SelectTrigger aria-label="Historischen Referenzzeitraum wählen"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">Alle Jahre bis 2025</SelectItem><SelectItem value="normal">1991–2020</SelectItem></SelectContent></Select></div></div>
+   <div className="toolbar"><Tabs value={mode} onValueChange={v=>setMode(v as typeof mode)}><TabsList><TabsTrigger value="cumulative">Kumulativ</TabsTrigger><TabsTrigger value="gaussian">Tagesverlauf</TabsTrigger></TabsList></Tabs><div className="reference"><span>Referenz</span><Select value={reference} onValueChange={v=>setReference(v as typeof reference)}><SelectTrigger aria-label="Historischen Referenzzeitraum wählen"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">Alle Jahre bis {history?.to.slice(0,4) ?? Number(japanToday().slice(0,4))-1}</SelectItem><SelectItem value="normal">1991–2020</SelectItem></SelectContent></Select></div></div>
    <section className="plot-card" aria-label="Niederschlagsauswertung">
     <div className="plot-heading"><div><h2>{station.name}<span> / </span>{mode==='cumulative'?'Kumulierter Niederschlag':'Niederschlag im Jahresverlauf'}</h2><p>{data.series.length?`${data.series[0].year}–${data.series.at(-1)!.year} · ${data.series.length} vollständige Jahre`:'Historische Tagesdaten'}<span> · </span>{mode==='cumulative'?'Ohne Glättung':'Gauß · σ = 11 Tage'}</p></div><div className="export-buttons"><button onClick={exportCSV} disabled={!data.series.length} aria-label="Berechnete Daten als CSV herunterladen"><Download size={15}/>CSV</button><button onClick={exportPNG} disabled={!data.series.length} aria-label="Diagramm als PNG herunterladen">PNG</button></div></div>
-    {data.series.length?<RainChart data={data} mode={mode} bands={bands} years={years} svgRef={svgRef}/>:<div className="empty-chart"><CloudRain size={38}/><h3>{busy?'Messwerte werden geladen':'Keine vollständige Messreihe verfügbar'}</h3><p>{busy?status:'Wähle eine andere Station oder versuche den Abruf erneut.'}</p>{busy&&<p className="small">Der erste Import kann einige Minuten dauern. Bereits geladene Zeiträume werden gespeichert.</p>}</div>}
+    {data.series.length?<RainChart data={data} mode={mode} bands={bands} years={years} svgRef={svgRef}/>:<div className="empty-chart"><CloudRain size={38}/><h3>{busy?'Messwerte werden geladen':'Keine vollständige Messreihe verfügbar'}</h3><p>{busy?status:'Wähle eine andere Station oder versuche den Abruf erneut.'}</p>{busy&&<p className="small">Die vorbereiteten Stationsdateien werden von dieser Website geladen.</p>}</div>}
     <div className="legend"><span className="legend-item"><i style={{background:'#e57920'}}/>{data.currentYear??japanToday().slice(0,4)}</span><span className="legend-item"><i style={{background:'#22587e'}}/>Median</span>{[['50','50 %'],['90','90 %'],['range','Min–Max']].map(([key,label])=><label className="legend-check" key={key}><Checkbox checked={bands.includes(key)} onCheckedChange={()=>toggle(key)} aria-label={`${label} anzeigen`}/><span className={`swatch swatch-${key}`}/>{label}</label>)}<span className="legend-spacer"/><label className="legend-check"><Checkbox checked={compare} onCheckedChange={v=>setCompare(v===true)}/>Vergleichsjahre</label></div>
     {compare&&topYears.length>0&&<div className="comparison-legend">{topYears.map((year,i)=><span className="legend-item" key={year}><i style={{background:colors[i]}}/>{year}</span>)}<span className="comparison-note">Die drei höchsten Summen zum selben Stichtag</span></div>}
    </section>
@@ -87,7 +95,7 @@ export default function App(){
    {error&&<div role="alert" className="notice">{error}{history?' Vorhandene Daten bleiben verfügbar.':''}</div>}
    {storageWarning&&<div className="notice">Der Browser erlaubt keine dauerhafte Speicherung. Daten bleiben nur für diese Sitzung im Speicher.</div>}
    {data.gap&&<div className="notice">Die aktuelle Kurve endet vor dem ersten fehlenden oder nicht vollständig geprüften Tageswert.</div>}
-   <details className="method"><summary>Quellen & Methodik <ChevronDown size={16}/></summary><div><p>Offizielle tägliche Niederschlagssummen der Japan Meteorological Agency, Station {stationId}. Die Intervalle umfassen die mittleren 50 % (25.–75. Perzentil) und 90 % (5.–95. Perzentil) der historischen Jahre; Min–Max zeigt die beobachtete Spannweite. Das sind punktweise historische Verteilungen, keine Konfidenzintervalle oder Prognosen. Quantile: lineare Interpolation (Typ 7).</p><p>Nur vollständige Kalenderjahre mit JMA-Qualitätscode 8 gehen in die Referenz ein. {data.excluded.length>0?`Ausgeschlossen: ${data.excluded.join(', ')}.`:''} Kumulative Summen enthalten den Niederschlag des 29. Februar; nur sein Achsenpunkt entfällt. So bleiben Jahressummen erhalten. Im Tagesverlauf wird der 29. Februar vor der Gauß-Glättung entfernt; historische Jahre werden zyklisch geglättet (σ = 11 Tage, Radius 44 Tage). Das aktuelle Jahr nutzt die vorhergehenden Dezemberwerte, soweit vollständig verfügbar. Am offenen Ende wird der Kernel neu normiert; die letzten 44 Tage sind gestrichelt und vorläufig.</p><p>Der Vergleich über lange Zeiträume beschreibt das historische Archiv; Klimaänderungen und Stationsverlegungen werden nicht herausgerechnet. Die Zahl vollständiger Jahre kann sich zwischen Stationen stark unterscheiden. Tokyo: 1.800 Monatssummen aus Tagesdaten wurden mit den offiziellen JMA-Monatssummen abgeglichen. Bei neu geladenen Stationen erfolgt diese zusätzliche Monatsprüfung noch nicht.</p><p>Historische Daten bis 2025 bleiben im Browser gespeichert. Aktuelle Daten werden nach zwölf Stunden erneut direkt von JMA abgerufen. „Aktualisieren“ erneuert die aktuellen Daten. Der erste Stationsimport lädt fünf Zeitblöcke nacheinander. Browserdaten können vom Browser gelöscht werden; historische JMA-Korrekturen sind nicht automatisch enthalten.</p><div className="method-links"><a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noreferrer">Offizieller JMA-Download ↗</a><a href={`https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=${station.pref}&block_no=${stationId}&year=${japanToday().slice(0,4)}&month=${japanToday().slice(5,7)}&view=`} target="_blank" rel="noreferrer">Tägliche Stationswerte ↗</a><a href={`https://www.data.jma.go.jp/stats/etrn/view/monthly_s3.php?prec_no=${station.pref}&block_no=${stationId}&year=&month=&day=&view=p5`} target="_blank" rel="noreferrer">Monatssummen ↗</a></div></div></details>
+   <details className="method"><summary>Quellen & Methodik <ChevronDown size={16}/></summary><div><p>Offizielle tägliche Niederschlagssummen der Japan Meteorological Agency, Station {stationId}. Die Intervalle umfassen die mittleren 50 % (25.–75. Perzentil) und 90 % (5.–95. Perzentil) der historischen Jahre; Min–Max zeigt die beobachtete Spannweite. Das sind punktweise historische Verteilungen, keine Konfidenzintervalle oder Prognosen. Quantile: lineare Interpolation (Typ 7).</p><p>Nur vollständige Kalenderjahre mit JMA-Qualitätscode 8 gehen in die Referenz ein. {data.excluded.length>0?`Ausgeschlossen: ${data.excluded.join(', ')}.`:''} Kumulative Summen enthalten den Niederschlag des 29. Februar; nur sein Achsenpunkt entfällt. So bleiben Jahressummen erhalten. Im Tagesverlauf wird der 29. Februar vor der Gauß-Glättung entfernt; historische Jahre werden zyklisch geglättet (σ = 11 Tage, Radius 44 Tage). Das aktuelle Jahr nutzt die vorhergehenden Dezemberwerte, soweit vollständig verfügbar. Am offenen Ende wird der Kernel neu normiert; die letzten 44 Tage sind gestrichelt und vorläufig.</p><p>Der Vergleich über lange Zeiträume beschreibt das historische Archiv; Klimaänderungen und Stationsverlegungen werden nicht herausgerechnet. Die Zahl vollständiger Jahre kann sich zwischen Stationen stark unterscheiden. Tokyo: 1.800 Monatssummen aus Tagesdaten wurden mit den offiziellen JMA-Monatssummen abgeglichen. Bei neu geladenen Stationen erfolgt diese zusätzliche Monatsprüfung noch nicht.</p><p>Die Messwerte werden zentral zweimal täglich bei JMA abgerufen, geprüft und auf dieser Website veröffentlicht. „Aktualisieren“ lädt den zuletzt veröffentlichten Stand. Der Browser speichert Stationsdateien anhand ihrer Datenversion; bei Fehlern bleibt der lokale Stand sichtbar. Historische Daten werden zum Jahreswechsel ergänzt. Eine vollständige Neuprüfung historischer JMA-Korrekturen kann manuell gestartet werden.</p><div className="method-links"><a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noreferrer">Offizieller JMA-Download ↗</a><a href={`https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=${station.pref}&block_no=${stationId}&year=${japanToday().slice(0,4)}&month=${japanToday().slice(5,7)}&view=`} target="_blank" rel="noreferrer">Tägliche Stationswerte ↗</a><a href={`https://www.data.jma.go.jp/stats/etrn/view/monthly_s3.php?prec_no=${station.pref}&block_no=${stationId}&year=&month=&day=&view=p5`} target="_blank" rel="noreferrer">Monatssummen ↗</a></div></div></details>
   </main><footer><span>ame 雨</span><span>Japan Meteorological Agency</span></footer>
  </div>;
 }

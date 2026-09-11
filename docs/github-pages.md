@@ -1,76 +1,78 @@
-# Ausbauidee: GitHub Pages und GitHub Actions
+# GitHub Actions und GitHub Pages
 
-## Variante A: GitHub Pages als statischer Host
+Die Website wird aus dem privaten Repository `LeonGeorgi/rain` über GitHub Pages veröffentlicht. Repository-Sichtbarkeit und Website-Sichtbarkeit sind getrennt: Eine gewöhnliche Pages-Website ist öffentlich erreichbar.
 
-Die Anwendung kann zunächst unverändert im Browser rechnen und JMA direkt abrufen. GitHub Pages liefert nur die Dateien aus `dist/` aus. Der lokale IndexedDB-Cache bleibt bestehen.
+## Workflows
 
-Vorgehen:
+| Datei | Auslöser | Aufgabe |
+| --- | --- | --- |
+| `.github/workflows/ci.yml` | Pull Requests und Pushes auf andere Branches | Installation, Typprüfung, ESLint, Tests, Datenvalidierung und Produktionsbuild |
+| `.github/workflows/pages.yml` | Push auf `main`, manueller Start oder Aufruf durch Datenworkflow | Prüfung, Build mit dem von Pages gelieferten Basispfad und Deployment |
+| `.github/workflows/update-data.yml` | 00:23 und 12:23 UTC sowie manueller Start | Messwerte abrufen, validieren, committen und den Pages-Workflow aufrufen |
 
-1. Quellcode in ein eigenes GitHub-Repository übernehmen.
-2. Für die erste Version eine Adresse an der Domainwurzel wählen, beispielsweise ein Repository `BENUTZERNAME.github.io` oder eine eigene Domain.
-3. Lokal `pnpm build` ausführen und den Inhalt von `dist/` in den Veröffentlichungsbranch kopieren.
-4. Unter **Settings → Pages** den Branch und das Veröffentlichungsverzeichnis auswählen.
+Der Zeitplan entspricht 09:23 und 21:23 japanischer Zeit. GitHub kann geplante Läufe verzögern. Ein fehlgeschlagener Lauf bleibt in Actions sichtbar und ändert die bestehende Website nicht. Zeitpläne laufen auf dem Standardbranch.
 
-Alternativ kann ein eigener Actions-Workflow Installation, Build und Pages-Veröffentlichung übernehmen. Dann **GitHub Actions** als Pages-Quelle einstellen. Die üblichen Schritte sind Checkout, Node/pnpm einrichten, `pnpm install --frozen-lockfile`, `pnpm build`, `actions/configure-pages`, `actions/upload-pages-artifact` mit `path: dist` und `actions/deploy-pages`. Der Deployment-Job benötigt `pages: write`, `id-token: write` und das Environment `github-pages`.
+## Einmalige Repository-Einrichtung
 
-**Projektadresse:** Für `BENUTZERNAME.github.io/REPOSITORY/` mit `pnpm build --base=/REPOSITORY/` bauen. Vite setzt die Asset-Pfade; die Datenabrufe, der Startseiten-Link und das Favicon verwenden denselben Basispfad. Alternativ `base: '/REPOSITORY/'` in `vite.config.ts` eintragen. Für eine eigene Domain an der Domainwurzel genügt `pnpm build`.
+- Unter **Settings → Pages → Build and deployment → Source** muss **GitHub Actions** gewählt sein.
+- GitHub Actions muss im Repository aktiviert sein. Für Pages in einem privaten Repository muss der GitHub-Tarif diese Funktion unterstützen.
+- Das Environment `github-pages` muss Deployments von `main` erlauben. Bei Schutzregeln für `main` muss der Datenworkflow seine Datencommits pushen dürfen.
+- Es sind keine eigenen API-Schlüssel, PAT-Secrets oder JMA-Zugangsdaten nötig. Der kurzlebige `GITHUB_TOKEN` erhält die im jeweiligen Workflow angegebenen Berechtigungen.
 
-## Variante B: Actions aktualisiert die JMA-Daten zentral
+Der Pages-Workflow übernimmt den Basispfad aus `actions/configure-pages`. Das funktioniert sowohl für `/rain/` als auch für eine eigene Domain. Lokal: `pnpm build --base=/rain/` und `pnpm preview --base=/rain/`.
 
-Ziel: Besucher laden fertig bereitgestellte Stationsdateien von derselben Website. Die Anwendung bleibt statisch; JMA wird zentral durch einen geplanten Job abgefragt.
-
-Vorgeschlagene Dateistruktur für den Ausbau:
+## Datenformat und Speicherung
 
 ```text
 public/data/
   stations.json
-  47662/
+  47662/             Tokyo
     history.json
     current.json
-  47759/
-    history.json
-    current.json
+  47759/             Kyoto
+  47772/             Osaka
+  47412/             Sapporo
+  47807/             Fukuoka
+  47936/             Naha
 ```
 
-`stations.json` sollte Stationsnummer, Namen, verfügbare Jahre und URLs enthalten. Jede Datendatei sollte einen Schema-Stand, `fetchedAt`, den letzten Beobachtungstag und die Qualitätskennzeichen speichern. Die obige Struktur ist vorgeschlagen und noch nicht implementiert; derzeit liegen nur die beiden Tokyo-Dateien unter `public/data/`.
+Jede Stationsdatei enthält `schemaVersion`, `stationId`, `revision`, `fetchedAt`, `from`, `to`, `source` und Tageszeilen `[Datum, Niederschlag oder null, Qualitätscode]`. Die SHA-256-Revision hängt vom Stationsinhalt und Zeitraum ab. Das Manifest verweist auf die Dateien und ihre Revisionen.
 
-Empfohlener Ablauf:
+Daten liegen dauerhaft im Standardbranch und seiner Git-Historie. Ein Actions-Cache ist keine Datenquelle. Der Browser lädt neue Daten bei geänderter Revision und behält bei Netzwerkfehlern seinen letzten lokalen Stand. „Aktualisieren“ prüft nur veröffentlichte Dateien.
 
-1. **Einmaliger Import:** Für eine begrenzte Stationsliste die historischen Tageswerte laden, auf Vollständigkeit und Qualität prüfen und dauerhaft als Dateien im Repository ablegen.
-2. **Regelmäßiges Update:** Beispielsweise zweimal täglich aktuelle Werte laden. Anfangs kann das ganze laufende Jahr erneut geladen werden; später reicht ein überlappender jüngster Zeitraum plus gelegentliche vollständige Prüfung auf Korrekturen.
-3. **Validierung:** Stationskennung, Datumsgrenzen, doppelte Tage, Zahlenformat und Qualitätscodes prüfen. Fehlende Messungen niemals als 0 mm interpretieren. Für weitere Stationen auch Monatsabgleiche ergänzen.
-4. **Fehlerfall:** Bei unplausibler oder unvollständiger Antwort den zuletzt gültigen Stand beibehalten und den fehlgeschlagenen Lauf sichtbar machen.
-5. **Dauerhafte Speicherung:** Geänderte Datendateien beispielsweise in einen dedizierten Datenbranch schreiben. Ein Actions-Cache oder die temporäre Runner-Festplatte ist keine verlässliche dauerhafte Datenquelle.
-6. **Veröffentlichung:** Den validierten Datenstand in den Build übernehmen und die gesamte statische Website über Pages veröffentlichen. Update, Build und Deployment können im selben Workflow laufen.
-7. **Frontend anpassen:** Die vorhandenen direkten JMA-Aufrufe durch Abrufe der Stations-JSON-Dateien ersetzen. IndexedDB bleibt ein zusätzlicher lokaler Cache. Ein Versionsfeld oder `fetchedAt` sollte auch Änderungen historischer Dateien erkennbar machen.
+Historische Daten beginnen 1876. Zum Jahreswechsel lädt der Importer das fehlende Vorjahr vollständig nach. Am 1. Januar darf das aktuelle Jahr noch leer sein. Die Referenzauswahl passt ihre Jahresobergrenze automatisch an.
 
-Ein möglicher Zeitplan als Ausschnitt eines späteren Workflows:
+## Daten manuell aktualisieren
 
-```yaml
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: '23 0,12 * * *' # UTC; zweimal täglich
+In **Actions → Update JMA data → Run workflow** auf `main` starten. Für eine vollständige historische Neuabfrage `refresh_history` aktivieren. Im Normalbetrieb werden vorhandene historische Dateien wiederverwendet.
+
+Lokal:
+
+```bash
+pnpm data:update
+pnpm data:validate
+pnpm check
+pnpm build
+
+# Optional: alle historischen Zeiträume erneut bei JMA laden
+pnpm data:update --refresh-history
 ```
 
-Das ist nur die Trigger-Konfiguration, kein vollständiger ausführbarer Workflow. Ein JMA-Updateskript und der komplette Build-/Deployment-Workflow müssen noch erstellt werden. Es liegt bewusst keine aktivierte Datei unter `.github/workflows/` im Projekt.
+Der Import erfolgt in historischen Blöcken von höchstens 30 Jahren. Alle Stationen müssen erfolgreich geprüft sein, bevor Dateien geschrieben werden. Ein Abbruch, ein falscher Stationsname, fehlende oder doppelte Tage, ein unbekanntes Zahlenformat oder ein Rückgang vollständiger Tageswerte lässt den Lauf scheitern. Fehlende Beobachtungen sind keine Nullen. Die Statistik verwendet weiterhin nur vollständige Jahre mit Qualitätscode 8.
 
-Geplante Läufe sind nicht minutengenau garantiert. GitHub kann sie bei hoher Last verzögern oder ausfallen lassen; bei öffentlichen Repositories können Zeitpläne nach 60 Tagen ohne Repository-Aktivität deaktiviert werden. Deshalb den tatsächlichen Beobachtungs- und Aktualisierungsstand anzeigen und Fehler überwachen.
+## Veröffentlichung nach Datenupdates
 
-## Stationsauswahl im Actions-Modell
+Der Datenjob prüft die Dateien, erzeugt einen Commit und pusht ihn ohne Force-Push. Änderungen auf `main` während eines Imports können deshalb einen Konflikt verursachen; dann den Workflow erneut starten. Daten werden nicht stillschweigend über fremde Änderungen geschrieben.
 
-Der Nutzer wählt aus den vorbereiteten Stationen. Die Auswahl lädt nur deren Dateien; sie startet keinen neuen Actions-Lauf. Neue Stationen werden zur Importliste hinzugefügt und beim nächsten Import vorbereitet.
+Commits mit `GITHUB_TOKEN` starten üblicherweise keinen weiteren Push-Workflow. Deshalb ruft der Datenworkflow den wiederverwendbaren Pages-Workflow ausdrücklich mit dem vollständigen neuen Commit-SHA auf. Scheitert der anschließende Build, bleiben die Daten im Repository gesichert und die vorherige Website online. Der Pages-Workflow kann nach der Fehlerbehebung manuell erneut gestartet werden.
 
-Für beliebige, noch nicht vorbereitete Stationen wäre weiterhin ein direkter Browserabruf bei JMA oder ein kleiner API-Endpunkt nötig. Ein GitHub-Token zum Starten von Workflows gehört nicht in den öffentlichen Frontend-Code.
+Deployments werden nacheinander ausgeführt; ein laufendes Deployment wird nicht abgebrochen. Pull Requests bekommen keine Schreibrechte und veröffentlichen nichts. Die verwendeten Actions sind auf vollständige Commit-SHAs festgelegt.
 
-Die Statistik kann im Browser bleiben: So funktionieren ein anderer Referenzzeitraum und eine andere Glättung ohne neue Serveranfrage. Erst bei wesentlich mehr Daten wäre zusätzliches Vorberechnen sinnvoll. Für dieses Projekt würde ich zunächst Variante A nutzen und Variante B ergänzen, wenn direkte JMA-Abrufe oder erste Stationsimporte im Alltag stören.
+## Offizielle Dokumentation
 
-## Offizielle GitHub-Dokumentation
-
-Stand der Dokumentationsprüfung: 11.09.2026.
-
-- [Eigene Workflows für GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
-- [Veröffentlichungsquelle für Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
-- [Geplante Actions-Läufe](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
+- [GitHub Pages mit eigenen Workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+- [Pages-Veröffentlichungsquelle einstellen](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+- [Workflows durch andere Workflows auslösen](https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-when-your-workflow-runs/triggering-a-workflow)
+- [Zeitgesteuerte Workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
 
 [Zurück zur Projektübersicht](../README.md)
