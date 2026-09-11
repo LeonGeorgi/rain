@@ -18,7 +18,7 @@ Vite startet lokal auf `http://localhost:5173`; die Vorschau des Produktionsbuil
 
 ## Oberfläche
 
-- Native Stationsauswahl, nach Japan und Deutschland gruppiert.
+- Native Stationsauswahl, nach Japan und Deutschland gruppiert, plus Karten-Button. Der Base-UI-Dialog zeigt links die Länderwahl und rechts den Landesumriss mit direkt auswählbaren Stationen. Auf kleinen Displays steht die Länderwahl über der Karte.
 - Japan: Tokyo, Kyoto, Osaka, Sapporo, Fukuoka und Naha (JMA).
 - Deutschland: Berlin-Tempelhof, Hamburg-Fuhlsbüttel, München-Stadt, Frankfurt/Main, Köln/Bonn und Dresden-Klotzsche (DWD).
 - Native Jahresauswahl mit Minus-/Plus-Buttons für verfügbare Messjahre. Standard ist das laufende Jahr; die Auswahl bleibt beim Stationswechsel erhalten, soweit dort verfügbar.
@@ -27,7 +27,7 @@ Vite startet lokal auf `http://localhost:5173`; die Vorschau des Produktionsbuil
 - Optional drei Vergleichsjahre mit den höchsten Summen zum selben Stichtag; standardmäßig aus.
 - Messwerte per Maus oder Pfeiltasten ablesen; CSV und PNG mit Datenquellen exportieren.
 
-Das Diagramm steht im Mittelpunkt. Es gibt keine dekorative Titelzeile oder Kartenoberfläche. Die Statistik wird im Browser berechnet; ein Anwendungsserver ist nicht erforderlich.
+Das Diagramm steht im Mittelpunkt. Dialog, Tabs und Checkboxen verwenden Base UI; die Auswahlfelder bleiben nativ. Die Statistik wird im Browser berechnet; ein Anwendungsserver ist nicht erforderlich.
 
 ## Datenimport und Veröffentlichung
 
@@ -47,6 +47,8 @@ DWD-Dateien beginnen beim veröffentlichten Stationsbeginn. Der Importer liest d
 Stationskennungen, Zahlen, Qualitätscodes und Datumsfolgen werden geprüft. Fehlende DWD-Tage und der Fehlwert `-999` bleiben `null`; ein fehlendes Qualitätskennzeichen `-999` wird intern als 0 gespeichert. Ein fehlgeschlagener Abruf oder ein Rückgang verwendbarer Tageswerte bricht den gesamten Import vor dem Schreiben ab. Die veröffentlichten Dateien bleiben dann unverändert.
 
 Alle Daten liegen unter `public/data/`, getrennt nach Station und historischem/aktuellem Zeitraum. Japanische IDs bleiben unverändert; DWD-IDs tragen das Präfix `dwd-`. Ein Manifest enthält Zeiträume und SHA-256-Inhaltsrevisionen. Der Browser lädt ausschließlich diese vorbereiteten Dateien und speichert sie nach Revision in IndexedDB. Bei Netzfehlern bleibt der lokale Stand sichtbar. „Aktualisieren“ prüft den veröffentlichten Stand erneut; es startet keinen Import.
+
+Die Karten verwenden gemeinfreie [Natural-Earth-Umrisse](https://www.naturalearthdata.com/) und aktuelle JMA-/DWD-Stationskoordinaten. Es werden keine externen Kartenkacheln geladen. [Geometrie und Quellen](src/assets/maps/README.md).
 
 ## Methodik und Grenzen
 
@@ -68,7 +70,8 @@ Datenbasis der deutschen Auswertungen: Deutscher Wetterdienst, Climate Data Cent
 
 ```text
 src/App.tsx                Oberfläche, Diagramm und Datenladeablauf
-src/components/            Methodik, Tabs und Checkbox
+src/components/            Kartendialog, Methodik, Base-UI-Tabs und Checkbox
+src/assets/maps/           Lokale Landesumrisse und Quellenangaben
 src/lib/                   Stationskatalog, Datenformat, Cache und Statistik
 src/styles/                Styles und übernommene Styles mit Lizenz
 scripts/jma.ts             JMA-CSV-Adapter

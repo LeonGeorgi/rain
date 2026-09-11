@@ -1,4 +1,5 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
+import {StationMapDialog} from '@/components/StationMapDialog';
 import {Methodology} from '@/components/Methodology';
 import {Tabs,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {Checkbox} from '@/components/ui/checkbox';
@@ -134,6 +135,7 @@ export default function App(){
     <div className="toolbar">
      <div className="station-picker">
       <label htmlFor="station">Station</label>
+      <div className="station-controls">
       <select id="station" aria-label="Wetterstation auswählen" value={stationId} onChange={event=>setStationId(event.target.value)}>
        {(['jma','dwd'] as const).map(provider=>(
         <optgroup key={provider} label={provider==='jma'?'Japan':'Deutschland'}>
@@ -141,6 +143,8 @@ export default function App(){
         </optgroup>
        ))}
       </select>
+      <StationMapDialog station={station} onSelect={setStationId}/>
+      </div>
      </div>
      <div className="year-picker">
       <label htmlFor="year">Jahr</label>
@@ -153,7 +157,7 @@ export default function App(){
       </div>
      </div>
      <Tabs value={mode} onValueChange={v=>setMode(v as typeof mode)}>
-      <TabsList variant="line" aria-label="Darstellung">
+      <TabsList aria-label="Darstellung">
        <TabsTrigger value="cumulative">Kumulativ</TabsTrigger>
        <TabsTrigger value="gaussian">Tagesverlauf</TabsTrigger>
       </TabsList>
@@ -186,7 +190,7 @@ export default function App(){
       <div className="band-controls" role="group" aria-label="Historische Verteilung">
        {[['50','50 %'],['90','90 %'],['range','Min–Max']].map(([key,label])=>(
         <label className="legend-check" key={key}>
-         <Checkbox checked={bands.includes(key)} onCheckedChange={()=>toggle(key)} aria-label={`${label} anzeigen`}/>
+         <Checkbox checked={bands.includes(key)} onCheckedChange={()=>toggle(key)}/>
          <span className={`swatch swatch-${key}`}/>{label}
         </label>
        ))}

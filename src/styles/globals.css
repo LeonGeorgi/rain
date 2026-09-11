@@ -43,7 +43,7 @@ button:disabled { cursor: default; opacity: .45; }
 a { color: inherit; text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 button, select { font: inherit; }
-button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible, svg:focus-visible {
+button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible, svg:focus-visible, [data-slot=checkbox]:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 4px;
 }
@@ -82,8 +82,11 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
   font-size: 18px;
 }
 .year-controls button:hover:not(:disabled) { background: var(--muted); }
-.toolbar [data-slot=tabs-list] { padding: 0; gap: 20px; height: 36px; border-radius: 0; }
+.toolbar [data-slot=tabs-list] { display: flex; align-items: center; padding: 0; gap: 20px; height: 36px; border-radius: 0; }
 .toolbar [data-slot=tabs-trigger] {
+  position: relative;
+  white-space: nowrap;
+  background: transparent;
   padding: 6px 0;
   border: 0;
   border-radius: 0;
@@ -92,8 +95,8 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
   color: var(--muted-foreground);
   box-shadow: none;
 }
-.toolbar [data-slot=tabs-trigger][data-state=active] { color: var(--foreground); font-weight: 600; }
-.toolbar [data-slot=tabs-trigger]::after { bottom: -1px; height: 2px; }
+.toolbar [data-slot=tabs-trigger][data-active] { color: var(--foreground); font-weight: 600; }
+.toolbar [data-slot=tabs-trigger][data-active]::after { content: ""; position: absolute; background: currentColor; left: 0; right: 0; bottom: -1px; height: 2px; }
 
 .plot-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 14px 0 16px; }
 .plot-meta p { color: var(--muted-foreground); font-size: 12px; margin: 0; }
@@ -132,8 +135,8 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
 .current-year { font-weight: 600; color: #b9502b; }
 .current-year i { height: 3px; }
 .legend-check { display: flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap; min-height: 28px; }
-.legend-check [data-slot=checkbox] { width: 14px; height: 14px; border-radius: 2px; box-shadow: none; }
-.legend-check [data-slot=checkbox][data-state=checked] { background: #fff; color: var(--foreground); border-color: #9da3a7; }
+.legend-check [data-slot=checkbox] { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 14px; height: 14px; border: 1px solid #9da3a7; border-radius: 2px; box-shadow: none; }
+.legend-check [data-slot=checkbox][data-checked] { background: #fff; color: var(--foreground); border-color: #9da3a7; }
 .swatch { display: inline-block; width: 14px; height: 10px; }
 .swatch-50 { background: #cdd3d7; }
 .swatch-90 { background: #eef0f1; border: 1px solid #dedfe0; }
