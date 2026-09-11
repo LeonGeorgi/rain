@@ -155,7 +155,7 @@
     },
     {
       "id": "dwd-03379",
-      "name": "München-Stadt",
+      "name": "Munich (city)",
       "history": {
         "path": "dwd-03379/history.json",
         "revision": "18e7f27f2ac197516558ca95cae27051666d9e411dc1ce870c871b05d635b364",
@@ -191,7 +191,7 @@
     },
     {
       "id": "dwd-02667",
-      "name": "Köln/Bonn",
+      "name": "Cologne/Bonn",
       "history": {
         "path": "dwd-02667/history.json",
         "revision": "90f94eaf0cad105fa808759caa6f3717b7c0c6963264693e4cb79bf0419212dc",
