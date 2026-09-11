@@ -1,3 +1,5 @@
+import type { Provider } from "./stations.ts";
+
 export type Row = [string, number | null, number];
 
 export type Dataset = {
@@ -20,7 +22,7 @@ export type StationManifest = {
   schemaVersion: 1;
   updatedAt: string;
   historyEndYear: number;
-  stations: { id: string; name: string; jp: string; history: DatasetReference; current: DatasetReference }[];
+  stations: { id: string; name: string; jp?: string; history: DatasetReference; current: DatasetReference }[];
 };
 
 export function validateRows(rows: unknown, from: string, to: string): asserts rows is Row[] {
@@ -38,7 +40,7 @@ export function validateRows(rows: unknown, from: string, to: string): asserts r
     const date = new Date(start + index * 86_400_000).toISOString().slice(0, 10);
     if (!Array.isArray(row) || row.length !== 3 || row[0] !== date ||
         !(row[1] === null || (typeof row[1] === "number" && Number.isFinite(row[1]) && row[1] >= 0)) ||
-        !Number.isInteger(row[2]) || row[2] < 0 || row[2] > 9) {
+        !Number.isInteger(row[2]) || row[2] < 0 || row[2] > 10) {
       throw new Error(`Ungültiger Tageswert oder Datumsfolge: ${date}.`);
     }
   });
@@ -54,4 +56,9 @@ export function validateDataset(value: unknown, stationId: string): Dataset {
   }
   validateRows(data.rows, data.from, data.to);
   return data;
+}
+
+// DWD QN describes the checking procedure, not the JMA per-value quality flag.
+export function usableRow(row: Row, provider: Provider = "jma") {
+  return row[1] !== null && (provider === "jma" ? row[2] === 8 : [1, 2, 3, 5, 7, 8, 9, 10].includes(row[2]));
 }

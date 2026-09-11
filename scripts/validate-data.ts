@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { stations } from "../src/lib/stations.ts";
 import { validateDataset, type StationManifest } from "../src/lib/datasets.ts";
-import { makeDataset } from "./jma.ts";
+import { makeDataset } from "./dataset.ts";
 
 const directory = fileURLToPath(new URL("../public/data/", import.meta.url));
 const manifest: StationManifest = JSON.parse(await readFile(resolve(directory, "stations.json"), "utf8"));
@@ -19,15 +19,15 @@ for (const station of stations) {
     const ref = entry[period];
     if (ref.path !== `${station.id}/${period}.json`) throw new Error("Invalid dataset path.");
     const data = validateDataset(JSON.parse(await readFile(resolve(directory, ref.path), "utf8")), station.id);
-    const expected = makeDataset(data.stationId, data.from, data.to, data.rows, data.fetchedAt);
+    const expected = makeDataset(data.stationId, data.from, data.to, data.rows, data.fetchedAt, data.source);
     if (data.revision !== expected.revision || data.revision !== ref.revision ||
         data.from !== ref.from || data.to !== ref.to || data.fetchedAt !== ref.fetchedAt) {
       throw new Error(`Dataset revision/metadata mismatch: ${ref.path}.`);
     }
-    if (period === "history" && (data.from !== "1876-01-01" || data.to !== `${manifest.historyEndYear}-12-31`)) {
+    if (period === "history" && (data.from !== station.historyStart || data.to !== `${Number(entry.current.from.slice(0, 4)) - 1}-12-31`)) {
       throw new Error(`Historical coverage mismatch: ${ref.path}.`);
     }
-    if (period === "current" && data.from !== `${manifest.historyEndYear + 1}-01-01`) {
+    if (period === "current" && data.from !== `${Number(entry.history.to.slice(0, 4)) + 1}-01-01`) {
       throw new Error(`Current-year coverage mismatch: ${ref.path}.`);
     }
   }

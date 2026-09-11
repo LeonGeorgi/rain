@@ -1,4 +1,4 @@
-name: Update JMA data
+name: Update weather data
 
 on:
   schedule:
@@ -16,7 +16,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: jma-data-update
+  group: weather-data-update
   cancel-in-progress: false
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
-      - name: Fetch and validate JMA measurements
+      - name: Fetch and validate JMA and DWD measurements
         env:
           REFRESH_HISTORY: ${{ inputs.refresh_history || false }}
         run: |
@@ -52,7 +52,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add public/data
           if ! git diff --cached --quiet; then
-            git commit -m 'Update published JMA measurements'
+            git commit -m 'Update published weather measurements'
             git push origin HEAD
           fi
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"

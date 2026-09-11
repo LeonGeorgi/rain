@@ -3,7 +3,11 @@ import { test } from "node:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { parseCSV, makeDataset, assertNoRegression } from "../scripts/jma.ts";
+import { parseCSV, endpoint } from "../scripts/jma.ts";
+import { makeDataset as createDataset, assertNoRegression } from "../scripts/dataset.ts";
+function makeDataset(id: string, from: string, to: string, rows: Row[], fetchedAt: string) {
+  return createDataset(id, from, to, rows, fetchedAt, endpoint);
+}
 import { dateBounds, updateData } from "../scripts/update-data.ts";
 import { validateRows, type Row } from "../src/lib/datasets.ts";
 import { stations } from "../src/lib/stations.ts";

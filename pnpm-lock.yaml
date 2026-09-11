@@ -57,6 +57,9 @@ importers:
       eslint-plugin-react-refresh:
         specifier: 0.5.6
         version: 0.5.6(eslint@10.10.0(jiti@2.7.0)(supports-color@10.2.2))
+      fflate:
+        specifier: 0.8.2
+        version: 0.8.2
       globals:
         specifier: 17.12.0
         version: 17.12.0
@@ -1563,6 +1566,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.8.2:
+    resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
   file-entry-cache@11.1.5:
     resolution: {integrity: sha512-+PFTHITI08JIGhnNpGNI8T8inUpgZfk3GNEqfT9R2zZV2iFXg3CvqzSl/uEhs7TSGujYRELEANyDvS8Fj7+S7Q==}
@@ -3624,6 +3630,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
       picomatch: 4.0.4
+
+  fflate@0.8.2: {}
 
   file-entry-cache@11.1.5:
     dependencies:

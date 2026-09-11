@@ -1,8 +1,8 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
-import {ChevronDown} from 'lucide-react';
+import {Methodology} from '@/components/Methodology';
 import {Tabs,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {Checkbox} from '@/components/ui/checkbox';
-import {analyze,monthNames,monthTicks,japanToday} from '@/lib/rain';
+import {analyze,monthNames,monthTicks,stationToday} from '@/lib/rain';
 import {stations} from '@/lib/stations';
 import type {Dataset} from '@/lib/datasets';
 import {loadStationData} from '@/lib/published-data';
@@ -46,6 +46,8 @@ export default function App(){
  const [status,setStatus]=useState('Tokyo-Daten werden geladen …');const [error,setError]=useState('');const [storageWarning,setStorageWarning]=useState(false);const [busy,setBusy]=useState(true);const [reload,setReload]=useState(0);
  const [mode,setMode]=useState<'cumulative'|'gaussian'>('cumulative');const [reference,setReference]=useState<'all'|'normal'>('all');const [bands,setBands]=useState(['50','90','range']);const [compare,setCompare]=useState(false);
  const svgRef=useRef<SVGSVGElement>(null);const station=stations.find(s=>s.id===stationId)!;
+ const today=stationToday(station.timeZone);
+ const exportName=`${station.provider}-${station.sourceId}-${mode}`;
  useEffect(() => {
   const abort = new AbortController();
   async function run() {
@@ -71,23 +73,67 @@ export default function App(){
   void run();
   return () => abort.abort();
  }, [stationId, reload]);
- const data=useMemo(()=>analyze(history?.rows??[],current?.rows??[],reference,mode),[history,current,reference,mode]);
- const cumulative=useMemo(()=>mode==='cumulative'?data:analyze(history?.rows??[],current?.rows??[],reference,'cumulative'),[history,current,reference,mode,data]);
+ const data=useMemo(()=>analyze(history?.rows??[],current?.rows??[],reference,mode,stations.find(s=>s.id===stationId)!.provider),[history,current,reference,mode,stationId]);
+ const cumulative=useMemo(()=>mode==='cumulative'?data:analyze(history?.rows??[],current?.rows??[],reference,'cumulative',stations.find(s=>s.id===stationId)!.provider),[history,current,reference,mode,data,stationId]);
  const topYears=cumulative.ranking.slice(0,3).map(r=>r.year);const years=compare?topYears:[];
  const median=cumulative.last>=0?cumulative.points[cumulative.last].median:null;
  const toggle=(key:string)=>setBands(v=>v.includes(key)?v.filter(x=>x!==key):[...v,key]);
- const exportCSV=()=>{const header=['day_of_year','month_day','n_historical_years','median_mm','p25_mm','p75_mm','p05_mm','p95_mm','min_mm','max_mm','current_'+(data.currentYear??japanToday().slice(0,4))+'_mm',...years.map(y=>'year_'+y+'_mm')];const rows=data.points.map((p,i)=>[i+1,p.date,data.series.length,p.median,p.low50,p.high50,p.low90,p.high90,p.min,p.max,p.current,...years.map(y=>data.series.find(s=>s.year===y)?.values[i])].map(v=>typeof v==='number'?Math.round(v*1000000)/1000000:v??'').join(','));download(new Blob([header.join(',')+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'}),`jma-${stationId}-${mode}.csv`);};
- const exportPNG=async()=>{try{if(!svgRef.current)return;const svg=svgRef.current.cloneNode(true) as SVGSVGElement;const s=new XMLSerializer().serializeToString(svg);const url=URL.createObjectURL(new Blob([s],{type:'image/svg+xml'}));const img=new Image();await new Promise<void>((resolve,reject)=>{img.onload=()=>resolve();img.onerror=reject;img.src=url;});const canvas=document.createElement('canvas');canvas.width=img.width*2;canvas.height=(img.height+75)*2;const ctx=canvas.getContext('2d')!;ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#152b41';ctx.font='600 20px system-ui';ctx.fillText(`${station.name} · ${mode==='cumulative'?'Kumulierter Niederschlag':'Niederschlag · Gauß σ = 11 Tage'}`,25,30);ctx.font='12px system-ui';ctx.fillText(`JMA ${stationId} · ${data.series.length} vollständige Jahre · Stand ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Vergleich ${years.join(', ')}`,25,53);ctx.drawImage(img,0,70);URL.revokeObjectURL(url);canvas.toBlob(b=>{if(b)download(b,`jma-${stationId}-${mode}.png`);},'image/png');}catch{setError('Der PNG-Export ist fehlgeschlagen. Der CSV-Export steht weiterhin zur Verfügung.');}};
+ const exportCSV=()=>{
+  const unit=mode==='cumulative'?'mm':'mm_per_day';
+  const header=['day_of_year','month_day','n_historical_years',...['median','p25','p75','p05','p95','min','max',`current_${data.currentYear??today.slice(0,4)}`,...years.map(year=>`year_${year}`)].map(name=>`${name}_${unit}`),'station','historical_source','current_source','license'];
+  const cell=(value:unknown)=>typeof value==='number'?String(Math.round(value*1000000)/1000000):`"${String(value??'').replaceAll('"','""')}"`;
+  const rows=data.points.map((point,index)=>[
+   index+1,point.date,data.series.length,point.median,point.low50,point.high50,point.low90,point.high90,point.min,point.max,point.current,
+   ...years.map(year=>data.series.find(series=>series.year===year)?.values[index]),
+   `${station.provider.toUpperCase()} ${station.sourceId} ${station.name}`,history?.source,current?.source,
+   station.provider==='dwd'?'Datenbasis: DWD CDC; bearbeitet; https://creativecommons.org/licenses/by/4.0/':'',
+  ].map(cell).join(','));
+  download(new Blob([header.join(',')+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'}),`${exportName}.csv`);
+ };
+ const exportPNG=async()=>{
+  let url:string|undefined;
+  try {
+   if(!svgRef.current)return;
+   const svg=svgRef.current.cloneNode(true) as SVGSVGElement;
+   const scale=Math.max(1,900/svg.width.baseVal.value);
+   svg.setAttribute('width',String(svg.width.baseVal.value*scale));
+   svg.setAttribute('height',String(svg.height.baseVal.value*scale));
+   url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'}));
+   const img=new Image();
+   await new Promise<void>((resolve,reject)=>{img.onload=()=>resolve();img.onerror=reject;img.src=url!;});
+   const canvas=document.createElement('canvas');
+   canvas.width=img.width*2;canvas.height=(img.height+110)*2;
+   const ctx=canvas.getContext('2d')!;
+   ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);
+   ctx.fillStyle='#292d30';ctx.font='600 20px system-ui';
+   ctx.fillText(`${station.name} · ${mode==='cumulative'?'Kumulierter Niederschlag':'Niederschlag · Gauß σ = 11 Tage'}`,25,30);
+   ctx.font='12px system-ui';
+   ctx.fillText(`${station.provider.toUpperCase()} ${station.sourceId} · ${data.series.length} vollständige Jahre · Stand ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Vergleich ${years.join(', ')||'aus'}`,25,53);
+   ctx.fillText(station.provider==='dwd'
+    ? 'Datenbasis: DWD CDC · bearbeitet · CC BY 4.0 (creativecommons.org/licenses/by/4.0/) · aktuelle Werte vorläufig'
+    : 'Datenbasis: Japan Meteorological Agency · data.jma.go.jp/risk/obsdl/',25,75);
+   ctx.drawImage(img,0,100);
+   canvas.toBlob(blob=>{if(blob)download(blob,`${exportName}.png`);},'image/png');
+  } catch {
+   setError('Der PNG-Export ist fehlgeschlagen. Der CSV-Export steht weiterhin zur Verfügung.');
+  } finally {
+   if(url)URL.revokeObjectURL(url);
+  }
+ };
  useEffect(()=>{const ctx=(document as Document&{modelContext?:{registerTool:(t:unknown,o:unknown)=>Promise<void>}}).modelContext;if(!ctx)return;const lifecycle=new AbortController();void Promise.resolve(ctx.registerTool({name:'get_precipitation_summary',description:'Read the currently displayed station, data coverage and cumulative rainfall comparison.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:(input:unknown)=>{if(!input||typeof input!=='object'||Object.keys(input).length)throw new Error('Expected an empty object.');return {station:station.name,stationId,mode,reference,completeYears:data.series.length,lastDate:data.lastDate,totalMm:cumulative.total,historicalYearsAbove:cumulative.higher,loading:busy,error:error||null};}},{signal:lifecycle.signal})).catch(()=>{});return()=>lifecycle.abort();},[station,stationId,mode,reference,data,cumulative,busy,error]);
  return (
   <div className="app">
    <main>
-    <h1 className="sr-only">Niederschlag in Japan</h1>
+    <h1 className="sr-only">Niederschlag in Japan und Deutschland</h1>
     <div className="toolbar">
      <div className="station-picker">
       <label htmlFor="station">Station</label>
       <select id="station" aria-label="Wetterstation auswählen" value={stationId} onChange={event=>setStationId(event.target.value)}>
-       {stations.map(s=><option key={s.id} value={s.id}>{s.name} · {s.jp}</option>)}
+       {(['jma','dwd'] as const).map(provider=>(
+        <optgroup key={provider} label={provider==='jma'?'Japan':'Deutschland'}>
+         {stations.filter(s=>s.provider===provider).map(s=><option key={s.id} value={s.id}>{s.name}{s.jp?` · ${s.jp}`:''}</option>)}
+        </optgroup>
+       ))}
       </select>
      </div>
      <Tabs value={mode} onValueChange={v=>setMode(v as typeof mode)}>
@@ -99,7 +145,7 @@ export default function App(){
      <div className="reference">
       <label htmlFor="reference">Referenz</label>
       <select id="reference" aria-label="Historischen Referenzzeitraum wählen" value={reference} onChange={event=>setReference(event.target.value as typeof reference)}>
-       <option value="all">Alle Jahre bis {history?.to.slice(0,4) ?? Number(japanToday().slice(0,4))-1}</option>
+       <option value="all">Alle Jahre bis {history?.to.slice(0,4) ?? Number(today.slice(0,4))-1}</option>
        <option value="normal">1991–2020</option>
       </select>
      </div>
@@ -119,7 +165,7 @@ export default function App(){
          <p>{busy?status:'Wähle eine andere Station oder versuche den Abruf erneut.'}</p>
         </div>}
      <div className="legend">
-      <span className="legend-item current-year"><i style={{background:'#b9502b'}}/>{data.currentYear??japanToday().slice(0,4)}</span>
+      <span className="legend-item current-year"><i style={{background:'#b9502b'}}/>{data.currentYear??today.slice(0,4)}</span>
       <span className="legend-item"><i style={{background:'#334d5c'}}/>Median</span>
       <div className="band-controls" role="group" aria-label="Historische Verteilung">
        {[['50','50 %'],['90','90 %'],['range','Min–Max']].map(([key,label])=>(
@@ -142,7 +188,7 @@ export default function App(){
      <div>
       <span>Bis {data.lastDate?dateLabel(data.lastDate):'zum letzten vollständigen Tag'}</span>
       <p>{fmt(cumulative.last>=0?cumulative.total:null,1)}<small> mm</small></p>
-      <em>Niederschlag {data.currentYear??japanToday().slice(0,4)}</em>
+      <em>Niederschlag {data.currentYear??today.slice(0,4)}</em>
      </div>
      <div>
       <span>Historischer Median</span>
@@ -156,13 +202,13 @@ export default function App(){
      </div>
     </section>
     <div className="data-status" aria-live="polite">
-     <span>{status}</span>
+     <span>{status}{station.provider==='dwd'&&current?' · Aktuelle DWD-Werte vorläufig':''}</span>
      <button disabled={busy} onClick={()=>setReload(v=>v+1)}>Aktualisieren</button>
     </div>
     {error&&<div role="alert" className="notice">{error}{history?' Vorhandene Daten bleiben verfügbar.':''}</div>}
     {storageWarning&&<div className="notice">Der Browser erlaubt keine dauerhafte Speicherung. Daten bleiben nur für diese Sitzung im Speicher.</div>}
-    {data.gap&&<div className="notice">Die aktuelle Kurve endet vor dem ersten fehlenden oder nicht vollständig geprüften Tageswert.</div>}
-   <details className="method"><summary>Quellen & Methodik <ChevronDown size={16}/></summary><div><p>Offizielle tägliche Niederschlagssummen der Japan Meteorological Agency, Station {stationId}. Die Intervalle umfassen die mittleren 50 % (25.–75. Perzentil) und 90 % (5.–95. Perzentil) der historischen Jahre; Min–Max zeigt die beobachtete Spannweite. Das sind punktweise historische Verteilungen, keine Konfidenzintervalle oder Prognosen. Quantile: lineare Interpolation (Typ 7).</p><p>Nur vollständige Kalenderjahre mit JMA-Qualitätscode 8 gehen in die Referenz ein. {data.excluded.length>0?`Ausgeschlossen: ${data.excluded.join(', ')}.`:''} Kumulative Summen enthalten den Niederschlag des 29. Februar; nur sein Achsenpunkt entfällt. So bleiben Jahressummen erhalten. Im Tagesverlauf wird der 29. Februar vor der Gauß-Glättung entfernt; historische Jahre werden zyklisch geglättet (σ = 11 Tage, Radius 44 Tage). Das aktuelle Jahr nutzt die vorhergehenden Dezemberwerte, soweit vollständig verfügbar. Am offenen Ende wird der Kernel neu normiert; die letzten 44 Tage sind gestrichelt und vorläufig.</p><p>Der Vergleich über lange Zeiträume beschreibt das historische Archiv; Klimaänderungen und Stationsverlegungen werden nicht herausgerechnet. Die Zahl vollständiger Jahre kann sich zwischen Stationen stark unterscheiden. Tokyo: 1.800 Monatssummen aus Tagesdaten wurden mit den offiziellen JMA-Monatssummen abgeglichen. Bei neu geladenen Stationen erfolgt diese zusätzliche Monatsprüfung noch nicht.</p><p>Die Messwerte werden zentral zweimal täglich bei JMA abgerufen, geprüft und auf dieser Website veröffentlicht. „Aktualisieren“ lädt den zuletzt veröffentlichten Stand. Der Browser speichert Stationsdateien anhand ihrer Datenversion; bei Fehlern bleibt der lokale Stand sichtbar. Historische Daten werden zum Jahreswechsel ergänzt. Eine vollständige Neuprüfung historischer JMA-Korrekturen kann manuell gestartet werden.</p><div className="method-links"><a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noreferrer">Offizieller JMA-Download ↗</a><a href={`https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=${station.pref}&block_no=${stationId}&year=${japanToday().slice(0,4)}&month=${japanToday().slice(5,7)}&view=`} target="_blank" rel="noreferrer">Tägliche Stationswerte ↗</a><a href={`https://www.data.jma.go.jp/stats/etrn/view/monthly_s3.php?prec_no=${station.pref}&block_no=${stationId}&year=&month=&day=&view=p5`} target="_blank" rel="noreferrer">Monatssummen ↗</a></div></div></details>
+    {data.gap&&<div className="notice">Die aktuelle Kurve endet vor dem ersten fehlenden oder nicht verwendbaren Tageswert.</div>}
+    <Methodology station={station} excluded={data.excluded} today={today}/>
    </main>
   </div>
  );

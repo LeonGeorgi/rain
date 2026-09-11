@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-11T15:46:04.706Z",
+  "updatedAt": "2026-09-11T16:09:26.980Z",
   "historyEndYear": 2025,
   "stations": [
     {
@@ -17,7 +17,7 @@
       "current": {
         "path": "47662/current.json",
         "revision": "c14dc0d668039e720c07a0ae2a075db87d71cd78d69764822f06f33f18991f14",
-        "fetchedAt": "2026-09-11T15:46:04.706Z",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -36,7 +36,7 @@
       "current": {
         "path": "47759/current.json",
         "revision": "e11fe8313ca7a5e3e895b08aacb8ced3e0ff030a8f7f294d101faa10a30e6dd7",
-        "fetchedAt": "2026-09-11T15:46:04.706Z",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -55,7 +55,7 @@
       "current": {
         "path": "47772/current.json",
         "revision": "856be5f67b21acc342fd194d4b262ef15caa1600d9c23c2db7d1a71918ccfcc3",
-        "fetchedAt": "2026-09-11T15:46:04.706Z",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -74,7 +74,7 @@
       "current": {
         "path": "47412/current.json",
         "revision": "56876fbd9ad466de1ba98db116d8c1de69e1d9b19857954846a26e56bee28140",
-        "fetchedAt": "2026-09-11T15:46:04.706Z",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -93,7 +93,7 @@
       "current": {
         "path": "47807/current.json",
         "revision": "ea547ab5c3eb4d4359b18c76ed27e0bc604dce38718a43448bf8e0ce56997a19",
-        "fetchedAt": "2026-09-11T15:46:04.706Z",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -112,9 +112,117 @@
       "current": {
         "path": "47936/current.json",
         "revision": "1d3c8e713142ae692e7d9caee7a0973f80e37cb92295e2f0d342d7630026082d",
-        "fetchedAt": "2026-09-11T15:46:04.706Z",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
+      }
+    },
+    {
+      "id": "dwd-00433",
+      "name": "Berlin-Tempelhof",
+      "history": {
+        "path": "dwd-00433/history.json",
+        "revision": "4333373f3d1bf36dea10853cb44321e1365defed692ac3fa0b7cd2587b2a91a6",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "1948-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "dwd-00433/current.json",
+        "revision": "bb7e9894b883728f00c34e5c5de3049f1ce92a03c6eb3716a29e146605815ff8",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "dwd-01975",
+      "name": "Hamburg-Fuhlsbüttel",
+      "history": {
+        "path": "dwd-01975/history.json",
+        "revision": "7eb891807fa3114b460c6beca068fbf6fdfc5ac7f015745a7f88ae2543564cda",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "1936-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "dwd-01975/current.json",
+        "revision": "a42afc403e4a8e6a0ec5ff269ca96245d871170b739213b3ac6eb88bfea5001a",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "dwd-03379",
+      "name": "München-Stadt",
+      "history": {
+        "path": "dwd-03379/history.json",
+        "revision": "18e7f27f2ac197516558ca95cae27051666d9e411dc1ce870c871b05d635b364",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "1954-06-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "dwd-03379/current.json",
+        "revision": "19923282a1ec11ad15c78279b011e5939860aaa8559013ac7cb676422c4b3081",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "dwd-01420",
+      "name": "Frankfurt/Main",
+      "history": {
+        "path": "dwd-01420/history.json",
+        "revision": "59482712c31b047206fb54f755fbe5cf19885dcc3986676a85f080e18a1f13c8",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "1935-07-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "dwd-01420/current.json",
+        "revision": "21f51fa2dc6f2acf12424624b0e721489e402d38f58ed38e2ac16ec286218cf6",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "dwd-02667",
+      "name": "Köln/Bonn",
+      "history": {
+        "path": "dwd-02667/history.json",
+        "revision": "90f94eaf0cad105fa808759caa6f3717b7c0c6963264693e4cb79bf0419212dc",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "1957-07-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "dwd-02667/current.json",
+        "revision": "9fe3a7fc7251be7ffd02755963b8389638f8f680dd50a5250a28899c1f90a22f",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
+      }
+    },
+    {
+      "id": "dwd-01048",
+      "name": "Dresden-Klotzsche",
+      "history": {
+        "path": "dwd-01048/history.json",
+        "revision": "0509546625772d93d565e3ce726c03718d82a68756391041327c6fbed245afe3",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "1934-01-01",
+        "to": "2025-12-31"
+      },
+      "current": {
+        "path": "dwd-01048/current.json",
+        "revision": "d386cf5999693a942611bf77675ffac8c21ba5f7c59bf635811b19e104dd1f30",
+        "fetchedAt": "2026-09-11T16:09:26.980Z",
+        "from": "2026-01-01",
+        "to": "2026-09-10"
       }
     }
   ]

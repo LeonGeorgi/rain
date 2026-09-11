@@ -17,7 +17,7 @@ Der Zeitplan entspricht 09:23 und 21:23 japanischer Zeit. GitHub kann geplante L
 - Unter **Settings → Pages → Build and deployment → Source** muss **GitHub Actions** gewählt sein.
 - GitHub Actions muss im Repository aktiviert sein. Für Pages in einem privaten Repository muss der GitHub-Tarif diese Funktion unterstützen.
 - Das Environment `github-pages` muss Deployments von `main` erlauben. Bei Schutzregeln für `main` muss der Datenworkflow seine Datencommits pushen dürfen.
-- Es sind keine eigenen API-Schlüssel, PAT-Secrets oder JMA-Zugangsdaten nötig. Der kurzlebige `GITHUB_TOKEN` erhält die im jeweiligen Workflow angegebenen Berechtigungen.
+- Es sind keine eigenen API-Schlüssel, PAT-Secrets oder JMA-/DWD-Zugangsdaten nötig. Der kurzlebige `GITHUB_TOKEN` erhält die im jeweiligen Workflow angegebenen Berechtigungen.
 
 Der Pages-Workflow übernimmt den Basispfad aus `actions/configure-pages`. Das funktioniert sowohl für `/rain/` als auch für eine eigene Domain. Lokal: `pnpm build --base=/rain/` und `pnpm preview --base=/rain/`.
 
@@ -34,17 +34,23 @@ public/data/
   47412/             Sapporo
   47807/             Fukuoka
   47936/             Naha
+  dwd-00433/         Berlin-Tempelhof
+  dwd-01975/         Hamburg-Fuhlsbüttel
+  dwd-03379/         München-Stadt
+  dwd-01420/         Frankfurt/Main
+  dwd-02667/         Köln/Bonn
+  dwd-01048/         Dresden-Klotzsche
 ```
 
-Jede Stationsdatei enthält `schemaVersion`, `stationId`, `revision`, `fetchedAt`, `from`, `to`, `source` und Tageszeilen `[Datum, Niederschlag oder null, Qualitätscode]`. Die SHA-256-Revision hängt vom Stationsinhalt und Zeitraum ab. Das Manifest verweist auf die Dateien und ihre Revisionen.
+Jede Stationsdatei enthält `schemaVersion`, `stationId`, `revision`, `fetchedAt`, `from`, `to`, `source` und Tageszeilen `[Datum, Niederschlag oder null, Qualitätscode]`. Bei JMA bleibt der Originalcode erhalten, beim DWD `QN_4` (fehlendes Kennzeichen als 0); die jeweiligen Regeln stehen in der Methodik. DWD-Quellen-URLs verweisen auf die tatsächlich verwendeten Archive. Die SHA-256-Revision hängt vom Stationsinhalt und Zeitraum ab. Das Manifest verweist auf die Dateien und ihre Revisionen.
 
 Daten liegen dauerhaft im Standardbranch und seiner Git-Historie. Ein Actions-Cache ist keine Datenquelle. Der Browser lädt neue Daten bei geänderter Revision und behält bei Netzwerkfehlern seinen letzten lokalen Stand. „Aktualisieren“ prüft nur veröffentlichte Dateien.
 
-Historische Daten beginnen 1876. Zum Jahreswechsel lädt der Importer das fehlende Vorjahr vollständig nach. Am 1. Januar darf das aktuelle Jahr noch leer sein. Die Referenzauswahl passt ihre Jahresobergrenze automatisch an.
+JMA-Daten beginnen im Abruffenster 1876 und werden zum Jahreswechsel ergänzt. DWD-Daten beginnen beim Stationsbeginn; die abgeschlossenen Archive werden bei jedem Lauf neu gelesen. Ein noch nicht im DWD-Archiv veröffentlichtes Vorjahr bleibt aus der historischen Referenz ausgeschlossen. Aktuelle DWD-Werte aus `recent` sind vorläufig. Die Jahresgrenzen werden pro Station in japanischer beziehungsweise deutscher Ortszeit bestimmt. Am 1. Januar darf das aktuelle Jahr noch leer sein. Die Referenzauswahl passt ihre Jahresobergrenze automatisch an.
 
 ## Daten manuell aktualisieren
 
-In **Actions → Update JMA data → Run workflow** auf `main` starten. Für eine vollständige historische Neuabfrage `refresh_history` aktivieren. Im Normalbetrieb werden vorhandene historische Dateien wiederverwendet.
+In **Actions → Update weather data → Run workflow** auf `main` starten. Für eine vollständige historische Neuabfrage `refresh_history` aktivieren. Im Normalbetrieb werden vorhandene JMA-Historien wiederverwendet; DWD-Archive werden immer neu gelesen.
 
 Lokal:
 
@@ -58,7 +64,7 @@ pnpm build
 pnpm data:update --refresh-history
 ```
 
-Der Import erfolgt in historischen Blöcken von höchstens 30 Jahren. Alle Stationen müssen erfolgreich geprüft sein, bevor Dateien geschrieben werden. Ein Abbruch, ein falscher Stationsname, fehlende oder doppelte Tage, ein unbekanntes Zahlenformat oder ein Rückgang vollständiger Tageswerte lässt den Lauf scheitern. Fehlende Beobachtungen sind keine Nullen. Die Statistik verwendet weiterhin nur vollständige Jahre mit Qualitätscode 8.
+Der JMA-Import erfolgt in historischen Blöcken von höchstens 30 Jahren; der DWD liefert je Station ein historisches und ein aktuelles ZIP-Archiv. Alle Stationen müssen erfolgreich geprüft sein, bevor Dateien geschrieben werden. Ein Abbruch, ein falscher Stationsname, fehlende oder doppelte Tage, ein unbekanntes Zahlenformat oder ein Rückgang vollständiger Tageswerte lässt den Lauf scheitern. Fehlende Beobachtungen sind keine Nullen. Die Statistik verwendet weiterhin nur vollständige Jahre mit Qualitätscode 8.
 
 ## Veröffentlichung nach Datenupdates
 
