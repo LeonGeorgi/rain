@@ -8,8 +8,8 @@ import {stations} from '@/lib/stations';
 import type {Dataset} from '@/lib/datasets';
 import {loadStationData} from '@/lib/published-data';
 type Analysis=ReturnType<typeof analyze>;
-const fmt=(v:number|null|undefined,d=0)=>v==null?'—':v.toLocaleString('de-DE',{maximumFractionDigits:d,minimumFractionDigits:d});
-const dateLabel=(d?:string)=>d?new Date(d+'T00:00:00Z').toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}):'—';
+const fmt=(v:number|null|undefined,d=0)=>v==null?'—':v.toLocaleString('en-GB',{maximumFractionDigits:d,minimumFractionDigits:d});
+const dateLabel=(d?:string)=>d?new Date(d+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}):'—';
 const colors=['#64857a','#8c7b98','#9b896a'];
 function download(blob:Blob,name:string){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
 function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;bands:string[];years:number[];svgRef:React.RefObject<SVGSVGElement|null>}){
@@ -23,11 +23,11 @@ function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;ban
  const line=(values:(number|null)[])=>values.map((v,i)=>v===null?'':`${i===0||values[i-1]===null?'M':'L'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ');
  const area=(lo:'low50'|'low90',hi:'high50'|'high90')=>line(data.points.map(p=>p[hi]))+' '+data.points.map((p,i)=>({p,i})).reverse().map(({p,i})=>`L${x(i).toFixed(2)},${y(p[lo]??0).toFixed(2)}`).join(' ')+' Z';
  const point=hover!==null?data.points[hover]:null;
- const unit=mode==='cumulative'?'mm':'mm/Tag';
+ const unit=mode==='cumulative'?'mm':'mm/day';
  return <div ref={box} className="chart-shell">
-  <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${mode==='cumulative'?'Kumulativer Niederschlag':'Geglätteter täglicher Niederschlag'} mit historischen Intervallen. Pfeiltasten wählen einen Kalendertag.`} tabIndex={0} onKeyDown={e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();setHover(i=>Math.max(0,Math.min(364,(i??data.last)+(e.key==='ArrowRight'?1:-1))));}if(e.key==='Escape')setHover(null);}} onPointerMove={e=>{const b=e.currentTarget.getBoundingClientRect();setHover(Math.max(0,Math.min(364,Math.round(((e.clientX-b.left)*width/b.width-left)/pw*364))));}} onPointerLeave={()=>setHover(null)}>
+  <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${mode==='cumulative'?'Cumulative precipitation':'Smoothed daily precipitation'} with historical intervals. Use the arrow keys to select a calendar day.`} tabIndex={0} onKeyDown={e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();setHover(i=>Math.max(0,Math.min(364,(i??data.last)+(e.key==='ArrowRight'?1:-1))));}if(e.key==='Escape')setHover(null);}} onPointerMove={e=>{const b=e.currentTarget.getBoundingClientRect();setHover(Math.max(0,Math.min(364,Math.round(((e.clientX-b.left)*width/b.width-left)/pw*364))));}} onPointerLeave={()=>setHover(null)}>
    <rect width={width} height={height} fill="white"/>
-   <text x={left} y={15} fill="#666b70" fontSize="12" fontFamily="system-ui">{mode==='cumulative'?'Niederschlag seit 1. Januar (mm)':'Durchschnittlicher Niederschlag (mm/Tag)'}</text>
+   <text x={left} y={15} fill="#666b70" fontSize="12" fontFamily="system-ui">{mode==='cumulative'?'Precipitation since 1 January (mm)':'Average precipitation (mm/day)'}</text>
    {Array.from({length:Math.round(yMax/step)+1},(_,i)=>i*step).map(v=><g key={v}><line x1={left} x2={width-right} y1={y(v)} y2={y(v)} stroke="#e7e8e9"/><text x={left-12} y={y(v)+4} textAnchor="end" fill="#666b70" fontSize="12" fontFamily="system-ui">{fmt(v)}</text></g>)}
    {bands.includes('90')&&<path d={area('low90','high90')} fill="#eef0f1"/>}
    {bands.includes('50')&&<path d={area('low50','high50')} fill="#cdd3d7" fillOpacity=".72"/>}
@@ -39,12 +39,12 @@ function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;ban
    {monthTicks.map((i,m)=>(width>=500||m%2===0)&&<text key={i} x={x(i)} y={height-12} textAnchor="middle" fill="#666b70" fontSize={width<500?12:13} fontFamily="system-ui">{monthNames[m]}</text>)}
    {point&&<g><line x1={x(hover!)} x2={x(hover!)} y1={top} y2={height-bottom} stroke="#666b70" strokeDasharray="3 4"/>{point.current!==null&&<circle cx={x(hover!)} cy={y(point.current)} r="4" fill="#b9502b"/>}</g>}
   </svg>
-  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{point.date.slice(3)}. {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.year} <b style={{color:'#b9502b'}}>{fmt(point.current,1)} {unit}</b></span><span>90 % <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
+  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{Number(point.date.slice(3))} {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.year} <b style={{color:'#b9502b'}}>{fmt(point.current,1)} {unit}</b></span><span>90% <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
  </div>;
 }
 export default function App(){
  const [stationId,setStationId]=useState('47662');const [history,setHistory]=useState<Dataset|null>(null);const [current,setCurrent]=useState<Dataset|null>(null);
- const [status,setStatus]=useState('Tokyo-Daten werden geladen …');const [error,setError]=useState('');const [storageWarning,setStorageWarning]=useState(false);const [busy,setBusy]=useState(true);const [reload,setReload]=useState(0);
+ const [status,setStatus]=useState('Loading Tokyo data …');const [error,setError]=useState('');const [storageWarning,setStorageWarning]=useState(false);const [busy,setBusy]=useState(true);const [reload,setReload]=useState(0);
  const [mode,setMode]=useState<'cumulative'|'gaussian'>('cumulative');const [reference,setReference]=useState<'all'|'normal'>('all');const [bands,setBands]=useState(['50','90','range']);const [compare,setCompare]=useState(false);
  const [requestedYear,setRequestedYear]=useState<number|null>(null);
  const svgRef=useRef<SVGSVGElement>(null);const station=stations.find(s=>s.id===stationId)!;
@@ -59,7 +59,7 @@ export default function App(){
   const abort = new AbortController();
   async function run() {
    setBusy(true); setError(''); setHistory(null); setCurrent(null);
-   setStatus('Veröffentlichte Stationsdaten werden geladen …');
+   setStatus('Loading published station data …');
    try {
     const data = await loadStationData(stationId, abort.signal, (history, current) => {
      if (abort.signal.aborted) return;
@@ -68,11 +68,11 @@ export default function App(){
     });
     if (abort.signal.aborted) return;
     setHistory(data.history); setCurrent(data.current); setStorageWarning(data.storageWarning);
-    setStatus(`Veröffentlicht am ${dateLabel(data.updatedAt.slice(0, 10))}`);
+    setStatus(`Published on ${dateLabel(data.updatedAt.slice(0, 10))}`);
    } catch (error) {
     if (abort.signal.aborted) return;
-    setError(error instanceof Error ? error.message : 'Der veröffentlichte Datenstand konnte nicht geladen werden.');
-    setStatus('Letzter lokal gespeicherter Stand');
+    setError(error instanceof Error ? error.message : 'The published data could not be loaded.');
+    setStatus('Last locally saved data');
    } finally {
     if (!abort.signal.aborted) setBusy(false);
    }
@@ -93,7 +93,7 @@ export default function App(){
    index+1,point.date,data.series.length,point.median,point.low50,point.high50,point.low90,point.high90,point.min,point.max,point.current,
    ...years.map(year=>data.series.find(series=>series.year===year)?.values[index]),
    `${station.provider.toUpperCase()} ${station.sourceId} ${station.name}`,history?.source,selectedSource,
-   station.provider==='dwd'?'Datenbasis: DWD CDC; bearbeitet; https://creativecommons.org/licenses/by/4.0/':'',
+   station.provider==='dwd'?'Source: DWD CDC; processed; https://creativecommons.org/licenses/by/4.0/':'',
   ].map(cell).join(','));
   download(new Blob([header.join(',')+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'}),`${exportName}.csv`);
  };
@@ -113,16 +113,16 @@ export default function App(){
    const ctx=canvas.getContext('2d')!;
    ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);
    ctx.fillStyle='#292d30';ctx.font='600 20px system-ui';
-   ctx.fillText(`${station.name} · ${selectedYear} · ${mode==='cumulative'?'Kumulierter Niederschlag':'Niederschlag · Gauß σ = 11 Tage'}`,25,30);
+   ctx.fillText(`${station.name} · ${selectedYear} · ${mode==='cumulative'?'Cumulative precipitation':'Precipitation · Gaussian σ = 11 days'}`,25,30);
    ctx.font='12px system-ui';
-   ctx.fillText(`${station.provider.toUpperCase()} ${station.sourceId} · ${data.series.length} vollständige Jahre · Stand ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Vergleich ${years.join(', ')||'aus'}`,25,53);
+   ctx.fillText(`${station.provider.toUpperCase()} ${station.sourceId} · ${data.series.length} complete years · Through ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Comparison ${years.join(', ')||'off'}`,25,53);
    ctx.fillText(station.provider==='dwd'
-    ? `Datenbasis: DWD CDC · bearbeitet · CC BY 4.0 (creativecommons.org/licenses/by/4.0/)${selectedYear===latestYear?' · Werte vorläufig':''}`
-    : 'Datenbasis: Japan Meteorological Agency · data.jma.go.jp/risk/obsdl/',25,75);
+    ? `Source: DWD CDC · processed · CC BY 4.0 (creativecommons.org/licenses/by/4.0/)${selectedYear===latestYear?' · Provisional values':''}`
+    : 'Source: Japan Meteorological Agency · data.jma.go.jp/risk/obsdl/',25,75);
    ctx.drawImage(img,0,100);
    canvas.toBlob(blob=>{if(blob)download(blob,`${exportName}.png`);},'image/png');
   } catch {
-   setError('Der PNG-Export ist fehlgeschlagen. Der CSV-Export steht weiterhin zur Verfügung.');
+   setError('PNG export failed. CSV export is still available.');
   } finally {
    if(url)URL.revokeObjectURL(url);
   }
@@ -131,14 +131,14 @@ export default function App(){
  return (
   <div className="app">
    <main>
-    <h1 className="sr-only">Niederschlag in Japan und Deutschland</h1>
+    <h1 className="sr-only">Precipitation in Japan and Germany</h1>
     <div className="toolbar">
      <div className="station-picker">
       <label htmlFor="station">Station</label>
       <div className="station-controls">
-      <select id="station" aria-label="Wetterstation auswählen" value={stationId} onChange={event=>setStationId(event.target.value)}>
+      <select id="station" aria-label="Select weather station" value={stationId} onChange={event=>setStationId(event.target.value)}>
        {(['jma','dwd'] as const).map(provider=>(
-        <optgroup key={provider} label={provider==='jma'?'Japan':'Deutschland'}>
+        <optgroup key={provider} label={provider==='jma'?'Japan':'Germany'}>
          {stations.filter(s=>s.provider===provider).map(s=><option key={s.id} value={s.id}>{s.name}{s.jp?` · ${s.jp}`:''}</option>)}
         </optgroup>
        ))}
@@ -147,88 +147,88 @@ export default function App(){
       </div>
      </div>
      <div className="year-picker">
-      <label htmlFor="year">Jahr</label>
+      <label htmlFor="year">Year</label>
       <div className="year-controls">
-       <button type="button" aria-label="Vorheriges Jahr" disabled={busy||yearIndex>=yearOptions.length-1} onClick={()=>setRequestedYear(yearOptions[yearIndex+1])}>−</button>
-       <select id="year" aria-label="Angezeigtes Jahr" value={selectedYear} disabled={busy} onChange={event=>setRequestedYear(Number(event.target.value))}>
+       <button type="button" aria-label="Previous year" disabled={busy||yearIndex>=yearOptions.length-1} onClick={()=>setRequestedYear(yearOptions[yearIndex+1])}>−</button>
+       <select id="year" aria-label="Displayed year" value={selectedYear} disabled={busy} onChange={event=>setRequestedYear(Number(event.target.value))}>
         {yearOptions.map(year=><option key={year} value={year}>{year}</option>)}
        </select>
-       <button type="button" aria-label="Nächstes Jahr" disabled={busy||yearIndex<=0} onClick={()=>setRequestedYear(yearOptions[yearIndex-1])}>+</button>
+       <button type="button" aria-label="Next year" disabled={busy||yearIndex<=0} onClick={()=>setRequestedYear(yearOptions[yearIndex-1])}>+</button>
       </div>
      </div>
      <Tabs value={mode} onValueChange={v=>setMode(v as typeof mode)}>
-      <TabsList aria-label="Darstellung">
-       <TabsTrigger value="cumulative">Kumulativ</TabsTrigger>
-       <TabsTrigger value="gaussian">Tagesverlauf</TabsTrigger>
+      <TabsList aria-label="Chart view">
+       <TabsTrigger value="cumulative">Cumulative</TabsTrigger>
+       <TabsTrigger value="gaussian">Daily trend</TabsTrigger>
       </TabsList>
      </Tabs>
      <div className="reference">
-      <label htmlFor="reference">Referenz</label>
-      <select id="reference" aria-label="Historischen Referenzzeitraum wählen" value={reference} onChange={event=>setReference(event.target.value as typeof reference)}>
-       <option value="all">Alle Jahre bis {history?.to.slice(0,4) ?? Number(today.slice(0,4))-1}</option>
+      <label htmlFor="reference">Reference</label>
+      <select id="reference" aria-label="Select historical reference period" value={reference} onChange={event=>setReference(event.target.value as typeof reference)}>
+       <option value="all">All years through {history?.to.slice(0,4) ?? Number(today.slice(0,4))-1}</option>
        <option value="normal">1991–2020</option>
       </select>
      </div>
     </div>
-    <section className="plot" aria-label="Niederschlagsauswertung">
+    <section className="plot" aria-label="Precipitation analysis">
      <div className="plot-meta">
-      <p>{data.series.length?`${data.series[0].year}–${data.series.at(-1)!.year} · ${data.series.length} vollständige Referenzjahre`:'Historische Tagesdaten'}{mode==='gaussian'?' · Gauß-Glättung, σ = 11 Tage':''}</p>
+      <p>{data.series.length?`${data.series[0].year}–${data.series.at(-1)!.year} · ${data.series.length} complete reference years`:'Historical daily data'}{mode==='gaussian'?' · Gaussian smoothing, σ = 11 days':''}</p>
       <div className="export-buttons" aria-label="Export">
-       <button onClick={exportCSV} disabled={!data.series.length} aria-label="Berechnete Daten als CSV herunterladen">CSV ↓</button>
-       <button onClick={exportPNG} disabled={!data.series.length} aria-label="Diagramm als PNG herunterladen">PNG ↓</button>
+       <button onClick={exportCSV} disabled={!data.series.length} aria-label="Download calculated data as CSV">CSV ↓</button>
+       <button onClick={exportPNG} disabled={!data.series.length} aria-label="Download chart as PNG">PNG ↓</button>
       </div>
      </div>
      {data.series.length
       ? <RainChart data={data} mode={mode} bands={bands} years={years} svgRef={svgRef}/>
       : <div className="empty-chart" aria-busy={busy}>
-         <h3>{busy?'Messwerte werden geladen …':'Keine vollständige Messreihe verfügbar'}</h3>
-         <p>{busy?status:'Wähle eine andere Station oder versuche den Abruf erneut.'}</p>
+         <h3>{busy?'Loading observations …':'No complete data series available'}</h3>
+         <p>{busy?status:'Select another station or try loading the data again.'}</p>
         </div>}
      <div className="legend">
       <span className="legend-item current-year"><i style={{background:'#b9502b'}}/>{selectedYear}</span>
       <span className="legend-item"><i style={{background:'#334d5c'}}/>Median</span>
-      <div className="band-controls" role="group" aria-label="Historische Verteilung">
-       {[['50','50 %'],['90','90 %'],['range','Min–Max']].map(([key,label])=>(
+      <div className="band-controls" role="group" aria-label="Historical distribution">
+       {[['50','50%'],['90','90%'],['range','Min–Max']].map(([key,label])=>(
         <label className="legend-check" key={key}>
          <Checkbox checked={bands.includes(key)} onCheckedChange={()=>toggle(key)}/>
          <span className={`swatch swatch-${key}`}/>{label}
         </label>
        ))}
       </div>
-      <label className="legend-check comparison-toggle"><Checkbox checked={compare} onCheckedChange={v=>setCompare(v===true)}/>Vergleichsjahre</label>
+      <label className="legend-check comparison-toggle"><Checkbox checked={compare} onCheckedChange={v=>setCompare(v===true)}/>Comparison years</label>
      </div>
      {compare&&topYears.length>0&&(
       <div className="comparison-legend">
        {topYears.map((year,i)=><span className="legend-item" key={year}><i style={{background:colors[i]}}/>{year}</span>)}
-       <span className="comparison-note">Höchste Summen zum selben Stichtag</span>
+       <span className="comparison-note">Highest totals through the same date</span>
       </div>
      )}
     </section>
-    <section className="stats" aria-label="Vergleich zum gleichen Kalendertag">
+    <section className="stats" aria-label="Comparison through the same calendar day">
      <div>
-      <span>Bis {data.lastDate?dateLabel(data.lastDate):'zum letzten vollständigen Tag'}</span>
+      <span>Through {data.lastDate?dateLabel(data.lastDate):'the last complete day'}</span>
       <p>{fmt(cumulative.last>=0?cumulative.total:null,1)}<small> mm</small></p>
-      <em>Niederschlag {selectedYear}</em>
+      <em>Precipitation {selectedYear}</em>
      </div>
      <div>
-      <span>Historischer Median</span>
+      <span>Historical median</span>
       <p>{fmt(median,1)}<small> mm</small></p>
-      <em>{median&&cumulative.last>=0?`${cumulative.total>=median?'+':''}${fmt((cumulative.total/median-1)*100,1)} % gegenüber dem Median`:'—'}</em>
+      <em>{median&&cumulative.last>=0?`${cumulative.total>=median?'+':''}${fmt((cumulative.total/median-1)*100,1)}% relative to the median`:'—'}</em>
      </div>
      <div>
-      <span>Historische Jahre mit mehr Regen</span>
+      <span>Historical years with more precipitation</span>
       <p>{cumulative.last>=0&&data.series.length?cumulative.higher:'—'}<small> / {data.series.length}</small></p>
-      <em>Alle Vergleiche zum selben Stichtag</em>
+      <em>All comparisons through the same date</em>
      </div>
     </section>
     <div className="data-status" aria-live="polite">
-     <span>{status}{station.provider==='dwd'&&current&&selectedYear===latestYear?' · Aktuelle DWD-Werte vorläufig':''}</span>
-     <button disabled={busy} onClick={()=>setReload(v=>v+1)}>Aktualisieren</button>
+     <span>{status}{station.provider==='dwd'&&current&&selectedYear===latestYear?' · Current DWD values are provisional':''}</span>
+     <button disabled={busy} onClick={()=>setReload(v=>v+1)}>Refresh</button>
     </div>
-    {error&&<div role="alert" className="notice">{error}{history?' Vorhandene Daten bleiben verfügbar.':''}</div>}
-    {storageWarning&&<div className="notice">Der Browser erlaubt keine dauerhafte Speicherung. Daten bleiben nur für diese Sitzung im Speicher.</div>}
-    {data.gap&&<div className="notice">Die ausgewählte Jahreskurve endet vor dem ersten fehlenden oder nicht verwendbaren Tageswert.</div>}
-    {!busy&&data.last<0&&<div className="notice">Für {selectedYear} liegen keine durchgehend verwendbaren Messwerte ab dem 1. Januar vor.</div>}
+    {error&&<div role="alert" className="notice">{error}{history?' Previously loaded data remains available.':''}</div>}
+    {storageWarning&&<div className="notice">This browser does not allow persistent storage. Data is kept in memory for this session only.</div>}
+    {data.gap&&<div className="notice">The selected year’s curve stops before the first missing or unusable daily observation.</div>}
+    {!busy&&data.last<0&&<div className="notice">No continuous usable observations from 1 January are available for {selectedYear}.</div>}
     <Methodology station={station} excluded={data.excluded} today={today}/>
    </main>
   </div>

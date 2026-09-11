@@ -9,7 +9,7 @@ import './station-map.css';
 
 const countries: {provider: Provider; name: string}[] = [
   {provider:'jma', name:'Japan'},
-  {provider:'dwd', name:'Deutschland'},
+  {provider:'dwd', name:'Germany'},
 ];
 
 // Label callouts keep nearby stations (especially Kyoto and Osaka) individually
@@ -23,9 +23,9 @@ const labels: Record<string, {name: string; x: number; y: number}> = {
   '47936': {name:'Naha', x:175, y:490},
   'dwd-00433': {name:'Berlin', x:520, y:190},
   'dwd-01975': {name:'Hamburg', x:280, y:90},
-  'dwd-03379': {name:'München', x:430, y:475},
+  'dwd-03379': {name:'Munich', x:430, y:475},
   'dwd-01420': {name:'Frankfurt', x:165, y:395},
-  'dwd-02667': {name:'Köln/Bonn', x:130, y:270},
+  'dwd-02667': {name:'Cologne/Bonn', x:130, y:270},
   'dwd-01048': {name:'Dresden', x:520, y:315},
 };
 
@@ -35,7 +35,7 @@ function CountryMap({provider, selectedId, onSelect}: {provider:Provider; select
     station, label:labels[station.id], point:projectMapPoint(station.longitude,station.latitude,outline.bounds as MapBounds),
   }));
   return (
-    <div className="country-map" role="group" aria-label={`Stationskarte ${countries.find(country=>country.provider===provider)!.name}`}>
+    <div className="country-map" role="group" aria-label={`Station map: ${countries.find(country=>country.provider===provider)!.name}`}>
       <svg viewBox={`0 0 ${mapWidth} ${mapHeight}`} aria-hidden="true" focusable="false">
         <path className="country-outline" d={outline.path}/>
         {markers.map(({station,label,point})=>(
@@ -52,7 +52,7 @@ function CountryMap({provider, selectedId, onSelect}: {provider:Provider; select
           type="button"
           className="station-map-label"
           style={{left:`${label.x/mapWidth*100}%`,top:`${label.y/mapHeight*100}%`}}
-          aria-label={`${station.name} auswählen`}
+          aria-label={`Select ${station.name}`}
           aria-pressed={station.id===selectedId}
           title={station.name}
           onClick={()=>onSelect(station.id)}
@@ -71,23 +71,23 @@ export function StationMapDialog({station,onSelect}:{station:Station;onSelect:(i
   }
   return (
     <Dialog.Root open={open} onOpenChange={next=>{if(next)setCountry(station.provider);setOpen(next);}}>
-      <Dialog.Trigger className="station-map-trigger" aria-label="Station auf Karte auswählen" title="Station auf Karte auswählen"><MapIcon size={17}/></Dialog.Trigger>
+      <Dialog.Trigger className="station-map-trigger" aria-label="Select station on map" title="Select station on map"><MapIcon size={17}/></Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Backdrop className="station-map-backdrop"/>
         <Dialog.Popup className="station-map-dialog">
           <header className="station-map-header">
-            <Dialog.Title>Station auswählen</Dialog.Title>
-            <Dialog.Close className="station-map-close" aria-label="Karte schließen"><X size={18}/></Dialog.Close>
+            <Dialog.Title>Select station</Dialog.Title>
+            <Dialog.Close className="station-map-close" aria-label="Close map"><X size={18}/></Dialog.Close>
           </header>
-          <Dialog.Description className="sr-only">Wähle links ein Land und anschließend eine Station auf der Karte. Die Auswahl wird direkt übernommen.</Dialog.Description>
+          <Dialog.Description className="sr-only">Choose a country, then a station on the map. The station is selected immediately.</Dialog.Description>
           <Tabs.Root className="station-map-layout" value={country} onValueChange={value=>setCountry(value as Provider)} orientation="vertical">
-            <Tabs.List className="country-list" aria-label="Land" activateOnFocus>
+            <Tabs.List className="country-list" aria-label="Country" activateOnFocus>
               {countries.map(country=><Tabs.Tab key={country.provider} value={country.provider}>{country.name}</Tabs.Tab>)}
             </Tabs.List>
             {countries.map(country=>(
               <Tabs.Panel key={country.provider} value={country.provider} className="country-panel">
                 <CountryMap provider={country.provider} selectedId={station.id} onSelect={selectStation}/>
-                <p className="map-source">Umrisse: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a> · Stationen: {country.provider==='jma'?'JMA':'DWD'}</p>
+                <p className="map-source">Outlines: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a> · Stations: {country.provider==='jma'?'JMA':'DWD'}</p>
               </Tabs.Panel>
             ))}
           </Tabs.Root>

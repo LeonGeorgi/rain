@@ -24,9 +24,9 @@ export const stations: Station[] = [
   ...[
     {sourceId:'00433', latitude:52.4676, longitude:13.4020, name:'Berlin-Tempelhof', historyStart:'1948-01-01'},
     {sourceId:'01975', latitude:53.6332, longitude:9.9881, name:'Hamburg-Fuhlsbüttel', historyStart:'1936-01-01'},
-    {sourceId:'03379', latitude:48.1632, longitude:11.5429, name:'München-Stadt', historyStart:'1954-06-01'},
+    {sourceId:'03379', latitude:48.1632, longitude:11.5429, name:'Munich (city)', historyStart:'1954-06-01'},
     {sourceId:'01420', latitude:50.0259, longitude:8.5213, name:'Frankfurt/Main', historyStart:'1935-07-01'},
-    {sourceId:'02667', latitude:50.8645, longitude:7.1575, name:'Köln/Bonn', historyStart:'1957-07-01'},
+    {sourceId:'02667', latitude:50.8645, longitude:7.1575, name:'Cologne/Bonn', historyStart:'1957-07-01'},
     {sourceId:'01048', latitude:51.1278, longitude:13.7543, name:'Dresden-Klotzsche', historyStart:'1934-01-01'},
   ].map(station => ({...station, id:`dwd-${station.sourceId}`, provider:'dwd' as const, timeZone:'Europe/Berlin'})),
 ];

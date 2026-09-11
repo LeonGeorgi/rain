@@ -7,34 +7,34 @@ export function Methodology({ station, excluded, today }: { station: Station; ex
   const isDWD = station.provider === 'dwd';
   return (
     <details className="method">
-      <summary>Quellen & Methodik <ChevronDown size={16}/></summary>
+      <summary>Sources & methodology <ChevronDown size={16}/></summary>
       <div>
         <p>
           {isDWD
-            ? `Datenbasis: Deutscher Wetterdienst (DWD), Climate Data Center, tägliche Stationsbeobachtungen, Station ${station.sourceId} (${station.name}). Lizenz: CC BY 4.0. Die Messwerte wurden hier zu Jahreskurven, Quantilen und Vergleichen verarbeitet.`
-            : `Offizielle tägliche Niederschlagssummen der Japan Meteorological Agency, Station ${station.sourceId}.`}
+            ? `Source: Deutscher Wetterdienst (DWD), Climate Data Center, daily station observations, station ${station.sourceId} (${station.name}). Licence: CC BY 4.0. These observations have been processed into annual curves, quantiles and comparisons.`
+            : `Official daily precipitation totals from the Japan Meteorological Agency, station ${station.sourceId}.`}
         </p>
-        <p>Die Jahresauswahl bestimmt die hervorgehobene Kurve, Kennzahlen und Exporte. Plus und Minus wechseln zum nächsten verfügbaren Messjahr. Das ausgewählte Jahr bleibt aus der historischen Referenz und den Vergleichsjahren ausgeschlossen. Die Referenz umfasst ansonsten den gewählten Archivzeitraum, auch Jahre nach dem angezeigten Jahr.</p>
-        <p>Die Intervalle umfassen die mittleren 50 % (25.–75. Perzentil) und 90 % (5.–95. Perzentil) der historischen Jahre; Min–Max zeigt die beobachtete Spannweite. Das sind punktweise historische Verteilungen, keine Konfidenzintervalle oder Prognosen. Quantile: lineare Interpolation (Typ 7).</p>
+        <p>The year selector determines the highlighted curve, statistics and exports. Plus and minus move to the next or previous available year. The selected year is excluded from the historical reference and comparison years. Otherwise, the reference covers the chosen archive period, including years after the displayed year.</p>
+        <p>The bands cover the central 50% (25th–75th percentiles) and 90% (5th–95th percentiles) of historical years; Min–Max shows the observed range. These are historical distributions at each calendar day, not confidence intervals or forecasts. Quantiles use linear interpolation (type 7).</p>
         <p>
           {isDWD
-            ? 'Die Referenz enthält nur vollständige Kalenderjahre aus den DWD-Archiven mit abgeschlossener Qualitätsprüfung (historical). Verwendet werden RSK in mm und die originalen Prüfverfahrenscodes QN_4 (1, 2, 3, 5, 7, 8, 9, 10). Diese Codes sind keine Rangskala und entsprechen nicht den JMA-Qualitätscodes. Aktuelle Werte aus recent sind vorläufig; ihre Qualitätsprüfung ist noch nicht abgeschlossen. Fehlwerte (-999), fehlende Tage oder ein fehlendes Qualitätskennzeichen werden nicht als null Millimeter gewertet. Ein noch nicht im historischen Archiv veröffentlichtes Vorjahr bleibt aus der Referenz ausgeschlossen.'
-            : 'Nur vollständige Kalenderjahre mit JMA-Qualitätscode 8 gehen in die Referenz ein.'}
-          {' '}{excluded.length > 0 ? `Ausgeschlossene Jahre: ${excluded.join(', ')}.` : ''}
+            ? 'The reference includes only complete calendar years from the DWD archives with completed quality checks (historical). It uses RSK in mm and the original QN_4 checking-procedure codes (1, 2, 3, 5, 7, 8, 9, 10). These codes are not a ranking and do not correspond to JMA quality codes. Current values from recent are provisional; their quality checks are not yet complete. Missing values (-999), missing days or missing quality flags are not treated as zero millimetres. A preceding year that has not yet been published in the historical archive remains excluded from the reference.'
+            : 'Only complete calendar years with JMA quality code 8 are included in the reference.'}
+          {' '}{excluded.length > 0 ? `Excluded years: ${excluded.join(', ')}.` : ''}
         </p>
-        <p>Kumulative Summen enthalten den Niederschlag des 29. Februar; nur sein Achsenpunkt entfällt. So bleiben Jahressummen erhalten. Im Tagesverlauf wird der 29. Februar vor der Gauß-Glättung entfernt; vollständige Jahre werden zyklisch geglättet (σ = 11 Tage, Radius 44 Tage), auch die ausgewählte Jahreskurve. Unvollständige Jahre nutzen die vorhergehenden Dezemberwerte, soweit vollständig verfügbar. Am offenen Ende wird der Kernel neu normiert; die letzten 44 Tage sind gestrichelt und vorläufig. Fehlende oder unbrauchbare Tageswerte beenden die ausgewählte Kurve.</p>
-        <p>Der Vergleich beschreibt das historische Archiv einer einzelnen Station. Klimaänderungen, Stationsverlegungen und Änderungen des Messverfahrens werden nicht herausgerechnet. Es gelten die Tagesgrenzen der jeweiligen Quelle; diese können sich zwischen Ländern und historischen Messperioden unterscheiden. Die Zahl vollständiger Jahre kann sich zwischen Stationen stark unterscheiden. Für Tokyo wurden 1.800 Monatssummen zusätzlich mit den offiziellen JMA-Monatssummen abgeglichen; für andere Stationen gibt es bislang keinen zusätzlichen Monatsabgleich.</p>
-        <p>Die Messwerte werden zentral zweimal täglich abgerufen, auf Format und Vollständigkeit geprüft und veröffentlicht. „Aktualisieren“ lädt den zuletzt veröffentlichten Stand. Der Browser speichert Stationsdateien anhand ihrer Datenversion; bei Fehlern bleibt der lokale Stand sichtbar. JMA-Archive werden zum Jahreswechsel ergänzt und können manuell vollständig neu geladen werden. DWD-Archive werden bei jedem Import erneut gelesen, damit jährliche Archivkorrekturen übernommen werden.</p>
+        <p>Cumulative totals include precipitation on 29 February; only its axis point is omitted, preserving annual totals. In the daily trend, 29 February is removed before Gaussian smoothing. Complete years use cyclic smoothing (σ = 11 days, radius 44 days), including the selected year. Incomplete years use the preceding December observations where fully available. At the open end, the kernel is renormalised; the final 44 days are dashed and provisional. Missing or unusable daily observations end the selected curve.</p>
+        <p>The comparison describes the historical archive of a single station. It does not adjust for climate change, station relocations or changes in measurement methods. Each source’s daily observation boundaries apply; these may differ between countries and historical measurement periods. The number of complete years can vary considerably between stations. For Tokyo, 1,800 monthly totals were additionally checked against official JMA monthly totals; other stations have not yet had this additional monthly check.</p>
+        <p>Observations are fetched centrally twice a day, checked for format and completeness, then published. “Refresh” loads the latest published data. The browser caches station files by data version; if a request fails, the locally saved data remains visible. JMA archives are extended at the start of each year and can be reloaded in full manually. DWD archives are read again on every import to pick up revisions to historical data.</p>
         <div className="method-links">
           {isDWD ? <>
-            <a href={`${dwd}historical/`} target="_blank" rel="noreferrer">DWD-Archiv ↗</a>
-            <a href={`${dwd}recent/tageswerte_KL_${station.sourceId}_akt.zip`}>Aktuelle Stationswerte ↓</a>
-            <a href={`${dwd}BESCHREIBUNG_obsgermany-climate-daily-kl_de.pdf`} target="_blank" rel="noreferrer">Datensatzbeschreibung ↗</a>
+            <a href={`${dwd}historical/`} target="_blank" rel="noreferrer">DWD archive ↗</a>
+            <a href={`${dwd}recent/tageswerte_KL_${station.sourceId}_akt.zip`}>Current station observations ↓</a>
+            <a href={`${dwd}BESCHREIBUNG_obsgermany-climate-daily-kl_de.pdf`} target="_blank" rel="noreferrer">Dataset documentation (German) ↗</a>
             <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0 ↗</a>
           </> : <>
-            <a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noreferrer">Offizieller JMA-Download ↗</a>
-            <a href={`https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=${station.pref}&block_no=${station.sourceId}&year=${today.slice(0,4)}&month=${today.slice(5,7)}&view=`} target="_blank" rel="noreferrer">Tägliche Stationswerte ↗</a>
-            <a href={`https://www.data.jma.go.jp/stats/etrn/view/monthly_s3.php?prec_no=${station.pref}&block_no=${station.sourceId}&year=&month=&day=&view=p5`} target="_blank" rel="noreferrer">Monatssummen ↗</a>
+            <a href="https://www.data.jma.go.jp/risk/obsdl/" target="_blank" rel="noreferrer">Official JMA download ↗</a>
+            <a href={`https://www.data.jma.go.jp/stats/etrn/view/daily_s1.php?prec_no=${station.pref}&block_no=${station.sourceId}&year=${today.slice(0,4)}&month=${today.slice(5,7)}&view=`} target="_blank" rel="noreferrer">Daily station observations ↗</a>
+            <a href={`https://www.data.jma.go.jp/stats/etrn/view/monthly_s3.php?prec_no=${station.pref}&block_no=${station.sourceId}&year=&month=&day=&view=p5`} target="_blank" rel="noreferrer">Monthly totals ↗</a>
           </>}
         </div>
       </div>

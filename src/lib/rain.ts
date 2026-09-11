@@ -1,7 +1,7 @@
 import { usableRow, type Row } from "./datasets.ts";
 import type { Provider } from "./stations.ts";
 
-export const monthNames=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+export const monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 export const calendar=Array.from({length:365},(_,i)=>new Date(Date.UTC(2001,0,i+1)).toISOString().slice(5,10));
 export const monthTicks=calendar.flatMap((d,i)=>d.endsWith('-15')?[i]:[]);
 export function quantile(sorted:number[],p:number){const h=(sorted.length-1)*p, i=Math.floor(h);return sorted[i]+(sorted[Math.ceil(h)]-sorted[i])*(h-i);}
