@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-11T15:38:48.830Z",
+  "updatedAt": "2026-09-11T15:46:04.706Z",
   "historyEndYear": 2025,
   "stations": [
     {
@@ -17,7 +17,7 @@
       "current": {
         "path": "47662/current.json",
         "revision": "c14dc0d668039e720c07a0ae2a075db87d71cd78d69764822f06f33f18991f14",
-        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "fetchedAt": "2026-09-11T15:46:04.706Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -36,7 +36,7 @@
       "current": {
         "path": "47759/current.json",
         "revision": "e11fe8313ca7a5e3e895b08aacb8ced3e0ff030a8f7f294d101faa10a30e6dd7",
-        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "fetchedAt": "2026-09-11T15:46:04.706Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -55,7 +55,7 @@
       "current": {
         "path": "47772/current.json",
         "revision": "856be5f67b21acc342fd194d4b262ef15caa1600d9c23c2db7d1a71918ccfcc3",
-        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "fetchedAt": "2026-09-11T15:46:04.706Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -74,7 +74,7 @@
       "current": {
         "path": "47412/current.json",
         "revision": "56876fbd9ad466de1ba98db116d8c1de69e1d9b19857954846a26e56bee28140",
-        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "fetchedAt": "2026-09-11T15:46:04.706Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -93,7 +93,7 @@
       "current": {
         "path": "47807/current.json",
         "revision": "ea547ab5c3eb4d4359b18c76ed27e0bc604dce38718a43448bf8e0ce56997a19",
-        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "fetchedAt": "2026-09-11T15:46:04.706Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
@@ -112,7 +112,7 @@
       "current": {
         "path": "47936/current.json",
         "revision": "1d3c8e713142ae692e7d9caee7a0973f80e37cb92295e2f0d342d7630026082d",
-        "fetchedAt": "2026-09-11T15:38:48.830Z",
+        "fetchedAt": "2026-09-11T15:46:04.706Z",
         "from": "2026-01-01",
         "to": "2026-09-11"
       }
