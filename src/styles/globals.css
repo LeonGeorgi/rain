@@ -56,7 +56,7 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
   border-bottom: 1px solid var(--border);
   padding: 0 0 14px;
 }
-.station-picker, .reference { display: flex; align-items: center; gap: 10px; }
+.station-picker, .year-picker, .reference { display: flex; align-items: center; gap: 10px; }
 .toolbar label { font-size: 12px; color: var(--muted-foreground); }
 .reference { margin-left: auto; }
 .toolbar select {
@@ -69,6 +69,19 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
   box-shadow: none;
   font-size: 13px;
 }
+.year-controls { display: flex; align-items: center; gap: 4px; }
+.toolbar .year-controls select { min-width: 0; width: 82px; font-variant-numeric: tabular-nums; }
+.year-controls button {
+  width: 32px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: #fff;
+  color: var(--foreground);
+  font-size: 18px;
+}
+.year-controls button:hover:not(:disabled) { background: var(--muted); }
 .toolbar [data-slot=tabs-list] { padding: 0; gap: 20px; height: 36px; border-radius: 0; }
 .toolbar [data-slot=tabs-trigger] {
   padding: 6px 0;
@@ -148,7 +161,7 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
 .method p { margin: 0 0 12px; line-height: 1.75; }
 .method-links { display: flex; flex-wrap: wrap; gap: 10px 24px; color: var(--primary); }
 
-@media (max-width: 850px) {
+@media (max-width: 1100px) {
   .toolbar { flex-wrap: wrap; gap: 12px 24px; }
   .reference { margin-left: 0; }
   .toolbar [data-slot=tabs] { margin-left: auto; }
@@ -157,8 +170,11 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
 @media (max-width: 600px) {
   .app { padding: 14px 16px; }
   .toolbar { gap: 8px 16px; padding: 0 0 10px; }
-  .station-picker, .reference { flex: 1 1 100%; justify-content: space-between; }
+  .station-picker, .year-picker, .reference { flex: 1 1 100%; justify-content: space-between; }
   .toolbar select { width: 190px; font-size: 14px; height: 38px; }
+  .year-controls { width: 190px; }
+  .toolbar .year-controls select { flex: 1; width: 0; }
+  .year-controls button { width: 38px; height: 38px; }
   .toolbar [data-slot=tabs] { order: 1; margin: 0; width: 100%; }
   .toolbar [data-slot=tabs-list] { width: 100%; gap: 24px; justify-content: flex-start; }
   .toolbar [data-slot=tabs-trigger] { flex: 0 1 auto; min-height: 36px; font-size: 14px; }

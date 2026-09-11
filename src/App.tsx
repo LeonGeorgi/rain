@@ -2,7 +2,7 @@ import {useEffect,useMemo,useRef,useState} from 'react';
 import {Methodology} from '@/components/Methodology';
 import {Tabs,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {Checkbox} from '@/components/ui/checkbox';
-import {analyze,monthNames,monthTicks,stationToday} from '@/lib/rain';
+import {analyze,availableYears,monthNames,monthTicks,stationToday} from '@/lib/rain';
 import {stations} from '@/lib/stations';
 import type {Dataset} from '@/lib/datasets';
 import {loadStationData} from '@/lib/published-data';
@@ -33,21 +33,27 @@ function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;ban
    {bands.includes('range')&&['min','max'].map(k=><path key={k} d={line(data.points.map(p=>p[k as 'min'|'max']))} fill="none" stroke="#adb4b9" strokeWidth="1"/>)}
    <path d={line(data.points.map(p=>p.median))} fill="none" stroke="#334d5c" strokeWidth="2"/>
    {selected.map(s=><path key={s.year} d={line(s.values)} fill="none" stroke={colors[years.indexOf(s.year)%3]} strokeWidth="1.4"/>)}
-   {mode==='cumulative'?<path d={line(data.points.map(p=>p.current))} fill="none" stroke="#b9502b" strokeWidth="2.8"/>:<><path d={line(data.points.map((p,i)=>i<=data.last-44?p.current:null))} fill="none" stroke="#b9502b" strokeWidth="2.8"/><path d={line(data.points.map((p,i)=>i>=Math.max(0,data.last-44)?p.current:null))} fill="none" stroke="#b9502b" strokeWidth="2.8" strokeDasharray="5 4"/></>}
+   {!data.provisionalTail?<path d={line(data.points.map(p=>p.current))} fill="none" stroke="#b9502b" strokeWidth="2.8"/>:<><path d={line(data.points.map((p,i)=>i<=data.last-44?p.current:null))} fill="none" stroke="#b9502b" strokeWidth="2.8"/><path d={line(data.points.map((p,i)=>i>=Math.max(0,data.last-44)?p.current:null))} fill="none" stroke="#b9502b" strokeWidth="2.8" strokeDasharray="5 4"/></>}
    {data.last>=0&&<circle cx={x(data.last)} cy={y(data.points[data.last].current!)} r="4.5" fill="#b9502b" stroke="white" strokeWidth="2"/>}
    {monthTicks.map((i,m)=>(width>=500||m%2===0)&&<text key={i} x={x(i)} y={height-12} textAnchor="middle" fill="#666b70" fontSize={width<500?12:13} fontFamily="system-ui">{monthNames[m]}</text>)}
    {point&&<g><line x1={x(hover!)} x2={x(hover!)} y1={top} y2={height-bottom} stroke="#666b70" strokeDasharray="3 4"/>{point.current!==null&&<circle cx={x(hover!)} cy={y(point.current)} r="4" fill="#b9502b"/>}</g>}
   </svg>
-  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{point.date.slice(3)}. {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.currentYear} <b style={{color:'#b9502b'}}>{fmt(point.current,1)} {unit}</b></span><span>90 % <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
+  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{point.date.slice(3)}. {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.year} <b style={{color:'#b9502b'}}>{fmt(point.current,1)} {unit}</b></span><span>90 % <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
  </div>;
 }
 export default function App(){
  const [stationId,setStationId]=useState('47662');const [history,setHistory]=useState<Dataset|null>(null);const [current,setCurrent]=useState<Dataset|null>(null);
  const [status,setStatus]=useState('Tokyo-Daten werden geladen …');const [error,setError]=useState('');const [storageWarning,setStorageWarning]=useState(false);const [busy,setBusy]=useState(true);const [reload,setReload]=useState(0);
  const [mode,setMode]=useState<'cumulative'|'gaussian'>('cumulative');const [reference,setReference]=useState<'all'|'normal'>('all');const [bands,setBands]=useState(['50','90','range']);const [compare,setCompare]=useState(false);
+ const [requestedYear,setRequestedYear]=useState<number|null>(null);
  const svgRef=useRef<SVGSVGElement>(null);const station=stations.find(s=>s.id===stationId)!;
  const today=stationToday(station.timeZone);
- const exportName=`${station.provider}-${station.sourceId}-${mode}`;
+ const latestYear=Number(current?.from.slice(0,4)??today.slice(0,4));
+ const yearOptions=useMemo(()=>availableYears(history?.rows??[],current?.rows??[],latestYear,stations.find(s=>s.id===stationId)!.provider),[history,current,latestYear,stationId]);
+ const selectedYear=requestedYear!==null&&yearOptions.includes(requestedYear)?requestedYear:latestYear;
+ const yearIndex=yearOptions.indexOf(selectedYear);
+ const exportName=`${station.provider}-${station.sourceId}-${selectedYear}-${mode}`;
+ const selectedSource=selectedYear===latestYear?current?.source:history?.source;
  useEffect(() => {
   const abort = new AbortController();
   async function run() {
@@ -73,19 +79,19 @@ export default function App(){
   void run();
   return () => abort.abort();
  }, [stationId, reload]);
- const data=useMemo(()=>analyze(history?.rows??[],current?.rows??[],reference,mode,stations.find(s=>s.id===stationId)!.provider),[history,current,reference,mode,stationId]);
- const cumulative=useMemo(()=>mode==='cumulative'?data:analyze(history?.rows??[],current?.rows??[],reference,'cumulative',stations.find(s=>s.id===stationId)!.provider),[history,current,reference,mode,data,stationId]);
+ const data=useMemo(()=>analyze(history?.rows??[],current?.rows??[],reference,mode,stations.find(s=>s.id===stationId)!.provider,{year:selectedYear}),[history,current,reference,mode,stationId,selectedYear]);
+ const cumulative=useMemo(()=>mode==='cumulative'?data:analyze(history?.rows??[],current?.rows??[],reference,'cumulative',stations.find(s=>s.id===stationId)!.provider,{year:selectedYear}),[history,current,reference,mode,data,stationId,selectedYear]);
  const topYears=cumulative.ranking.slice(0,3).map(r=>r.year);const years=compare?topYears:[];
  const median=cumulative.last>=0?cumulative.points[cumulative.last].median:null;
  const toggle=(key:string)=>setBands(v=>v.includes(key)?v.filter(x=>x!==key):[...v,key]);
  const exportCSV=()=>{
   const unit=mode==='cumulative'?'mm':'mm_per_day';
-  const header=['day_of_year','month_day','n_historical_years',...['median','p25','p75','p05','p95','min','max',`current_${data.currentYear??today.slice(0,4)}`,...years.map(year=>`year_${year}`)].map(name=>`${name}_${unit}`),'station','historical_source','current_source','license'];
+  const header=['day_of_year','month_day','n_historical_years',...['median','p25','p75','p05','p95','min','max',`selected_${selectedYear}`,...years.map(year=>`year_${year}`)].map(name=>`${name}_${unit}`),'station','historical_source','selected_source','license'];
   const cell=(value:unknown)=>typeof value==='number'?String(Math.round(value*1000000)/1000000):`"${String(value??'').replaceAll('"','""')}"`;
   const rows=data.points.map((point,index)=>[
    index+1,point.date,data.series.length,point.median,point.low50,point.high50,point.low90,point.high90,point.min,point.max,point.current,
    ...years.map(year=>data.series.find(series=>series.year===year)?.values[index]),
-   `${station.provider.toUpperCase()} ${station.sourceId} ${station.name}`,history?.source,current?.source,
+   `${station.provider.toUpperCase()} ${station.sourceId} ${station.name}`,history?.source,selectedSource,
    station.provider==='dwd'?'Datenbasis: DWD CDC; bearbeitet; https://creativecommons.org/licenses/by/4.0/':'',
   ].map(cell).join(','));
   download(new Blob([header.join(',')+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'}),`${exportName}.csv`);
@@ -106,11 +112,11 @@ export default function App(){
    const ctx=canvas.getContext('2d')!;
    ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);
    ctx.fillStyle='#292d30';ctx.font='600 20px system-ui';
-   ctx.fillText(`${station.name} · ${mode==='cumulative'?'Kumulierter Niederschlag':'Niederschlag · Gauß σ = 11 Tage'}`,25,30);
+   ctx.fillText(`${station.name} · ${selectedYear} · ${mode==='cumulative'?'Kumulierter Niederschlag':'Niederschlag · Gauß σ = 11 Tage'}`,25,30);
    ctx.font='12px system-ui';
    ctx.fillText(`${station.provider.toUpperCase()} ${station.sourceId} · ${data.series.length} vollständige Jahre · Stand ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Vergleich ${years.join(', ')||'aus'}`,25,53);
    ctx.fillText(station.provider==='dwd'
-    ? 'Datenbasis: DWD CDC · bearbeitet · CC BY 4.0 (creativecommons.org/licenses/by/4.0/) · aktuelle Werte vorläufig'
+    ? `Datenbasis: DWD CDC · bearbeitet · CC BY 4.0 (creativecommons.org/licenses/by/4.0/)${selectedYear===latestYear?' · Werte vorläufig':''}`
     : 'Datenbasis: Japan Meteorological Agency · data.jma.go.jp/risk/obsdl/',25,75);
    ctx.drawImage(img,0,100);
    canvas.toBlob(blob=>{if(blob)download(blob,`${exportName}.png`);},'image/png');
@@ -120,7 +126,7 @@ export default function App(){
    if(url)URL.revokeObjectURL(url);
   }
  };
- useEffect(()=>{const ctx=(document as Document&{modelContext?:{registerTool:(t:unknown,o:unknown)=>Promise<void>}}).modelContext;if(!ctx)return;const lifecycle=new AbortController();void Promise.resolve(ctx.registerTool({name:'get_precipitation_summary',description:'Read the currently displayed station, data coverage and cumulative rainfall comparison.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:(input:unknown)=>{if(!input||typeof input!=='object'||Object.keys(input).length)throw new Error('Expected an empty object.');return {station:station.name,stationId,mode,reference,completeYears:data.series.length,lastDate:data.lastDate,totalMm:cumulative.total,historicalYearsAbove:cumulative.higher,loading:busy,error:error||null};}},{signal:lifecycle.signal})).catch(()=>{});return()=>lifecycle.abort();},[station,stationId,mode,reference,data,cumulative,busy,error]);
+ useEffect(()=>{const ctx=(document as Document&{modelContext?:{registerTool:(t:unknown,o:unknown)=>Promise<void>}}).modelContext;if(!ctx)return;const lifecycle=new AbortController();void Promise.resolve(ctx.registerTool({name:'get_precipitation_summary',description:'Read the currently displayed station, data coverage and cumulative rainfall comparison.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:(input:unknown)=>{if(!input||typeof input!=='object'||Object.keys(input).length)throw new Error('Expected an empty object.');return {station:station.name,stationId,year:selectedYear,mode,reference,completeYears:data.series.length,lastDate:data.lastDate,totalMm:cumulative.total,historicalYearsAbove:cumulative.higher,loading:busy,error:error||null};}},{signal:lifecycle.signal})).catch(()=>{});return()=>lifecycle.abort();},[station,stationId,selectedYear,mode,reference,data,cumulative,busy,error]);
  return (
   <div className="app">
    <main>
@@ -135,6 +141,16 @@ export default function App(){
         </optgroup>
        ))}
       </select>
+     </div>
+     <div className="year-picker">
+      <label htmlFor="year">Jahr</label>
+      <div className="year-controls">
+       <button type="button" aria-label="Vorheriges Jahr" disabled={busy||yearIndex>=yearOptions.length-1} onClick={()=>setRequestedYear(yearOptions[yearIndex+1])}>−</button>
+       <select id="year" aria-label="Angezeigtes Jahr" value={selectedYear} disabled={busy} onChange={event=>setRequestedYear(Number(event.target.value))}>
+        {yearOptions.map(year=><option key={year} value={year}>{year}</option>)}
+       </select>
+       <button type="button" aria-label="Nächstes Jahr" disabled={busy||yearIndex<=0} onClick={()=>setRequestedYear(yearOptions[yearIndex-1])}>+</button>
+      </div>
      </div>
      <Tabs value={mode} onValueChange={v=>setMode(v as typeof mode)}>
       <TabsList variant="line" aria-label="Darstellung">
@@ -165,7 +181,7 @@ export default function App(){
          <p>{busy?status:'Wähle eine andere Station oder versuche den Abruf erneut.'}</p>
         </div>}
      <div className="legend">
-      <span className="legend-item current-year"><i style={{background:'#b9502b'}}/>{data.currentYear??today.slice(0,4)}</span>
+      <span className="legend-item current-year"><i style={{background:'#b9502b'}}/>{selectedYear}</span>
       <span className="legend-item"><i style={{background:'#334d5c'}}/>Median</span>
       <div className="band-controls" role="group" aria-label="Historische Verteilung">
        {[['50','50 %'],['90','90 %'],['range','Min–Max']].map(([key,label])=>(
@@ -188,7 +204,7 @@ export default function App(){
      <div>
       <span>Bis {data.lastDate?dateLabel(data.lastDate):'zum letzten vollständigen Tag'}</span>
       <p>{fmt(cumulative.last>=0?cumulative.total:null,1)}<small> mm</small></p>
-      <em>Niederschlag {data.currentYear??today.slice(0,4)}</em>
+      <em>Niederschlag {selectedYear}</em>
      </div>
      <div>
       <span>Historischer Median</span>
@@ -202,12 +218,13 @@ export default function App(){
      </div>
     </section>
     <div className="data-status" aria-live="polite">
-     <span>{status}{station.provider==='dwd'&&current?' · Aktuelle DWD-Werte vorläufig':''}</span>
+     <span>{status}{station.provider==='dwd'&&current&&selectedYear===latestYear?' · Aktuelle DWD-Werte vorläufig':''}</span>
      <button disabled={busy} onClick={()=>setReload(v=>v+1)}>Aktualisieren</button>
     </div>
     {error&&<div role="alert" className="notice">{error}{history?' Vorhandene Daten bleiben verfügbar.':''}</div>}
     {storageWarning&&<div className="notice">Der Browser erlaubt keine dauerhafte Speicherung. Daten bleiben nur für diese Sitzung im Speicher.</div>}
-    {data.gap&&<div className="notice">Die aktuelle Kurve endet vor dem ersten fehlenden oder nicht verwendbaren Tageswert.</div>}
+    {data.gap&&<div className="notice">Die ausgewählte Jahreskurve endet vor dem ersten fehlenden oder nicht verwendbaren Tageswert.</div>}
+    {!busy&&data.last<0&&<div className="notice">Für {selectedYear} liegen keine durchgehend verwendbaren Messwerte ab dem 1. Januar vor.</div>}
     <Methodology station={station} excluded={data.excluded} today={today}/>
    </main>
   </div>

@@ -21,6 +21,7 @@ Vite startet lokal auf `http://localhost:5173`; die Vorschau des Produktionsbuil
 - Native Stationsauswahl, nach Japan und Deutschland gruppiert.
 - Japan: Tokyo, Kyoto, Osaka, Sapporo, Fukuoka und Naha (JMA).
 - Deutschland: Berlin-Tempelhof, Hamburg-Fuhlsbüttel, München-Stadt, Frankfurt/Main, Köln/Bonn und Dresden-Klotzsche (DWD).
+- Native Jahresauswahl mit Minus-/Plus-Buttons für verfügbare Messjahre. Standard ist das laufende Jahr; die Auswahl bleibt beim Stationswechsel erhalten, soweit dort verfügbar.
 - Kumulierte Jahressummen oder geglätteter Tagesverlauf mit Gauß-Kernel (σ = 11 Tage).
 - Historischer Median, mittlere 50 % und 90 %, Min–Max; Referenz alle vollständigen Jahre oder 1991–2020.
 - Optional drei Vergleichsjahre mit den höchsten Summen zum selben Stichtag; standardmäßig aus.
@@ -49,9 +50,9 @@ Alle Daten liegen unter `public/data/`, getrennt nach Station und historischem/a
 
 ## Methodik und Grenzen
 
-Für die Referenz werden nur vollständige Kalenderjahre verwendet. JMA-Werte benötigen Qualitätscode 8. Beim DWD werden die dokumentierten QN-Verfahren 1, 2, 3, 5, 7, 8, 9 und 10 akzeptiert, jedoch ausschließlich aus dem abgeschlossenen historischen Archiv. QN ist keine Rangskala. Die aktuellen DWD-Werte haben ihre Qualitätskontrolle noch nicht vollständig durchlaufen.
+Für die Referenz werden nur vollständige Kalenderjahre verwendet. Das ausgewählte Jahr wird aus der Referenz und den optionalen Vergleichsjahren ausgeschlossen. Vergangene Jahre werden bis Jahresende dargestellt, sofern vollständig; bei Lücken endet ihre Kurve ebenfalls am ersten unbrauchbaren Tag. Die Referenz bleibt der gewählte Archivzeitraum und kann auch spätere Jahre enthalten. JMA-Werte benötigen Qualitätscode 8. Beim DWD werden die dokumentierten QN-Verfahren 1, 2, 3, 5, 7, 8, 9 und 10 akzeptiert, jedoch ausschließlich aus dem abgeschlossenen historischen Archiv. QN ist keine Rangskala. Die aktuellen DWD-Werte haben ihre Qualitätskontrolle noch nicht vollständig durchlaufen.
 
-Kumulative Kurven summieren den 29. Februar mit auf; nur sein Achsenpunkt entfällt. Die Jahressumme bleibt erhalten. Vor der Gauß-Glättung wird der 29. Februar entfernt. Historische Jahre werden zyklisch geglättet. Das aktuelle Jahr verwendet vollständige vorhergehende Dezemberwerte, soweit verfügbar; am offenen Ende wird der Kernel neu normiert. Seine letzten 44 Tage sind gestrichelt. Die aktuelle Kurve endet am ersten fehlenden oder unbrauchbaren Tag.
+Kumulative Kurven summieren den 29. Februar mit auf; nur sein Achsenpunkt entfällt. Die Jahressumme bleibt erhalten. Vor der Gauß-Glättung wird der 29. Februar entfernt. Vollständige Jahre werden zyklisch geglättet, einschließlich der ausgewählten Jahreskurve. Unvollständige Jahre verwenden vollständige vorhergehende Dezemberwerte, soweit verfügbar; am offenen Ende wird der Kernel neu normiert. Seine letzten 44 Tage sind gestrichelt. Die ausgewählte Kurve endet am ersten fehlenden oder unbrauchbaren Tag.
 
 Quantile werden pro Kalendertag mit linearer Interpolation (Typ 7) berechnet. Die Flächen sind historische Verteilungen, keine Konfidenzintervalle oder Prognosen. Stationsverlegungen, Klimaänderungen und Änderungen von Messverfahren/Tagesgrenzen werden nicht herausgerechnet. Es werden keine verschiedenen Stationen zu einer Stadt-Zeitreihe zusammengefügt. Für Tokyo wurden ursprünglich 1.800 Monatssummen zusätzlich gegen JMA-Monatsdaten geprüft; andere Stationen haben bislang keinen zusätzlichen Monatsabgleich.
 
