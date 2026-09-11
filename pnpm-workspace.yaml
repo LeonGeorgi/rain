@@ -1,0 +1,13 @@
+minimumReleaseAge: 10080
+minimumReleaseAgeIgnoreMissingTime: false
+trustLockfile: false
+strictDepBuilds: true
+allowBuilds:
+  esbuild: true
+  fsevents: set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
+storeDir: .cache/pnpm-store
+cacheDir: .cache/pnpm-store/policy-cache
+packageImportMethod: clone-or-copy
+verifyDepsBeforeRun: false
