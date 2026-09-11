@@ -8,6 +8,11 @@ export const countries = [
   {id:'fr', name:'France', mapCode:'FRA'},
   {id:'gb', name:'United Kingdom', mapCode:'GBR'},
   {id:'se', name:'Sweden', mapCode:'SWE'},
+  {id:'es', name:'Spain', mapCode:'ESP'},
+  {id:'ch', name:'Switzerland', mapCode:'CHE'},
+  {id:'at', name:'Austria', mapCode:'AUT'},
+  {id:'ie', name:'Ireland', mapCode:'IRL'},
+  {id:'no', name:'Norway', mapCode:'NOR'},
 ] as const;
 export type Country = typeof countries[number]['id'];
 export const providerNames: Record<Provider, string> = {jma:'JMA', dwd:'DWD', ghcn:'NOAA GHCN-Daily', knmi:'KNMI'};
@@ -67,6 +72,20 @@ export const stations: Station[] = [
     {sourceId:'SWE00139148', name:'Uppsala', country:'se' as const, latitude:59.86, longitude:17.63, timeZone:'Europe/Stockholm', historyStart:'1836-01-01'},
     {sourceId:'SWE00140908', name:'Kiruna', country:'se' as const, latitude:67.8497, longitude:20.25, timeZone:'Europe/Stockholm', historyStart:'1898-08-01'},
     {sourceId:'SWE00139720', name:'Sveg', country:'se' as const, latitude:62.0192, longitude:14.1903, timeZone:'Europe/Stockholm', historyStart:'1875-07-01'},
+    {sourceId:'SP000003195', name:'Madrid Retiro', country:'es' as const, latitude:40.4117, longitude:-3.6781, timeZone:'Europe/Madrid', historyStart:'1920-01-01'},
+    {sourceId:'SP000008181', name:'Barcelona Airport', country:'es' as const, latitude:41.2928, longitude:2.0697, timeZone:'Europe/Madrid', historyStart:'1924-03-01'},
+    {sourceId:'SP000008027', name:'San Sebastián–Igueldo', country:'es' as const, latitude:43.3075, longitude:-2.0392, timeZone:'Europe/Madrid', historyStart:'1916-04-01'},
+    {sourceId:'SZ000003700', name:'Zürich Fluntern', country:'ch' as const, latitude:47.3831, longitude:8.5667, timeZone:'Europe/Zurich', historyStart:'1901-01-01'},
+    {sourceId:'SZ000008390', name:'Geneva Observatory', country:'ch' as const, latitude:46.2, longitude:6.15, timeZone:'Europe/Zurich', historyStart:'1901-01-01'},
+    {sourceId:'SZ000009480', name:'Lugano', country:'ch' as const, latitude:46.0, longitude:8.9667, timeZone:'Europe/Zurich', historyStart:'1901-01-01'},
+    {sourceId:'AU000005901', name:'Vienna', country:'at' as const, latitude:48.2331, longitude:16.35, timeZone:'Europe/Vienna', historyStart:'1901-01-01'},
+    {sourceId:'AU000006306', name:'Salzburg', country:'at' as const, latitude:47.8, longitude:13.0, timeZone:'Europe/Vienna', historyStart:'1901-01-01'},
+    {sourceId:'AU000011801', name:'Innsbruck', country:'at' as const, latitude:47.2667, longitude:11.4, timeZone:'Europe/Vienna', historyStart:'1901-01-01'},
+    {sourceId:'EI000003969', name:'Dublin Phoenix Park', country:'ie' as const, latitude:53.3639, longitude:-6.3192, timeZone:'Europe/Dublin', historyStart:'1867-01-01'},
+    {sourceId:'EI000003980', name:'Malin Head', country:'ie' as const, latitude:55.3717, longitude:-7.34, timeZone:'Europe/Dublin', historyStart:'1885-01-01'},
+    {sourceId:'NO000001026', name:'Tromsø', country:'no' as const, latitude:69.6539, longitude:18.9281, timeZone:'Europe/Oslo', historyStart:'1920-07-01'},
+    {sourceId:'NOE00109680', name:'Stavanger Sola', country:'no' as const, latitude:58.8842, longitude:5.6367, timeZone:'Europe/Oslo', historyStart:'1941-08-01'},
+    {sourceId:'NOE00100574', name:'Bulken', country:'no' as const, latitude:60.6458, longitude:6.2233, timeZone:'Europe/Oslo', historyStart:'1895-06-01'},
   ].map(station => ({...station, id:`ghcn-${station.sourceId}`, provider:'ghcn' as const})),
   ...[
     {sourceId:'260', name:'De Bilt', latitude:52.101, longitude:5.177, historyStart:'1901-01-01'},

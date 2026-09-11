@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Dialog } from '@base-ui/react/dialog';
-import { Tabs } from '@base-ui/react/tabs';
 import { Map as MapIcon, X } from 'lucide-react';
 import outlines from '@/assets/maps/country-outlines.json';
 import { mapWidth, mapHeight, projectMapPoint, type MapBounds } from '@/lib/country-map';
 import { countries, stations, providerNames, type Country, type Station } from '@/lib/stations';
 import './station-map.css';
 
-const mapRegions: Partial<Record<Country,string>> = {us:'Contiguous US', au:'Mainland & Tasmania', nl:'European Netherlands', fr:'Metropolitan France'};
+const mapRegions: Partial<Record<Country,string>> = {us:'Contiguous US', au:'Mainland & Tasmania', nl:'European Netherlands', fr:'Metropolitan France', es:'Mainland & Balearic Islands', no:'Mainland & coastal islands'};
 
 // Label callouts keep nearby stations (especially Kyoto and Osaka) individually
 // selectable. The dots themselves retain their geographic positions.
@@ -54,6 +53,20 @@ const labels: Record<string, {name: string; x: number; y: number}> = {
   'ghcn-SWE00139148': {name:'Uppsala', x:440, y:370},
   'ghcn-SWE00140908': {name:'Kiruna', x:450, y:70},
   'ghcn-SWE00139720': {name:'Sveg', x:160, y:290},
+  'ghcn-SP000003195': {name:'Madrid', x:250, y:315},
+  'ghcn-SP000008181': {name:'Barcelona', x:505, y:255},
+  'ghcn-SP000008027': {name:'San Sebastián', x:325, y:50},
+  'ghcn-SZ000003700': {name:'Zürich', x:405, y:100},
+  'ghcn-SZ000008390': {name:'Geneva', x:125, y:435},
+  'ghcn-SZ000009480': {name:'Lugano', x:465, y:465},
+  'ghcn-AU000005901': {name:'Vienna', x:510, y:155},
+  'ghcn-AU000006306': {name:'Salzburg', x:300, y:200},
+  'ghcn-AU000011801': {name:'Innsbruck', x:190, y:385},
+  'ghcn-EI000003969': {name:'Dublin', x:485, y:330},
+  'ghcn-EI000003980': {name:'Malin Head', x:275, y:65},
+  'ghcn-NO000001026': {name:'Tromsø', x:495, y:130},
+  'ghcn-NOE00109680': {name:'Stavanger', x:360, y:490},
+  'ghcn-NOE00100574': {name:'Bulken', x:150, y:380},
 };
 
 function CountryMap({country, selectedId, onSelect}: {country:Country; selectedId:string; onSelect:(id:string)=>void}) {
@@ -92,6 +105,7 @@ function CountryMap({country, selectedId, onSelect}: {country:Country; selectedI
 export function StationMapDialog({station,onSelect}:{station:Station;onSelect:(id:string)=>void}) {
   const [open,setOpen]=useState(false);
   const [country,setCountry]=useState<Country>(station.country);
+  const countryOptions = countries.map(country=><option key={country.id} value={country.id}>{country.name}</option>);
   function selectStation(id:string) {
     onSelect(id);
     setOpen(false);
@@ -107,17 +121,16 @@ export function StationMapDialog({station,onSelect}:{station:Station;onSelect:(i
             <Dialog.Close className="station-map-close" aria-label="Close map"><X size={18}/></Dialog.Close>
           </header>
           <Dialog.Description className="sr-only">Choose a country, then a station on the map. The station is selected immediately.</Dialog.Description>
-          <Tabs.Root className="station-map-layout" value={country} onValueChange={value=>setCountry(value as Country)} orientation="vertical">
-            <Tabs.List className="country-list" aria-label="Country" activateOnFocus>
-              {countries.map(country=><Tabs.Tab key={country.id} value={country.id}>{country.name}</Tabs.Tab>)}
-            </Tabs.List>
-            {countries.map(country=>(
-              <Tabs.Panel key={country.id} value={country.id} className="country-panel">
-                <CountryMap country={country.id} selectedId={station.id} onSelect={selectStation}/>
-                <p className="map-source">{mapRegions[country.id]?`${mapRegions[country.id]} · `:''}Outlines: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a> · Stations: {providerNames[stations.find(station=>station.country===country.id)!.provider]}</p>
-              </Tabs.Panel>
-            ))}
-          </Tabs.Root>
+          <div className="station-map-layout">
+            <div className="country-list">
+              <select className="country-desktop" aria-label="Country" size={10} value={country} onChange={event=>setCountry(event.target.value as Country)}>{countryOptions}</select>
+              <select className="country-mobile" aria-label="Country" value={country} onChange={event=>setCountry(event.target.value as Country)}>{countryOptions}</select>
+            </div>
+            <div className="country-panel">
+              <CountryMap country={country} selectedId={station.id} onSelect={selectStation}/>
+              <p className="map-source">{mapRegions[country]?`${mapRegions[country]} · `:''}Outlines: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">Natural Earth</a> · Stations: {providerNames[stations.find(station=>station.country===country)!.provider]}</p>
+            </div>
+          </div>
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>

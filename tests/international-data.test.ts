@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { zipSync, strToU8 } from 'fflate';
-import { parseGHCN } from '../scripts/ghcn.ts';
+import { fetchGHCN, parseGHCN } from '../scripts/ghcn.ts';
 import { parseKNMI, parseKNMIArchive } from '../scripts/knmi.ts';
 import { fillDays, splitDailyArchive } from '../scripts/dataset.ts';
 import { dateBounds, updateData } from '../scripts/update-data.ts';
@@ -39,6 +39,30 @@ test('GHCN rejects malformed stations, dates, flags, duplicates and impossible d
   assert.throws(()=>parseGHCN(monthly(impossible),us.sourceId));
   assert.equal(parseGHCN(monthly([[100,'  W']],'202402','TMAX')+'\n'+record,us.sourceId)[0][1],1);
   assert.throws(()=>parseGHCN(monthly([[100,'  W']],'202402','MDPR'),us.sourceId));
+});
+
+test('GHCN recovers from temporary transport and server failures, but bounds retries and rejects permanent or malformed responses', async () => {
+  const station={...us,historyStart:'2024-12-01'};
+  const now=new Date('2025-01-03T12:00:00Z');
+  const bounds=dateBounds(now,station.timeZone);
+  const archive=monthly(Array.from({length:31},():[number,string]=>[10,'  W']),'202412')+'\n'+monthly([[20,'  W']],'202501');
+  let calls=0;
+  const recovered=await fetchGHCN(station,bounds,now,async()=>{
+    calls++;
+    if(calls===1) throw new TypeError('Connection closed');
+    if(calls===2) return new Response('Unavailable',{status:503});
+    return new Response(archive);
+  });
+  assert.equal(calls,3);
+  assert.equal(recovered.current.rows[0][1],2);
+  calls=0;
+  await assert.rejects(fetchGHCN(station,bounds,now,async()=>{calls++;throw new TypeError('Offline');}),/Offline/);
+  assert.equal(calls,3);
+  for(const response of [new Response('Missing',{status:404}),new Response('Malformed archive')]){
+    calls=0;
+    await assert.rejects(fetchGHCN(station,bounds,now,async()=>{calls++;return response;}));
+    assert.equal(calls,1);
+  }
 });
 
 test('KNMI distinguishes traces from missing and true zero and validates the station and complete CSV structure', () => {

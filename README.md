@@ -1,6 +1,6 @@
 # Rain — Niederschlag im historischen Vergleich
 
-Eine statische React-Webseite für tägliche Niederschlagsmessungen aus acht Ländern. Sie vergleicht das laufende Jahr mit vollständigen historischen Kalenderjahren derselben Station.
+Eine statische React-Webseite für tägliche Niederschlagsmessungen aus 13 Ländern. Sie vergleicht das laufende Jahr mit vollständigen historischen Kalenderjahren derselben Station.
 
 ## Entwicklung
 
@@ -18,13 +18,14 @@ Vite startet lokal auf `http://localhost:5173`; die Vorschau des Produktionsbuil
 
 ## Oberfläche
 
-- Native Stationsauswahl, nach Land gruppiert, plus Karten-Button. Der Base-UI-Dialog zeigt links die Länderwahl und rechts den Landesumriss mit direkt auswählbaren Stationen. Auf kleinen Displays steht die Länderwahl über der Karte.
+- Native Stationsauswahl, nach Land gruppiert, plus Karten-Button. Der Base-UI-Dialog zeigt links die Länderwahl und rechts den Landesumriss mit direkt auswählbaren Stationen. Die Länderwahl ist nativ und scrollbar; auf kleinen Displays steht sie als Dropdown über der Karte.
 - Japan: Tokyo, Kyoto, Osaka, Sapporo, Fukuoka und Naha (JMA).
 - Deutschland: Berlin-Tempelhof, Hamburg-Fuhlsbüttel, München-Stadt, Frankfurt/Main, Köln/Bonn und Dresden-Klotzsche (DWD).
 - USA: New York, Seattle, Los Angeles, San Francisco, Chicago und Miami (NOAA GHCN-Daily).
 - Australien: Perth, Melbourne, Darwin, Brisbane, Sydney und Hobart (NOAA GHCN-Daily/Bureau of Meteorology).
 - Niederlande: De Bilt, De Kooy, Amsterdam Schiphol, Groningen Eelde, Vlissingen und Maastricht (KNMI).
 - Frankreich: Paris Orly, Marseille, Rennes und Nice; Großbritannien: Oxford, Eskdalemuir, Lerwick und Stornoway; Schweden: Lund, Uppsala, Kiruna und Sveg (NOAA GHCN-Daily).
+- Spanien: Madrid Retiro, Barcelona Airport und San Sebastián–Igueldo; Schweiz: Zürich Fluntern, Geneva Observatory und Lugano; Österreich: Vienna, Salzburg und Innsbruck; Irland: Dublin Phoenix Park und Malin Head; Norwegen: Tromsø, Stavanger Sola und Bulken (NOAA GHCN-Daily).
 - Native Jahresauswahl mit Minus-/Plus-Buttons für verfügbare Messjahre. Standard ist das laufende Jahr; die Auswahl bleibt beim Stationswechsel erhalten, soweit dort verfügbar.
 - Kumulierte Jahressummen oder geglätteter Tagesverlauf mit Gauß-Kernel (σ = 11 Tage).
 - Historischer Median, mittlere 50 % und 90 %, Min–Max; Referenz alle vollständigen Jahre oder 1991–2020.
@@ -48,7 +49,7 @@ JMA-Dateien beginnen im Abruffenster 1876; das ist keine Aussage über den tats�
 
 DWD-Dateien beginnen beim veröffentlichten Stationsbeginn. Der Importer liest die ZIP-Archive mit `fflate`, übernimmt `RSK` in mm und bewahrt die ursprünglichen `QN_4`-Prüfverfahrenscodes. Historische Archive werden bei jedem Lauf neu gelesen, damit auch jährliche Korrekturen übernommen werden. Nur `historical` geht in die Referenz ein; ein noch nicht im Archiv veröffentlichtes Vorjahr bleibt fehlend. `recent` liefert das laufende Jahr und ist ausdrücklich vorläufig. Zeiträume richten sich nach `Asia/Tokyo` beziehungsweise `Europe/Berlin`; die Tagesdatierung der Quelle bleibt unverändert.
 
-NOAA GHCN-Daily und KNMI werden als vollständige Stationsarchive bei jedem Lauf erneut gelesen. Einheiten, Spuren, Qualitätsflags und Veröffentlichungsverzögerungen sind in [Internationale Daten](docs/international-data.md) dokumentiert. Länder und Datenanbieter sind getrennt modelliert; insgesamt stehen 42 Stationen zur Verfügung.
+NOAA GHCN-Daily und KNMI werden als vollständige Stationsarchive bei jedem Lauf erneut gelesen. Einheiten, Spuren, Qualitätsflags und Veröffentlichungsverzögerungen sind in [Internationale Daten](docs/international-data.md) dokumentiert. Länder und Datenanbieter sind getrennt modelliert; insgesamt stehen 56 Stationen zur Verfügung.
 
 Stationskennungen, Zahlen, Qualitätscodes und Datumsfolgen werden geprüft. Fehlende DWD-Tage und der Fehlwert `-999` bleiben `null`; ein fehlendes Qualitätskennzeichen `-999` wird intern als 0 gespeichert. Ein fehlgeschlagener Abruf oder ein Rückgang verwendbarer Tageswerte bricht den gesamten Import vor dem Schreiben ab. Die veröffentlichten Dateien bleiben dann unverändert.
 
@@ -89,7 +90,7 @@ scripts/knmi.ts            KNMI-ZIP-Archive und RH-Tageswerte
 scripts/dataset.ts         Inhaltsrevisionen und Schutz vor Datenverlust
 scripts/update-data.ts     Gemeinsamer Import und atomare Veröffentlichung
 scripts/validate-data.ts   Prüfung aller veröffentlichten Dateien
-public/data/               Messwerte und Manifest der 42 Stationen
+public/data/               Messwerte und Manifest der 56 Stationen
 tests/                     Parser, Qualität, Statistik, Jahreswechsel und Fehlerfälle
 .github/workflows/         CI, Datenimport und GitHub Pages
 ```

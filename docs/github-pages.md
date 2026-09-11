@@ -40,7 +40,7 @@ public/data/
   dwd-01420/         Frankfurt/Main
   dwd-02667/         Köln/Bonn
   dwd-01048/         Dresden-Klotzsche
-  ghcn-USW00094728/  New York (weitere 23 GHCN-Stationen)
+  ghcn-USW00094728/  New York (weitere 37 GHCN-Stationen)
   knmi-260/          De Bilt (weitere fünf KNMI-Stationen)
 ```
 

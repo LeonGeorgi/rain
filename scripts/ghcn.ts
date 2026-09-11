@@ -1,6 +1,7 @@
 import { ghcnQuality, type Row } from '../src/lib/datasets.ts';
 import type { Station } from '../src/lib/stations.ts';
 import { splitDailyArchive } from './dataset.ts';
+import { setTimeout as delay } from 'node:timers/promises';
 
 export const ghcnBase = 'https://www.ncei.noaa.gov/pub/data/ghcn/daily/';
 
@@ -37,12 +38,30 @@ export function parseGHCN(text: string, stationId: string): Row[] {
   return rows;
 }
 
-export async function fetchGHCN(station: Station, bounds: Parameters<typeof splitDailyArchive>[2], now: Date) {
+async function downloadArchive(source: string, request: typeof fetch): Promise<string> {
+  let failure: unknown;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    let response: Response | undefined;
+    try {
+      response = await request(source, {signal:AbortSignal.timeout(120_000)});
+      if (response.ok) return await response.text();
+    } catch (error) {
+      failure = error;
+    }
+    if (response && !response.ok) {
+      failure = new Error(`GHCN: HTTP ${response.status} for ${source}.`);
+      await response.body?.cancel();
+      if (response.status !== 429 && response.status < 500) throw failure;
+    }
+    if (attempt < 3) await delay(attempt * 1_000);
+  }
+  throw failure;
+}
+
+export async function fetchGHCN(station: Station, bounds: Parameters<typeof splitDailyArchive>[2], now: Date, request: typeof fetch = fetch) {
   if (!/^[A-Z0-9]{11}$/.test(station.sourceId)) throw new Error('GHCN: Invalid station ID.');
   const source = `${ghcnBase}all/${station.sourceId}.dly`;
-  const response = await fetch(source, {signal:AbortSignal.timeout(120_000)});
-  if (!response.ok) throw new Error(`GHCN: HTTP ${response.status} for ${station.id}.`);
-  const text = await response.text();
+  const text = await downloadArchive(source, request);
   if (text.length > 30_000_000) throw new Error('GHCN: Unexpectedly large station file.');
   return splitDailyArchive(station, parseGHCN(text, station.sourceId), bounds, now, source);
 }
