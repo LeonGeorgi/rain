@@ -166,6 +166,10 @@ export default function App(){
         {yearOptions.map(year=><option key={year} value={year}>{year}</option>)}
        </select>
        <button type="button" aria-label="Next year" disabled={busy||yearIndex<=0} onClick={()=>setRequestedYear(yearOptions[yearIndex-1])}>+</button>
+       {selectedYear!==latestYear&&<button type="button" className="current-year-button" disabled={busy} title={`Return to ${latestYear}`} onClick={()=>{
+        setRequestedYear(null);
+        document.getElementById('year')?.focus();
+       }}>Current year</button>}
       </div>
      </div>
      <Tabs value={mode} onValueChange={v=>setMode(v as typeof mode)}>
