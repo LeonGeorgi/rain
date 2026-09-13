@@ -10,10 +10,7 @@ on:
         type: boolean
         default: false
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: weather-data-update
@@ -21,6 +18,8 @@ concurrency:
 
 jobs:
   update:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 90
     outputs:
@@ -60,7 +59,13 @@ jobs:
   # GITHUB_TOKEN commits do not trigger another push workflow. Invoke the
   # deployment explicitly with the exact data commit from the successful job.
   deploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      pull-requests: write
     needs: update
     uses: ./.github/workflows/pages.yml
     with:
       ref: ${{ needs.update.outputs.commit }}
+
