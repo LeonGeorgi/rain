@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "check": "pnpm typecheck && pnpm lint && pnpm test",
-    "test": "node --test tests/*.test.ts",
+    "test": "node --test tests/*.test.*",
     "data:update": "node scripts/update-data.ts",
     "data:validate": "node scripts/validate-data.ts"
   },
@@ -44,3 +44,4 @@
   "type": "module",
   "packageManager": "pnpm@11.25.0"
 }
+

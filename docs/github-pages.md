@@ -7,10 +7,10 @@ Die Website wird aus dem privaten Repository `LeonGeorgi/rain` über GitHub Page
 | Datei | Auslöser | Aufgabe |
 | --- | --- | --- |
 | `.github/workflows/ci.yml` | Pull Requests und Pushes auf andere Branches | Installation, Typprüfung, ESLint, Tests, Datenvalidierung und Produktionsbuild |
-| `.github/workflows/pages.yml` | Push auf `main`, manueller Start oder Aufruf durch Datenworkflow | Prüfung, Build mit dem von Pages gelieferten Basispfad und Deployment |
+| `.github/workflows/pages.yml` | Push auf `main`, PR-Ereignisse, manueller Start oder Aufruf durch Datenworkflow | Hauptseite und offene PR-Vorschauen bauen und gemeinsam veröffentlichen |
 | `.github/workflows/update-data.yml` | 00:23 und 12:23 UTC sowie manueller Start | Messwerte abrufen, validieren, committen und den Pages-Workflow aufrufen |
 
-Der Zeitplan entspricht 09:23 und 21:23 japanischer Zeit. GitHub kann geplante Läufe verzögern. Ein fehlgeschlagener Lauf bleibt in Actions sichtbar und ändert die bestehende Website nicht. Zeitpläne laufen auf dem Standardbranch.
+Der Zeitplan entspricht 09:23 und 21:23 japanischer Zeit. GitHub kann geplante Läufe verzögern. Ein fehlgeschlagener Datenimport oder Produktionsbuild bleibt in Actions sichtbar und ändert die bestehende Website nicht. Fehlgeschlagene PR-Builds werden separat angezeigt und ihre Vorschauen beim nächsten erfolgreichen Deployment weggelassen. Zeitpläne laufen auf dem Standardbranch.
 
 ## Einmalige Repository-Einrichtung
 
@@ -20,6 +20,25 @@ Der Zeitplan entspricht 09:23 und 21:23 japanischer Zeit. GitHub kann geplante L
 - Es sind keine eigenen API-Schlüssel, PAT-Secrets oder Zugangsdaten der Wetterdienste nötig. Der kurzlebige `GITHUB_TOKEN` erhält die im jeweiligen Workflow angegebenen Berechtigungen.
 
 Der Pages-Workflow übernimmt den Basispfad aus `actions/configure-pages`. Das funktioniert sowohl für `/rain/` als auch für eine eigene Domain. Lokal: `pnpm build --base=/rain/` und `pnpm preview --base=/rain/`.
+
+## PR-Vorschauen
+
+Nach dem Merge dieses Workflows nach `main` werden PRs aus Branches desselben Repositories mit Ziel `main` automatisch veröffentlicht. Fork-PRs bekommen weiterhin CI-Prüfungen, aber keine automatische Veröffentlichung. Auslöser sind Öffnen, neue Commits, Wiederöffnen, Bearbeiten und Schließen; ein manueller Start auf `main` gleicht alle offenen PRs ab. Der erste Push nach dem Merge nimmt bereits offene PRs mit auf. Der Infrastruktur-PR selbst kann vor diesem Merge noch keine Vorschau über den neuen Workflow bereitstellen.
+
+| Installation | Hauptseite | Vorschau für PR #1 |
+| --- | --- | --- |
+| Custom Domain | `https://deine-domain.de/` | `https://deine-domain.de/pr-preview/1/` |
+| GitHub-Projektseite | `https://leongeorgi.github.io/rain/` | `https://leongeorgi.github.io/rain/pr-preview/1/` |
+
+Die bestehende Domainkonfiguration in Pages bleibt bestehen; zusätzliche DNS-Einträge sind nicht nötig. Der Produktionsbuild nutzt den von `configure-pages` gelieferten Basispfad, jede Vorschau hängt `pr-preview/<Nummer>/` an. Vite-Assets, Favicon und Datenabrufe folgen diesem Pfad. Jede Vorschau enthält die Daten ihres eigenen Commits. Der lokale Datencache wird ebenfalls nach Basispfad getrennt, damit Hauptseite und Vorschauen mit dieser Codeversion nicht denselben Cacheeintrag überschreiben.
+
+Jeder Lauf baut den aktuellen `main`-Commit und die exakten Head-Commits aller offenen, geeigneten PRs neu. Produktions- und PR-Builds laufen in getrennten Jobs. Ein vertrauenswürdiger Job setzt nur statische Dateien zu einem einzigen Pages-Artefakt zusammen. Die Hauptseite wird über die konkrete Artefakt-ID ihres Build-Jobs geladen. Geschlossene Vorschauen werden nicht mehr aufgenommen und verschwinden dadurch ohne separaten Lösch-Branch. Es gibt keinen zusätzlichen `gh-pages`-Branch und keine langfristige Abhängigkeit von alten Actions-Artefakten.
+
+Nach erfolgreichem Deployment erhält jeder offene PR einen aktualisierten Bot-Kommentar mit Vorschau-Link und Commit-SHA. Ein fehlgeschlagener oder zu großer Preview-Build erhält stattdessen einen Hinweis. Ein neuer Commit während eines laufenden Builds wird durch den nächsten Lauf übernommen; der Kommentar bezeichnet einen älteren Build nicht als aktuellen Stand. Ein Schließen-Ereignis aktualisiert auch den bisherigen Kommentar zur entfernten Vorschau.
+
+PR-Code wird ausschließlich mit `contents: read` auf frischen Runnern gebaut, ohne gespeicherte Checkout-Zugangsdaten, Deployment-Environment, Secrets oder gemeinsamen Build-Cache. Planung, Zusammenstellung und Kommentare verwenden Helfer aus der vertrauenswürdigen Workflow-Revision. Nur der abschließende Deployment-Job erhält `pages: write` und `id-token: write`; der Kommentarjob erhält `pull-requests: write`. Die Vorschauen sind wie die Hauptseite öffentlich und liegen auf derselben Origin. Es sind Vorschauen für eigene Repository-Branches, keine Isolation für fremde Webanwendungen.
+
+Der vollständige Neuaufbau hält das Deployment einfach und konsistent, benötigt aber pro offenem PR einen zusätzlichen Build und eine Kopie der Messdaten. Vier Vorschauen werden höchstens gleichzeitig gebaut. Das gemeinsame Paket hat ein Budget von 900 MiB; Vorschauen darüber werden ausgelassen, damit die Hauptseite veröffentlicht werden kann. Nicht erfolgreiche Vorschauen behalten keine alte, möglicherweise irreführende Version. Scheitert der Produktionsbuild oder das eigentliche Pages-Deployment, bleibt die vorherige veröffentlichte Website bestehen. Künftige Änderungen am Deployment sollten die Prüfungen in `tests/pages-preview.test.mjs` berücksichtigen.
 
 ## Datenformat und Speicherung
 
@@ -72,9 +91,9 @@ Der JMA-Import erfolgt in historischen Blöcken von höchstens 30 Jahren; der DW
 
 Der Datenjob prüft die Dateien, erzeugt einen Commit und pusht ihn ohne Force-Push. Änderungen auf `main` während eines Imports können deshalb einen Konflikt verursachen; dann den Workflow erneut starten. Daten werden nicht stillschweigend über fremde Änderungen geschrieben.
 
-Commits mit `GITHUB_TOKEN` starten üblicherweise keinen weiteren Push-Workflow. Deshalb ruft der Datenworkflow den wiederverwendbaren Pages-Workflow ausdrücklich mit dem vollständigen neuen Commit-SHA auf. Scheitert der anschließende Build, bleiben die Daten im Repository gesichert und die vorherige Website online. Der Pages-Workflow kann nach der Fehlerbehebung manuell erneut gestartet werden.
+Commits mit `GITHUB_TOKEN` starten üblicherweise keinen weiteren Push-Workflow. Deshalb ruft der Datenworkflow den wiederverwendbaren Pages-Workflow ausdrücklich mit dem vollständigen neuen Commit-SHA auf. Der Pages-Workflow liest bei der Planung den aktuellen `main`-Stand; falls inzwischen ein neuerer Commit vorliegt, hat dieser Vorrang, damit ein verzögert gestarteter Datenlauf keine ältere Hauptseite wiederherstellt. Scheitert der anschließende Build, bleiben die Daten im Repository gesichert und die vorherige Website online. Der Pages-Workflow kann nach der Fehlerbehebung manuell erneut gestartet werden.
 
-Deployments werden nacheinander ausgeführt; ein laufendes Deployment wird nicht abgebrochen. Pull Requests bekommen keine Schreibrechte und veröffentlichen nichts. Die verwendeten Actions sind auf vollständige Commit-SHAs festgelegt.
+Deployments werden nacheinander ausgeführt; ein laufendes Deployment wird nicht abgebrochen. PR-Build-Jobs bekommen keine Schreibrechte; die Veröffentlichung ihrer statischen Ergebnisse übernimmt der getrennte Pages-Deployment-Job. Die verwendeten Actions sind auf vollständige Commit-SHAs festgelegt.
 
 ## Offizielle Dokumentation
 
@@ -84,3 +103,4 @@ Deployments werden nacheinander ausgeführt; ein laufendes Deployment wird nicht
 - [Zeitgesteuerte Workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
 
 [Zurück zur Projektübersicht](../README.md)
+

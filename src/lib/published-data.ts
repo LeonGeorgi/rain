@@ -6,7 +6,7 @@ export async function loadStationData(
   signal: AbortSignal,
   onCached: (history?: Dataset, current?: Dataset) => void,
 ) {
-  const key = (period: string) => `${stationId}:published:${period}`;
+  const key = (period: string) => `${import.meta.env.BASE_URL}:${stationId}:published:${period}`;
   const [cachedHistory, cachedCurrent] = await Promise.all([cacheGet(key("history")), cacheGet(key("current"))]);
   if (signal.aborted) throw signal.reason;
   onCached(cachedHistory, cachedCurrent);
@@ -33,3 +33,4 @@ export async function loadStationData(
   const stored = await Promise.all([cachePut(key("history"), history), cachePut(key("current"), current)]);
   return { history, current, updatedAt: manifest.updatedAt, storageWarning: stored.includes(false) };
 }
+

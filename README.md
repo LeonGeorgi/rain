@@ -38,7 +38,7 @@ Das Diagramm steht im Mittelpunkt. Dialog, Tabs und Checkboxen verwenden Base UI
 
 ## Datenimport und Veröffentlichung
 
-GitHub Actions aktualisiert alle Stationen zweimal täglich. Jeder Push auf `main` prüft, baut und veröffentlicht die Website über GitHub Pages. [Betrieb und Workflows](docs/github-pages.md).
+GitHub Actions aktualisiert alle Stationen zweimal täglich. Jeder Push auf `main` prüft, baut und veröffentlicht die Website über GitHub Pages. Offene PRs aus eigenen Repository-Branches erhalten automatisch eine Vorschau unter `pr-preview/<Nummer>/`, einschließlich Link im PR; beim Schließen wird sie entfernt. Hauptseite und Vorschauen werden gemeinsam veröffentlicht. [Betrieb und Workflows](docs/github-pages.md).
 
 ```bash
 pnpm data:update
