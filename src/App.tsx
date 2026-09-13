@@ -10,7 +10,7 @@ import {loadStationData} from '@/lib/published-data';
 type Analysis=ReturnType<typeof analyze>;
 const fmt=(v:number|null|undefined,d=0)=>v==null?'—':v.toLocaleString('en-GB',{maximumFractionDigits:d,minimumFractionDigits:d});
 const dateLabel=(d?:string)=>d?new Date(d+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}):'—';
-const colors=['#64857a','#8c7b98','#9b896a'];
+const colors=['var(--rain-comparison-1)','var(--rain-comparison-2)','var(--rain-comparison-3)'];
 function download(blob:Blob,name:string){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
 function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;bands:string[];years:number[];svgRef:React.RefObject<SVGSVGElement|null>}){
  const box=useRef<HTMLDivElement>(null);const [width,setWidth]=useState(1000);const [hover,setHover]=useState<number|null>(null);
@@ -26,20 +26,20 @@ function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;ban
  const unit=mode==='cumulative'?'mm':'mm/day';
  return <div ref={box} className="chart-shell">
   <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${mode==='cumulative'?'Cumulative precipitation':'Smoothed daily precipitation'} with historical intervals. Use the arrow keys to select a calendar day.`} tabIndex={0} onKeyDown={e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();setHover(i=>Math.max(0,Math.min(364,(i??data.last)+(e.key==='ArrowRight'?1:-1))));}if(e.key==='Escape')setHover(null);}} onPointerMove={e=>{const b=e.currentTarget.getBoundingClientRect();setHover(Math.max(0,Math.min(364,Math.round(((e.clientX-b.left)*width/b.width-left)/pw*364))));}} onPointerLeave={()=>setHover(null)}>
-   <rect width={width} height={height} fill="white"/>
-   <text x={left} y={15} fill="#666b70" fontSize="12" fontFamily="system-ui">{mode==='cumulative'?'Precipitation since 1 January (mm)':'Average precipitation (mm/day)'}</text>
-   {Array.from({length:Math.round(yMax/step)+1},(_,i)=>i*step).map(v=><g key={v}><line x1={left} x2={width-right} y1={y(v)} y2={y(v)} stroke="#e7e8e9"/><text x={left-12} y={y(v)+4} textAnchor="end" fill="#666b70" fontSize="12" fontFamily="system-ui">{fmt(v)}</text></g>)}
-   {bands.includes('90')&&<path d={area('low90','high90')} fill="#eef0f1"/>}
-   {bands.includes('50')&&<path d={area('low50','high50')} fill="#cdd3d7" fillOpacity=".72"/>}
-   {bands.includes('range')&&['min','max'].map(k=><path key={k} d={line(data.points.map(p=>p[k as 'min'|'max']))} fill="none" stroke="#adb4b9" strokeWidth="1"/>)}
-   <path d={line(data.points.map(p=>p.median))} fill="none" stroke="#334d5c" strokeWidth="2"/>
+   <rect width={width} height={height} fill="var(--background)"/>
+   <text x={left} y={15} fill="var(--muted-foreground)" fontSize="12" fontFamily="system-ui">{mode==='cumulative'?'Precipitation since 1 January (mm)':'Average precipitation (mm/day)'}</text>
+   {Array.from({length:Math.round(yMax/step)+1},(_,i)=>i*step).map(v=><g key={v}><line x1={left} x2={width-right} y1={y(v)} y2={y(v)} stroke="var(--rain-grid)"/><text x={left-12} y={y(v)+4} textAnchor="end" fill="var(--muted-foreground)" fontSize="12" fontFamily="system-ui">{fmt(v)}</text></g>)}
+   {bands.includes('90')&&<path d={area('low90','high90')} fill="var(--rain-band-90)"/>}
+   {bands.includes('50')&&<path d={area('low50','high50')} fill="var(--rain-band-50)" fillOpacity=".72"/>}
+   {bands.includes('range')&&['min','max'].map(k=><path key={k} d={line(data.points.map(p=>p[k as 'min'|'max']))} fill="none" stroke="var(--rain-range)" strokeWidth="1"/>)}
+   <path d={line(data.points.map(p=>p.median))} fill="none" stroke="var(--primary)" strokeWidth="2"/>
    {selected.map(s=><path key={s.year} d={line(s.values)} fill="none" stroke={colors[years.indexOf(s.year)%3]} strokeWidth="1.4"/>)}
-   {!data.provisionalTail?<path d={line(data.points.map(p=>p.current))} fill="none" stroke="#b9502b" strokeWidth="2.8"/>:<><path d={line(data.points.map((p,i)=>i<=data.last-44?p.current:null))} fill="none" stroke="#b9502b" strokeWidth="2.8"/><path d={line(data.points.map((p,i)=>i>=Math.max(0,data.last-44)?p.current:null))} fill="none" stroke="#b9502b" strokeWidth="2.8" strokeDasharray="5 4"/></>}
-   {data.last>=0&&<circle cx={x(data.last)} cy={y(data.points[data.last].current!)} r="4.5" fill="#b9502b" stroke="white" strokeWidth="2"/>}
-   {monthTicks.map((i,m)=>(width>=500||m%2===0)&&<text key={i} x={x(i)} y={height-12} textAnchor="middle" fill="#666b70" fontSize={width<500?12:13} fontFamily="system-ui">{monthNames[m]}</text>)}
-   {point&&<g><line x1={x(hover!)} x2={x(hover!)} y1={top} y2={height-bottom} stroke="#666b70" strokeDasharray="3 4"/>{point.current!==null&&<circle cx={x(hover!)} cy={y(point.current)} r="4" fill="#b9502b"/>}</g>}
+   {!data.provisionalTail?<path d={line(data.points.map(p=>p.current))} fill="none" stroke="var(--rain-current)" strokeWidth="2.8"/>:<><path d={line(data.points.map((p,i)=>i<=data.last-44?p.current:null))} fill="none" stroke="var(--rain-current)" strokeWidth="2.8"/><path d={line(data.points.map((p,i)=>i>=Math.max(0,data.last-44)?p.current:null))} fill="none" stroke="var(--rain-current)" strokeWidth="2.8" strokeDasharray="5 4"/></>}
+   {data.last>=0&&<circle cx={x(data.last)} cy={y(data.points[data.last].current!)} r="4.5" fill="var(--rain-current)" stroke="var(--background)" strokeWidth="2"/>}
+   {monthTicks.map((i,m)=>(width>=500||m%2===0)&&<text key={i} x={x(i)} y={height-12} textAnchor="middle" fill="var(--muted-foreground)" fontSize={width<500?12:13} fontFamily="system-ui">{monthNames[m]}</text>)}
+   {point&&<g><line x1={x(hover!)} x2={x(hover!)} y1={top} y2={height-bottom} stroke="var(--muted-foreground)" strokeDasharray="3 4"/>{point.current!==null&&<circle cx={x(hover!)} cy={y(point.current)} r="4" fill="var(--rain-current)"/>}</g>}
   </svg>
-  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{Number(point.date.slice(3))} {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.year} <b style={{color:'#b9502b'}}>{fmt(point.current,1)} {unit}</b></span><span>90% <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
+  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{Number(point.date.slice(3))} {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.year} <b style={{color:'var(--rain-current)'}}>{fmt(point.current,1)} {unit}</b></span><span>90% <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
  </div>;
 }
 export default function App(){
@@ -102,6 +102,16 @@ export default function App(){
   try {
    if(!svgRef.current)return;
    const svg=svgRef.current.cloneNode(true) as SVGSVGElement;
+   // Resolve inherited CSS colors before serializing the standalone SVG.
+   const sourceNodes=[svgRef.current,...svgRef.current.querySelectorAll('*')];
+   const exportNodes=[svg,...svg.querySelectorAll('*')];
+   sourceNodes.forEach((node,index)=>{
+    const style=getComputedStyle(node);
+    for(const property of ['fill','stroke','color']) {
+     (exportNodes[index] as SVGElement).style.setProperty(property,style.getPropertyValue(property));
+    }
+   });
+   const theme=getComputedStyle(svgRef.current);
    const scale=Math.max(1,900/svg.width.baseVal.value);
    svg.setAttribute('width',String(svg.width.baseVal.value*scale));
    svg.setAttribute('height',String(svg.height.baseVal.value*scale));
@@ -111,8 +121,8 @@ export default function App(){
    const canvas=document.createElement('canvas');
    canvas.width=img.width*2;canvas.height=(img.height+110)*2;
    const ctx=canvas.getContext('2d')!;
-   ctx.scale(2,2);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);
-   ctx.fillStyle='#292d30';ctx.font='600 20px system-ui';
+   ctx.scale(2,2);ctx.fillStyle=theme.getPropertyValue('--background').trim();ctx.fillRect(0,0,canvas.width,canvas.height);
+   ctx.fillStyle=theme.getPropertyValue('--foreground').trim();ctx.font='600 20px system-ui';
    ctx.fillText(`${station.name} · ${selectedYear} · ${mode==='cumulative'?'Cumulative precipitation':'Precipitation · Gaussian σ = 11 days'}`,25,30);
    ctx.font='12px system-ui';
    ctx.fillText(`${providerNames[station.provider]} ${station.sourceId} · ${data.series.length} complete years · Through ${data.lastDate??'—'} · Median / ${bands.join(' / ')} · Comparison ${years.join(', ')||'off'}`,25,53,img.width-50);
@@ -187,8 +197,8 @@ export default function App(){
          <p>{busy?status:'Select another station or try loading the data again.'}</p>
         </div>}
      <div className="legend">
-      <span className="legend-item current-year"><i style={{background:'#b9502b'}}/>{selectedYear}</span>
-      <span className="legend-item"><i style={{background:'#334d5c'}}/>Median</span>
+      <span className="legend-item current-year"><i style={{background:'var(--rain-current)'}}/>{selectedYear}</span>
+      <span className="legend-item"><i style={{background:'var(--primary)'}}/>Median</span>
       <div className="band-controls" role="group" aria-label="Historical distribution">
        {[['50','50%'],['90','90%'],['range','Min–Max']].map(([key,label])=>(
         <label className="legend-check" key={key}>
@@ -236,3 +246,4 @@ export default function App(){
   </div>
  );
 }
+

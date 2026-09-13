@@ -18,6 +18,8 @@ Vite startet lokal auf `http://localhost:5173`; die Vorschau des Produktionsbuil
 
 ## Oberfläche
 
+- Helles oder dunkles Farbschema folgt automatisch der Systemeinstellung, einschließlich Diagramm, Stationskarte und PNG-Export.
+
 - Native Stationsauswahl, nach Land gruppiert, plus Karten-Button. Der Base-UI-Dialog zeigt links die Länderwahl und rechts den Landesumriss mit direkt auswählbaren Stationen. Die Länderwahl ist nativ und scrollbar; auf kleinen Displays steht sie als Dropdown über der Karte.
 - Japan: Tokyo, Kyoto, Osaka, Sapporo, Fukuoka und Naha (JMA).
 - Deutschland: Berlin-Tempelhof, Hamburg-Fuhlsbüttel, München-Stadt, Frankfurt/Main, Köln/Bonn und Dresden-Klotzsche (DWD).
@@ -96,3 +98,4 @@ tests/                     Parser, Qualität, Statistik, Jahreswechsel und Fehle
 ```
 
 `pnpm check` führt Typprüfung, ESLint und Tests aus. Tests decken unter anderem native Qualitätscodes, fehlende Tage gegenüber null Millimetern, falsche Stationen, ZIP-Auswahl, Schaltjahressummen, Gauß-Glättung, länderspezifische Jahreswechsel und den Erhalt veröffentlichter Daten bei Abruffehlern ab. `pnpm data:validate` prüft die tatsächlich veröffentlichten Dateien einschließlich ihrer Inhaltsrevisionen.
+
