@@ -29,6 +29,14 @@ export function analyze(history:Row[],current:Row[],reference:'all'|'normal'='al
   let next=sorted.length?`${sorted[0][0].slice(0,4)}-01-01`:'';
   for(const r of sorted){if(r[0]!==next||!usableRow(r,provider))break;valid.push(r);next=new Date(Date.parse(next)+86400000).toISOString().slice(0,10);}
   let sum=0;const values:number[]=[];for(const [date,v] of valid){sum+=v!;if(date.slice(5)!=='02-29')values.push(mode==='cumulative'?sum:v!);}
+  const lastUsableRow=sorted.findLast(r=>usableRow(r,provider));
+  let reportedMinimumTotal=0,missingOrUnusableDays=0;const reportedMinimumValues:number[]=[];
+  for(const r of sorted){
+    if(!lastUsableRow||r[0]>lastUsableRow[0])break;
+    if(usableRow(r,provider))reportedMinimumTotal+=r[1]!;else missingOrUnusableDays++;
+    if(r[0].slice(5)!=='02-29')reportedMinimumValues.push(reportedMinimumTotal);
+  }
+  const hasLaterObservations=lastUsableRow!==undefined&&lastUsableRow[0]>(valid.at(-1)?.[0]??'');
   const year=selectedYear??(sorted.length?Number(sorted[0][0].slice(0,4)):undefined);
   const complete=year!==undefined&&valid.length===(Date.UTC(year+1,0,1)-Date.UTC(year,0,1))/86400000;
   let observed=values;
@@ -39,8 +47,8 @@ export function analyze(history:Row[],current:Row[],reference:'all'|'normal'='al
     const pad=previous.length===4*h&&previous.every(r=>usableRow(r,provider))?previous.map(r=>r[1]!):[];
     observed=gaussian([...pad,...values],false).slice(pad.length);
   }
-  const points=calendar.map((date,i)=>{const v=series.map(s=>s.values[i]).sort((a,b)=>a-b);return {day:i,date,median:v.length?quantile(v,.5):null,low50:v.length?quantile(v,.25):null,high50:v.length?quantile(v,.75):null,low90:v.length?quantile(v,.05):null,high90:v.length?quantile(v,.95):null,min:v[0]??null,max:v.at(-1)??null,current:observed[i]??null};});
+  const points=calendar.map((date,i)=>{const v=series.map(s=>s.values[i]).sort((a,b)=>a-b);return {day:i,date,median:v.length?quantile(v,.5):null,low50:v.length?quantile(v,.25):null,high50:v.length?quantile(v,.75):null,low90:v.length?quantile(v,.05):null,high90:v.length?quantile(v,.95):null,min:v[0]??null,max:v.at(-1)??null,current:observed[i]??null,reportedMinimum:mode==='cumulative'&&hasLaterObservations?(reportedMinimumValues[i]??null):null};});
   const last=observed.length-1;
   const ranking=last>=0?series.map(s=>({year:s.year,value:s.values[last]})).sort((a,b)=>b.value-a.value):[];
-  return {points,series,excluded,last,lastDate:valid.at(-1)?.[0],total:sum,year,complete,provisionalTail:mode==='gaussian'&&!complete,ranking,higher:ranking.filter(r=>r.value>observed[last]).length,gap:valid.length<sorted.length};
+  return {points,series,excluded,last,lastDate:valid.at(-1)?.[0],total:sum,year,complete,provisionalTail:mode==='gaussian'&&!complete,ranking,higher:ranking.filter(r=>r.value>observed[last]).length,gap:valid.length<sorted.length,hasLaterObservations,reportedThrough:lastUsableRow?.[0],reportedMinimumTotal,missingOrUnusableDays};
 }

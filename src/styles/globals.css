@@ -191,6 +191,7 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
 .legend { padding: 16px 0 10px; font-size: 13px; }
 .legend-item { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .legend-item i { width: 20px; height: 2px; }
+.reported-minimum i { height: 0; border-top: 2px dashed var(--rain-current); background: transparent; }
 .current-year { font-weight: 600; color: var(--rain-current); }
 .current-year i { height: 3px; }
 .legend-check { display: flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap; min-height: 28px; }
@@ -258,4 +259,3 @@ button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visib
   .empty-chart { height: 320px; }
   .method-links { flex-direction: column; }
 }
-

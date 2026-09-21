@@ -19,11 +19,18 @@ export type DatasetReference = Omit<Dataset, "rows" | "schemaVersion" | "station
   path: string;
 };
 
+export type CoverageSummary = {
+  lastReported: string | null;
+  lastUsable: string | null;
+  lastContinuous: string | null;
+  missingOrUnusableDays: number;
+};
+
 export type StationManifest = {
   schemaVersion: 1;
   updatedAt: string;
   historyEndYear: number;
-  stations: { id: string; name: string; jp?: string; history: DatasetReference; current: DatasetReference }[];
+  stations: { id: string; name: string; jp?: string; history: DatasetReference; current: DatasetReference; coverage?: CoverageSummary }[];
 };
 
 export function validateRows(rows: unknown, from: string, to: string): asserts rows is Row[] {
@@ -77,4 +84,21 @@ export function usableRow(row: Row, provider: Provider = "jma") {
   if (provider === 'jma') return row[2] === 8;
   if (provider === 'dwd') return [1, 2, 3, 5, 7, 8, 9, 10].includes(row[2]);
   return row[2] === 1 || row[2] === 2;
+}
+
+export function summarizeCoverage(rows: Row[], provider: Provider): CoverageSummary {
+  const lastReported = rows.findLast(row => row[1] !== null)?.[0] ?? null;
+  const lastUsable = rows.findLast(row => usableRow(row, provider))?.[0] ?? null;
+  let lastContinuous: string | null = null;
+  for (const row of rows) {
+    if (!usableRow(row, provider)) break;
+    lastContinuous = row[0];
+  }
+  const through = lastUsable === null ? [] : rows.filter(row => row[0] <= lastUsable);
+  return {
+    lastReported,
+    lastUsable,
+    lastContinuous,
+    missingOrUnusableDays: through.filter(row => !usableRow(row, provider)).length,
+  };
 }

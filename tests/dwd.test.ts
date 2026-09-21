@@ -53,6 +53,11 @@ test('German analysis accepts historical QN 5/10 and provisional QN 1, preserves
   assert.equal(data.lastDate, '2025-01-01');
   assert.equal(data.total, 2);
   assert.equal(data.gap, true);
+  assert.equal(data.hasLaterObservations, true);
+  assert.equal(data.reportedThrough, '2025-01-03');
+  assert.equal(data.reportedMinimumTotal, 5);
+  assert.equal(data.missingOrUnusableDays, 1);
+  assert.equal(data.points[2].reportedMinimum, 5);
   assert.equal(analyze(history, current).series.length, 0);
   assert.equal(analyze(wetYear(2024, 8), [['2025-01-01', 2, 8]]).series.length, 1);
   const gaussian = analyze(history, current, 'all', 'gaussian', 'dwd');

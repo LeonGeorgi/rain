@@ -76,6 +76,9 @@ test("updates reuse history and a failed station leaves all published files unch
     assert.equal(await readFile(join(directory, "stations.json"), "utf8"), original);
     assert.equal(await readFile(join(directory, "47662/current.json"), "utf8"), current);
     assert.equal(manifest.stations.length, 2);
+    assert.deepEqual(manifest.stations[0].coverage, {
+      lastReported: '2026-01-02', lastUsable: '2026-01-02', lastContinuous: '2026-01-02', missingOrUnusableDays: 0,
+    });
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

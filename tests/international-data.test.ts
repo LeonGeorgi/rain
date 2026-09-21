@@ -87,6 +87,9 @@ test('international archives preserve leap sums, current cutoffs and gaps; quali
   assert.equal(analysis.series[0].values.at(-1),366);
   assert.equal(analysis.lastDate,'2025-01-01');
   assert.equal(analysis.gap,true);
+  assert.equal(analysis.hasLaterObservations,true);
+  assert.equal(analysis.reportedMinimumTotal,2);
+  assert.equal(analysis.missingOrUnusableDays,1);
   const changed=structuredClone(rows); changed[0][3]='  X';
   assert.notEqual(splitDailyArchive(station,changed,dateBounds(now,station.timeZone),now,'https://example.com/station.dly').history.revision,data.history.revision);
   const invalid=structuredClone(data.history); invalid.rows[0][3]=' SX';

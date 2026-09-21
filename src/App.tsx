@@ -17,7 +17,7 @@ function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;ban
  useEffect(()=>{const r=new ResizeObserver(e=>setWidth(Math.max(300,e[0].contentRect.width)));if(box.current)r.observe(box.current);return()=>r.disconnect();},[]);
  const height=width<600?320:430,left=width<600?42:54,right=18,top=32,bottom=42,pw=width-left-right,ph=height-top-bottom;
  const selected=data.series.filter(s=>years.includes(s.year));
- const max=Math.max(1,...data.points.map(p=>Math.max(p.current??0,bands.includes('range')?p.max??0:bands.includes('90')?p.high90??0:p.high50??0)),...selected.flatMap(s=>s.values));
+ const max=Math.max(1,...data.points.map(p=>Math.max(p.current??0,p.reportedMinimum??0,bands.includes('range')?p.max??0:bands.includes('90')?p.high90??0:p.high50??0)),...selected.flatMap(s=>s.values));
  const raw=max/5,mag=10**Math.floor(Math.log10(raw));const step=[1,2,2.5,5,10].map(x=>x*mag).find(x=>x>=raw)??mag*10;const yMax=Math.ceil(max/step)*step;
  const x=(i:number)=>left+i/364*pw,y=(v:number)=>top+ph-v/yMax*ph;
  const line=(values:(number|null)[])=>values.map((v,i)=>v===null?'':`${i===0||values[i-1]===null?'M':'L'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ');
@@ -35,11 +35,12 @@ function RainChart({data,mode,bands,years,svgRef}:{data:Analysis;mode:string;ban
    <path d={line(data.points.map(p=>p.median))} fill="none" stroke="var(--primary)" strokeWidth="2"/>
    {selected.map(s=><path key={s.year} d={line(s.values)} fill="none" stroke={colors[years.indexOf(s.year)%3]} strokeWidth="1.4"/>)}
    {!data.provisionalTail?<path d={line(data.points.map(p=>p.current))} fill="none" stroke="var(--rain-current)" strokeWidth="2.8"/>:<><path d={line(data.points.map((p,i)=>i<=data.last-44?p.current:null))} fill="none" stroke="var(--rain-current)" strokeWidth="2.8"/><path d={line(data.points.map((p,i)=>i>=Math.max(0,data.last-44)?p.current:null))} fill="none" stroke="var(--rain-current)" strokeWidth="2.8" strokeDasharray="5 4"/></>}
+   {mode==='cumulative'&&data.hasLaterObservations&&<path d={line(data.points.map((p,i)=>i>=Math.max(0,data.last)?p.reportedMinimum:null))} fill="none" stroke="var(--rain-current)" strokeWidth="2.4" strokeDasharray="3 5" opacity=".85"/>}
    {data.last>=0&&<circle cx={x(data.last)} cy={y(data.points[data.last].current!)} r="4.5" fill="var(--rain-current)" stroke="var(--background)" strokeWidth="2"/>}
    {monthTicks.map((i,m)=>(width>=500||m%2===0)&&<text key={i} x={x(i)} y={height-12} textAnchor="middle" fill="var(--muted-foreground)" fontSize={width<500?12:13} fontFamily="system-ui">{monthNames[m]}</text>)}
    {point&&<g><line x1={x(hover!)} x2={x(hover!)} y1={top} y2={height-bottom} stroke="var(--muted-foreground)" strokeDasharray="3 4"/>{point.current!==null&&<circle cx={x(hover!)} cy={y(point.current)} r="4" fill="var(--rain-current)"/>}</g>}
   </svg>
-  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{Number(point.date.slice(3))} {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.year} <b style={{color:'var(--rain-current)'}}>{fmt(point.current,1)} {unit}</b></span><span>90% <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
+  {point&&<div className="chart-tooltip" style={{left:Math.min(width-205,Math.max(5,x(hover!)+12))}}><strong>{Number(point.date.slice(3))} {monthNames[+point.date.slice(0,2)-1]}</strong><span>Median <b>{fmt(point.median,1)} {unit}</b></span><span>{data.year} <b style={{color:'var(--rain-current)'}}>{point.current!==null?fmt(point.current,1):point.reportedMinimum!==null?`≥ ${fmt(point.reportedMinimum,1)}`:'—'} {unit}</b></span><span>90% <b>{fmt(point.low90)}–{fmt(point.high90)} {unit}</b></span></div>}
  </div>;
 }
 export default function App(){
@@ -139,7 +140,7 @@ export default function App(){
    if(url)URL.revokeObjectURL(url);
   }
  };
- useEffect(()=>{const ctx=(document as Document&{modelContext?:{registerTool:(t:unknown,o:unknown)=>Promise<void>}}).modelContext;if(!ctx)return;const lifecycle=new AbortController();void Promise.resolve(ctx.registerTool({name:'get_precipitation_summary',description:'Read the currently displayed station, data coverage and cumulative rainfall comparison.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:(input:unknown)=>{if(!input||typeof input!=='object'||Object.keys(input).length)throw new Error('Expected an empty object.');return {station:station.name,stationId,year:selectedYear,mode,reference,completeYears:data.series.length,lastDate:data.lastDate,totalMm:cumulative.total,historicalYearsAbove:cumulative.higher,loading:busy,error:error||null};}},{signal:lifecycle.signal})).catch(()=>{});return()=>lifecycle.abort();},[station,stationId,selectedYear,mode,reference,data,cumulative,busy,error]);
+ useEffect(()=>{const ctx=(document as Document&{modelContext?:{registerTool:(t:unknown,o:unknown)=>Promise<void>}}).modelContext;if(!ctx)return;const lifecycle=new AbortController();void Promise.resolve(ctx.registerTool({name:'get_precipitation_summary',description:'Read the currently displayed station, data coverage and cumulative rainfall comparison.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:(input:unknown)=>{if(!input||typeof input!=='object'||Object.keys(input).length)throw new Error('Expected an empty object.');return {station:station.name,stationId,year:selectedYear,mode,reference,completeYears:data.series.length,lastExactDate:data.lastDate,exactTotalMm:cumulative.total,reportedThrough:cumulative.reportedThrough,reportedMinimumMm:cumulative.hasLaterObservations?cumulative.reportedMinimumTotal:null,missingOrUnusableDays:cumulative.missingOrUnusableDays,historicalYearsAbove:cumulative.higher,loading:busy,error:error||null};}},{signal:lifecycle.signal})).catch(()=>{});return()=>lifecycle.abort();},[station,stationId,selectedYear,mode,reference,data,cumulative,busy,error]);
  return (
   <div className="app">
    <main>
@@ -197,7 +198,8 @@ export default function App(){
          <p>{busy?status:'Select another station or try loading the data again.'}</p>
         </div>}
      <div className="legend">
-      <span className="legend-item current-year"><i style={{background:'var(--rain-current)'}}/>{selectedYear}</span>
+     <span className="legend-item current-year"><i style={{background:'var(--rain-current)'}}/>{selectedYear}</span>
+      {mode==='cumulative'&&data.hasLaterObservations&&<span className="legend-item reported-minimum"><i/>Reported minimum after gaps</span>}
       <span className="legend-item"><i style={{background:'var(--primary)'}}/>Median</span>
       <div className="band-controls" role="group" aria-label="Historical distribution">
        {[['50','50%'],['90','90%'],['range','Min–Max']].map(([key,label])=>(
@@ -239,11 +241,11 @@ export default function App(){
     </div>
     {error&&<div role="alert" className="notice">{error}{history?' Previously loaded data remains available.':''}</div>}
     {storageWarning&&<div className="notice">This browser does not allow persistent storage. Data is kept in memory for this session only.</div>}
-    {data.gap&&<div className="notice">The selected year’s curve stops before the first missing or unusable daily observation.</div>}
+    {data.hasLaterObservations&&<div className="notice">The solid curve is exact {data.lastDate?`through ${dateLabel(data.lastDate)}`:'for no continuous day from 1 January'}. The dotted continuation is a lower bound of ≥ {fmt(data.reportedMinimumTotal,1)} mm through {dateLabel(data.reportedThrough)}, because {data.missingOrUnusableDays} {data.missingOrUnusableDays===1?'day is':'days are'} missing or unusable. Rankings remain limited to the exact period.</div>}
+    {data.gap&&!data.hasLaterObservations&&<div className="notice">The selected year’s curve stops before the first missing or unusable daily observation.</div>}
     {!busy&&data.last<0&&<div className="notice">No continuous usable observations from 1 January are available for {selectedYear}.</div>}
     <Methodology station={station} excluded={data.excluded} today={today}/>
    </main>
   </div>
  );
 }
-

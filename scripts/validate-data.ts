@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { stations } from "../src/lib/stations.ts";
-import { validateDataset, type StationManifest } from "../src/lib/datasets.ts";
+import { summarizeCoverage, validateDataset, type StationManifest } from "../src/lib/datasets.ts";
 import { makeDataset } from "./dataset.ts";
 
 const directory = fileURLToPath(new URL("../public/data/", import.meta.url));
@@ -29,6 +29,10 @@ for (const station of stations) {
     }
     if (period === "current" && data.from !== `${Number(entry.history.to.slice(0, 4)) + 1}-01-01`) {
       throw new Error(`Current-year coverage mismatch: ${ref.path}.`);
+    }
+    if (period === "current" && entry.coverage &&
+        JSON.stringify(entry.coverage) !== JSON.stringify(summarizeCoverage(data.rows, station.provider))) {
+      throw new Error(`Coverage summary mismatch: ${ref.path}.`);
     }
   }
 }

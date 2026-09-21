@@ -2,7 +2,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { stations, type Station } from "../src/lib/stations.ts";
-import { validateDataset, type Dataset, type DatasetReference, type StationManifest } from "../src/lib/datasets.ts";
+import { summarizeCoverage, validateDataset, type Dataset, type DatasetReference, type StationManifest } from "../src/lib/datasets.ts";
 import { endpoint, fetchJMA } from "./jma.ts";
 import { assertNoRegression, makeDataset } from "./dataset.ts";
 import { fetchDWD, fetchDWDIndex } from "./dwd.ts";
@@ -97,6 +97,7 @@ export async function updateData({
     manifest.stations.push({
       id: station.id, name: station.name, jp: station.jp,
       history: reference(history, "history"), current: reference(current, "current"),
+      coverage: summarizeCoverage(current.rows, station.provider),
     });
   }
   // Nothing is written until every station has passed validation. The manifest

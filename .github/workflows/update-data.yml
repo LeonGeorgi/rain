@@ -44,6 +44,8 @@ jobs:
             pnpm data:update
           fi
       - run: pnpm data:validate
+      - name: Summarize station coverage
+        run: pnpm data:coverage >> "$GITHUB_STEP_SUMMARY"
       - name: Save the validated data in Git
         id: commit
         run: |
@@ -68,4 +70,3 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       ref: ${{ needs.update.outputs.commit }}
-

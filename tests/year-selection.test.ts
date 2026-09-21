@@ -45,6 +45,10 @@ test('complete selected years use cyclic smoothing, while incomplete years retai
   assert.equal(incomplete.gap,true);
   assert.equal(incomplete.provisionalTail,true);
   assert.equal(incomplete.total,6);
+  assert.equal(incomplete.hasLaterObservations,true);
+  assert.equal(incomplete.reportedThrough,'2024-12-31');
+  assert.equal(incomplete.missingOrUnusableDays,1);
+  assert.equal(incomplete.reportedMinimumTotal,1095);
 });
 
 test('selectable years respect source-specific quality, skip empty years and include the current year even before its first measurement', () => {

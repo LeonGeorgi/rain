@@ -43,6 +43,7 @@ GitHub Actions aktualisiert alle Stationen zweimal täglich. Jeder Push auf `mai
 ```bash
 pnpm data:update
 pnpm data:validate
+pnpm data:coverage
 # JMA-Historie vollständig neu abrufen:
 pnpm data:update --refresh-history
 ```
@@ -61,7 +62,7 @@ Die Karten verwenden gemeinfreie [Natural-Earth-Umrisse](https://www.naturaleart
 
 ## Methodik und Grenzen
 
-Für die Referenz werden nur vollständige Kalenderjahre verwendet. Das ausgewählte Jahr wird aus der Referenz und den optionalen Vergleichsjahren ausgeschlossen. Vergangene Jahre werden bis Jahresende dargestellt, sofern vollständig; bei Lücken endet ihre Kurve ebenfalls am ersten unbrauchbaren Tag. Die Referenz bleibt der gewählte Archivzeitraum und kann auch spätere Jahre enthalten. JMA-Werte benötigen Qualitätscode 8. Beim DWD werden die dokumentierten QN-Verfahren 1, 2, 3, 5, 7, 8, 9 und 10 akzeptiert, jedoch ausschließlich aus dem abgeschlossenen historischen Archiv. QN ist keine Rangskala. Die aktuellen DWD-Werte haben ihre Qualitätskontrolle noch nicht vollständig durchlaufen.
+Für die Referenz werden nur vollständige Kalenderjahre verwendet. Das ausgewählte Jahr wird aus der Referenz und den optionalen Vergleichsjahren ausgeschlossen. Die exakte Kurve endet an der ersten Lücke. Sind danach wieder verwendbare Messungen vorhanden, zeigt die kumulative Ansicht sie gestrichelt als Untergrenze; fehlende Tage werden nicht als null Millimeter gerechnet, und Ranglisten bleiben auf den exakten Zeitraum begrenzt. Die Referenz bleibt der gewählte Archivzeitraum und kann auch spätere Jahre enthalten. JMA-Werte benötigen Qualitätscode 8. Beim DWD werden die dokumentierten QN-Verfahren 1, 2, 3, 5, 7, 8, 9 und 10 akzeptiert, jedoch ausschließlich aus dem abgeschlossenen historischen Archiv. QN ist keine Rangskala. Die aktuellen DWD-Werte haben ihre Qualitätskontrolle noch nicht vollständig durchlaufen.
 
 Kumulative Kurven summieren den 29. Februar mit auf; nur sein Achsenpunkt entfällt. Die Jahressumme bleibt erhalten. Vor der Gauß-Glättung wird der 29. Februar entfernt. Vollständige Jahre werden zyklisch geglättet, einschließlich der ausgewählten Jahreskurve. Unvollständige Jahre verwenden vollständige vorhergehende Dezemberwerte, soweit verfügbar; am offenen Ende wird der Kernel neu normiert. Seine letzten 44 Tage sind gestrichelt. Die ausgewählte Kurve endet am ersten fehlenden oder unbrauchbaren Tag.
 
@@ -98,4 +99,3 @@ tests/                     Parser, Qualität, Statistik, Jahreswechsel und Fehle
 ```
 
 `pnpm check` führt Typprüfung, ESLint und Tests aus. Tests decken unter anderem native Qualitätscodes, fehlende Tage gegenüber null Millimetern, falsche Stationen, ZIP-Auswahl, Schaltjahressummen, Gauß-Glättung, länderspezifische Jahreswechsel und den Erhalt veröffentlichter Daten bei Abruffehlern ab. `pnpm data:validate` prüft die tatsächlich veröffentlichten Dateien einschließlich ihrer Inhaltsrevisionen.
-
