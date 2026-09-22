@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { zipSync, strToU8 } from 'fflate';
 import { fetchGHCN, parseGHCN } from '../scripts/ghcn.ts';
-import { parseKNMI, parseKNMIArchive } from '../scripts/knmi.ts';
+import { fetchKNMI, parseKNMI, parseKNMIArchive } from '../scripts/knmi.ts';
 import { fillDays, splitDailyArchive } from '../scripts/dataset.ts';
 import { dateBounds, updateData } from '../scripts/update-data.ts';
 import { validateDataset, usableRow, type Row } from '../src/lib/datasets.ts';
@@ -51,7 +51,7 @@ test('GHCN recovers from temporary transport and server failures, but bounds ret
     calls++;
     if(calls===1) throw new TypeError('Connection closed');
     if(calls===2) return new Response('Unavailable',{status:503});
-    return new Response(archive);
+    return new Response(Buffer.from(archive));
   });
   assert.equal(calls,3);
   assert.equal(recovered.current.rows[0][1],2);
@@ -72,6 +72,31 @@ test('KNMI distinguishes traces from missing and true zero and validates the sta
   assert.throws(()=>parseKNMIArchive(zipSync({'etmgeg_235.txt':strToU8(text)}),'260'));
   for(const row of ['235,20240101,10','260,20240230,10','260,20240101,-2','260,20240101,abc','260,20240101','260,20240101,1\n260,20240101,2']) {
     assert.throws(()=>parseKNMI(dutch(row),'260'));
+  }
+});
+
+test('KNMI recovers from temporary transport and server failures, but bounds retries and rejects permanent responses', async () => {
+  const station={...nl,historyStart:'2024-12-01'};
+  const now=new Date('2025-01-03T12:00:00Z');
+  const bounds=dateBounds(now,station.timeZone);
+  const december=Array.from({length:31},(_,i)=>`260,202412${String(i+1).padStart(2,'0')},10`).join('\n');
+  const archive=zipSync({'etmgeg_260.txt':strToU8(dutch(`${december}\n260,20250101,20\n260,20250102,`))});
+  let calls=0;
+  const recovered=await fetchKNMI(station,bounds,now,async()=>{
+    calls++;
+    if(calls===1) throw new TypeError('Connection closed');
+    if(calls===2) return new Response('Unavailable',{status:503});
+    return new Response(Buffer.from(archive));
+  });
+  assert.equal(calls,3);
+  assert.equal(recovered.current.rows[0][1],2);
+  calls=0;
+  await assert.rejects(fetchKNMI(station,bounds,now,async()=>{calls++;throw new TypeError('Offline');}),/Offline/);
+  assert.equal(calls,3);
+  for(const response of [new Response('Missing',{status:404}),new Response('Malformed archive')]){
+    calls=0;
+    await assert.rejects(fetchKNMI(station,bounds,now,async()=>{calls++;return response;}));
+    assert.equal(calls,1);
   }
 });
 
