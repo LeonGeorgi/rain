@@ -1,4 +1,5 @@
 import { unzipSync } from 'fflate';
+import { setTimeout as delay } from 'node:timers/promises';
 import type { Row } from '../src/lib/datasets.ts';
 import type { Station } from '../src/lib/stations.ts';
 import { splitDailyArchive } from './dataset.ts';
@@ -40,10 +41,36 @@ export function parseKNMIArchive(bytes: Uint8Array, stationId: string) {
   return parseKNMI(new TextDecoder().decode(text), stationId);
 }
 
-export async function fetchKNMI(station: Station, bounds: Parameters<typeof splitDailyArchive>[2], now: Date) {
+async function downloadArchive(source: string, stationId: string, request: typeof fetch): Promise<Uint8Array> {
+  let failure: unknown;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    let response: Response | undefined;
+    try {
+      response = await request(source, {
+        signal: AbortSignal.timeout(120_000),
+        headers: {'User-Agent': 'Rain precipitation comparison (github.com/LeonGeorgi/rain)'},
+      });
+      if (response.ok) return new Uint8Array(await response.arrayBuffer());
+    } catch (error) {
+      failure = error;
+    }
+    if (response && !response.ok) {
+      failure = new Error(`KNMI: HTTP ${response.status} for ${stationId}.`);
+      await response.body?.cancel();
+      if (response.status !== 429 && response.status < 500) throw failure;
+    }
+    if (attempt < 3) await delay(attempt * 1_000);
+  }
+  throw failure;
+}
+
+export async function fetchKNMI(
+  station: Station,
+  bounds: Parameters<typeof splitDailyArchive>[2],
+  now: Date,
+  request: typeof fetch = fetch,
+) {
   if (!/^\d{3}$/.test(station.sourceId)) throw new Error('KNMI: Invalid station ID.');
   const source = `${knmiBase}etmgeg_${station.sourceId}.zip`;
-  const response = await fetch(source, {signal:AbortSignal.timeout(120_000), headers:{'User-Agent':'Rain precipitation comparison (github.com/LeonGeorgi/rain)'}});
-  if (!response.ok) throw new Error(`KNMI: HTTP ${response.status} for ${station.id}.`);
-  return splitDailyArchive(station, parseKNMIArchive(new Uint8Array(await response.arrayBuffer()), station.sourceId), bounds, now, source);
+  return splitDailyArchive(station, parseKNMIArchive(await downloadArchive(source, station.id, request), station.sourceId), bounds, now, source);
 }
