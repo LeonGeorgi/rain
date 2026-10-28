@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-27T18:06:20.231Z",
+  "updatedAt": "2026-10-28T05:55:46.355Z",
   "historyEndYear": 2025,
   "stations": [
     {
@@ -17,7 +17,7 @@
       "current": {
         "path": "47662/current.json",
         "revision": "2c23d231305e0c79eb93b98df3608b4d5fcface345b4a36f9de91e21c8109c3c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-27"
       },
@@ -42,7 +42,7 @@
       "current": {
         "path": "47759/current.json",
         "revision": "3665ad2749237e4f8aadbc5c4d5b8d00a59f50a56bca4ede54db7ec8a9ac0a38",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-27"
       },
@@ -67,7 +67,7 @@
       "current": {
         "path": "47772/current.json",
         "revision": "b7d2278b945552f1cf3c216c77ca8bf892be0b9a64ee98e9115c30894e89f255",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-27"
       },
@@ -92,7 +92,7 @@
       "current": {
         "path": "47412/current.json",
         "revision": "3b6217a1b73aa183dc55403328ec63c974f1ad667d14ec26e3f12c7b55435a9a",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-27"
       },
@@ -117,7 +117,7 @@
       "current": {
         "path": "47807/current.json",
         "revision": "3a363be845a6028d9eb61a0cd8cae6246fbbe561bc92925a22919cc474ecca01",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-27"
       },
@@ -142,7 +142,7 @@
       "current": {
         "path": "47936/current.json",
         "revision": "f893f57c42ca6b4962568e0da37e65f857c56f7def8b0f1d68b48a9002417a06",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-27"
       },
@@ -159,14 +159,14 @@
       "history": {
         "path": "dwd-00433/history.json",
         "revision": "4333373f3d1bf36dea10853cb44321e1365defed692ac3fa0b7cd2587b2a91a6",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1948-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-00433/current.json",
         "revision": "f51b5a05e1e0b250141fe6b9611a57546809e60fe025f4cb4a2f1b1bd5556906",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -183,14 +183,14 @@
       "history": {
         "path": "dwd-01975/history.json",
         "revision": "7eb891807fa3114b460c6beca068fbf6fdfc5ac7f015745a7f88ae2543564cda",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1936-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-01975/current.json",
         "revision": "661b3a227e144c433429ff42c0b52bd04f53dcc30fdd156b89a8d174d37f5972",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -207,14 +207,14 @@
       "history": {
         "path": "dwd-03379/history.json",
         "revision": "18e7f27f2ac197516558ca95cae27051666d9e411dc1ce870c871b05d635b364",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1954-06-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-03379/current.json",
         "revision": "dd20f2f969da7a828b8bb104e91cec1135f9f75d64646ba15e2f75447c2b4329",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -231,14 +231,14 @@
       "history": {
         "path": "dwd-01420/history.json",
         "revision": "59482712c31b047206fb54f755fbe5cf19885dcc3986676a85f080e18a1f13c8",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1935-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-01420/current.json",
         "revision": "46a4e374b046aa82372067f7a4a4c53bcdcba9c60aa23885655bc22ec85d7d9f",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -255,14 +255,14 @@
       "history": {
         "path": "dwd-02667/history.json",
         "revision": "90f94eaf0cad105fa808759caa6f3717b7c0c6963264693e4cb79bf0419212dc",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1957-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-02667/current.json",
         "revision": "64acec7198472500a7a69ae6fec9ae0a5905a9822b69b7281aa64509cedb93e5",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -279,14 +279,14 @@
       "history": {
         "path": "dwd-01048/history.json",
         "revision": "0509546625772d93d565e3ce726c03718d82a68756391041327c6fbed245afe3",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1934-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "dwd-01048/current.json",
         "revision": "3b6b39c7fa75d8f07d1fd64dc9c55253cbf7720c88c9c25d76675e9d8d41f1bb",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -303,21 +303,21 @@
       "history": {
         "path": "ghcn-USW00094728/history.json",
         "revision": "cbedc870b0611c7f33157a9e1180ff832c008013d9c42ab690481a5cd900c10b",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1869-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-USW00094728/current.json",
-        "revision": "b0ce024aa319801928e060be830d5c43f0c8c68027ec448c66f7b295e10b852c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "22de18b3029df623b5d0aedd2a65df28f01f86888a2cc1b0d96f856732b01ac0",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-24"
+        "to": "2026-10-25"
       },
       "coverage": {
-        "lastReported": "2026-10-24",
-        "lastUsable": "2026-10-24",
-        "lastContinuous": "2026-10-24",
+        "lastReported": "2026-10-25",
+        "lastUsable": "2026-10-25",
+        "lastContinuous": "2026-10-25",
         "missingOrUnusableDays": 0
       }
     },
@@ -327,21 +327,21 @@
       "history": {
         "path": "ghcn-USW00024233/history.json",
         "revision": "1b1319bc5a92451f61d215bcf93965f8cac957876a1fd50a2c19797097495efe",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1948-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-USW00024233/current.json",
-        "revision": "28c36b3112d9c946ef1e75f1ac28f25c6fc55e0473d92e79b7c850d8e407ed53",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "ef3ec97e469786ae39b822704757ae77eecdeac1e002941c737976a9dac50a2b",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-24"
+        "to": "2026-10-25"
       },
       "coverage": {
-        "lastReported": "2026-10-24",
-        "lastUsable": "2026-10-24",
-        "lastContinuous": "2026-10-24",
+        "lastReported": "2026-10-25",
+        "lastUsable": "2026-10-25",
+        "lastContinuous": "2026-10-25",
         "missingOrUnusableDays": 0
       }
     },
@@ -351,14 +351,14 @@
       "history": {
         "path": "ghcn-ASN00009021/history.json",
         "revision": "2d222ee7ac30f7d86d9435a012fda596642e2be988833b11a7a1a92ea2ccc4cd",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1944-05-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-ASN00009021/current.json",
         "revision": "002289ff5e5dd11d8fa64a7649dbc7cc5a811b083267b9880632e2a079561c7b",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-15"
       },
@@ -375,14 +375,14 @@
       "history": {
         "path": "ghcn-ASN00086282/history.json",
         "revision": "71c04e174a540f4fbda7de6676f55d0f1fbf0c92c5255262b802b0b894c7398c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1970-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-ASN00086282/current.json",
         "revision": "948973feb8f7a130a342ada985aef028317b3f7d8c4971c323bfed133cffb37e",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-15"
       },
@@ -399,21 +399,21 @@
       "history": {
         "path": "ghcn-USW00023174/history.json",
         "revision": "89a6736a18f74c226a53183cb643b04ccaaab0bad95e720902305e1fe6491f64",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1944-08-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-USW00023174/current.json",
-        "revision": "c1e775c8476f664bcc083ce377294152dc8306ec0c035d31a41f2e3316a69559",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "666c715656d3456becabb95acf9c1bfde527df8b21dd6dda38ddb5c28df3cc3e",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-24"
+        "to": "2026-10-25"
       },
       "coverage": {
-        "lastReported": "2026-10-24",
-        "lastUsable": "2026-10-24",
-        "lastContinuous": "2026-10-24",
+        "lastReported": "2026-10-25",
+        "lastUsable": "2026-10-25",
+        "lastContinuous": "2026-10-25",
         "missingOrUnusableDays": 0
       }
     },
@@ -423,21 +423,21 @@
       "history": {
         "path": "ghcn-USW00023234/history.json",
         "revision": "28095aaa49249e66968cc5e8f48ac176376d8409a274042f6dbabc76e9558c7a",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1945-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-USW00023234/current.json",
-        "revision": "771c90d56454e5dbe4f48ffe0fded58f1d7fa16cf918b6630a46cf02eca85657",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "ca8a0c9b138373197424be22bf59ec12f176c00fa770938fed326019690ee224",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-24"
+        "to": "2026-10-25"
       },
       "coverage": {
-        "lastReported": "2026-10-24",
-        "lastUsable": "2026-10-24",
-        "lastContinuous": "2026-10-24",
+        "lastReported": "2026-10-25",
+        "lastUsable": "2026-10-25",
+        "lastContinuous": "2026-10-25",
         "missingOrUnusableDays": 0
       }
     },
@@ -447,21 +447,21 @@
       "history": {
         "path": "ghcn-USW00094846/history.json",
         "revision": "3af1de6e840bed7e321ac2278fe681e9b14918c464ca528515cdc4e84acba699",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1958-11-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-USW00094846/current.json",
-        "revision": "8d725e7a949879d11e18e5056eb9b177095a418e1636ffdc056fe9489e5fc8e9",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "6876556d4184a36cbfdc370e0445ca4202f92f85b7c64b4b9e8eda1d3ad44e5c",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-24"
+        "to": "2026-10-25"
       },
       "coverage": {
-        "lastReported": "2026-10-24",
-        "lastUsable": "2026-10-24",
-        "lastContinuous": "2026-10-24",
+        "lastReported": "2026-10-25",
+        "lastUsable": "2026-10-25",
+        "lastContinuous": "2026-10-25",
         "missingOrUnusableDays": 0
       }
     },
@@ -471,21 +471,21 @@
       "history": {
         "path": "ghcn-USW00012839/history.json",
         "revision": "fda9af6bdb5c91304d267680855a30aaed8b241dbfdebd00ee12980b8c238646",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1948-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-USW00012839/current.json",
-        "revision": "76651c7188e6c3085954064e6f7f12ea41616cf886a67ffdbd429fcf1f8a4b6f",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "cfa3c84530ba797ac622e40868774f654b1b82b5694b120e2f15b5807dca20ff",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-24"
+        "to": "2026-10-25"
       },
       "coverage": {
-        "lastReported": "2026-10-24",
-        "lastUsable": "2026-10-24",
-        "lastContinuous": "2026-10-24",
+        "lastReported": "2026-10-25",
+        "lastUsable": "2026-10-25",
+        "lastContinuous": "2026-10-25",
         "missingOrUnusableDays": 0
       }
     },
@@ -495,14 +495,14 @@
       "history": {
         "path": "ghcn-ASN00014015/history.json",
         "revision": "e8e27a7b8f62920d1570d7cf42e8db87b5178bd020a35804d8e12749277e4c3c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1941-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-ASN00014015/current.json",
         "revision": "dc915a738182c6e02118eadcd8212d72a36066d04d4d1925e61569dd616c0d98",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-09"
       },
@@ -519,14 +519,14 @@
       "history": {
         "path": "ghcn-ASN00040842/history.json",
         "revision": "ed968e82c64c30c36086c6dccd119acd50e29801b37b2e5dda214a7b93670dde",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1994-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-ASN00040842/current.json",
         "revision": "642d82efe4f099f5d5831e7e4a0438619cf2f640dcf052c32ef0523da63fe362",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-09"
       },
@@ -543,14 +543,14 @@
       "history": {
         "path": "ghcn-ASN00066037/history.json",
         "revision": "9b7df2d70d980acdbb86e3a6583cffc2c44d7186637bb2756347db5cab87aee3",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1929-09-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-ASN00066037/current.json",
         "revision": "f9872a24619093e5dc93fdd7b9fa9212dcede3d2fdb2bd82d690989607efa808",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-15"
       },
@@ -567,14 +567,14 @@
       "history": {
         "path": "ghcn-ASN00094029/history.json",
         "revision": "b5fe4ab830f215c6a915e4f6174e6076166cd9182d846750bad2f4105b47b5ff",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1893-06-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-ASN00094029/current.json",
         "revision": "24f1b36d984124ccd6ff5f5ffab2ac46bc3f2a788261771b33059f1d1f9ea97c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-09"
       },
@@ -591,14 +591,14 @@
       "history": {
         "path": "ghcn-FRM00007149/history.json",
         "revision": "2e170687e428b670f62f60beeb9fce9297ace652cfc34750a00bb3d558ffe3d8",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1921-03-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-FRM00007149/current.json",
         "revision": "f92d7eca47d19422525d33ba03fdbc1185da19ba587713db8cab4eacbdb1b122",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -615,14 +615,14 @@
       "history": {
         "path": "ghcn-FR000007650/history.json",
         "revision": "da410021f8c33336d455f0e5f5159c65388ac1d731d127d0adff388a6aa8601f",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1921-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-FR000007650/current.json",
         "revision": "369a958d39a3f3228e623ecdced96d67259e24e6400935d6e8ea9edc86de2532",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -639,14 +639,14 @@
       "history": {
         "path": "ghcn-FR000007130/history.json",
         "revision": "9e337f7bc9bf7a92e6f53b97aeb924aae77f99923f7be91ff3f9a31e3984d9ac",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1944-11-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-FR000007130/current.json",
         "revision": "84fb521917c4644c88a81584ecae91e60b919eb6c1ae8c4b04d192022fe52c64",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -663,14 +663,14 @@
       "history": {
         "path": "ghcn-FRE00104120/history.json",
         "revision": "4b843589ead0993c4187d8e4684689e4cda7ca09a46204ba7ed472223e023d1e",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1942-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-FRE00104120/current.json",
         "revision": "d4f96b57df06af6eed65a9252fbbc877fcf0881921c52f90de7126314b51add4",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -687,14 +687,14 @@
       "history": {
         "path": "ghcn-UK000056225/history.json",
         "revision": "eb8d22394aa9f10eb25180b9fd4a4b0a4065d48fea39aeb4030a5174ec12e47a",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1827-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-UK000056225/current.json",
         "revision": "e914d2e748acb31dc9d36fd08cbfb5789c73b1694106d0d998e1eb91c6a1a2ab",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-29"
       },
@@ -711,19 +711,19 @@
       "history": {
         "path": "ghcn-UK000003162/history.json",
         "revision": "55f2bf3f09caa90bc275328b71decc8ae09582711d7213e9618be00f94642254",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1931-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-UK000003162/current.json",
-        "revision": "03f1f52fe4a9aecd6ca0fa87bdf4ec0ade9ce14321ac89875553a8d539ad52e5",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "453ddc6d8593e2c30f19b84bd4a358710da224a45300067366c54d6004fc71ec",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-21"
+        "to": "2026-10-24"
       },
       "coverage": {
-        "lastReported": "2026-10-21",
+        "lastReported": "2026-10-24",
         "lastUsable": "2026-09-30",
         "lastContinuous": "2026-09-30",
         "missingOrUnusableDays": 0
@@ -735,14 +735,14 @@
       "history": {
         "path": "ghcn-UK000003005/history.json",
         "revision": "bfadeb6d415194f71c4b24d756492c70744047ca657013883217fb4d60702656",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1930-12-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-UK000003005/current.json",
         "revision": "13b4e857faeac48eb6f73c47edd0201fb00466d067ae6d648ef46d16cb7d117c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -759,14 +759,14 @@
       "history": {
         "path": "ghcn-UK000003026/history.json",
         "revision": "1777cafda5aa68b080dc8553aae4d776955c38721cf55177d05ed4215f55d944",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1930-12-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-UK000003026/current.json",
         "revision": "818a74bc6a2a46ae4d1e5b81ec102bf320ad3325703839b5535851cd1fc80b33",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -783,14 +783,14 @@
       "history": {
         "path": "ghcn-SWE00137568/history.json",
         "revision": "0afb6f158d32b4e8c7f365e38097014fc71bbcdc564da67dda103980e1a4fda5",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1863-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SWE00137568/current.json",
         "revision": "34f5f5c9458c60553e9badb9bbb5adc6fdb1ae64b5ab0ad15587102cc54c812b",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -807,14 +807,14 @@
       "history": {
         "path": "ghcn-SWE00139148/history.json",
         "revision": "efcf18306f309255fb53569f57c93043344c92c8c9562859ecbdd8eb4ee781c0",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1836-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SWE00139148/current.json",
         "revision": "4d205bff4c51f4f2844b3ea1b7f60a96b28e3b50ff2fe8fafdd2a5387561d9b1",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -831,14 +831,14 @@
       "history": {
         "path": "ghcn-SWE00140908/history.json",
         "revision": "1582f5f3005982d253be71f1cbfae119e2b239c46fae5bd50abb719e57bf218e",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1898-08-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SWE00140908/current.json",
         "revision": "51fdbcd1d1e291ff32acce31a8c032874009899dc64f52c947983af0dc3a4f62",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -855,14 +855,14 @@
       "history": {
         "path": "ghcn-SWE00139720/history.json",
         "revision": "541edf45cc2af9cf5795cfa84dae1d49e59eac74ec0514fe534233de1510039c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1875-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SWE00139720/current.json",
         "revision": "bf588add7c2e180a349f8f315feebf48d0b860b14186a77ef7471b553652c5e9",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -879,19 +879,19 @@
       "history": {
         "path": "ghcn-SP000003195/history.json",
         "revision": "a1fa83c0af9967149a29a42dc045e3b779206d97c250960645d68d607f6fb45e",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1920-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SP000003195/current.json",
-        "revision": "49fcf529926fe82ac7d915466797c008ec17834d31abb29ac520fa2d01a97196",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "f698ec2a9f4f85313645eeb82606e34260233f97abaf6de88b6638db160e6101",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-21"
+        "to": "2026-10-23"
       },
       "coverage": {
-        "lastReported": "2026-10-21",
+        "lastReported": "2026-10-23",
         "lastUsable": "2026-09-28",
         "lastContinuous": "2026-09-28",
         "missingOrUnusableDays": 0
@@ -903,14 +903,14 @@
       "history": {
         "path": "ghcn-SP000008181/history.json",
         "revision": "1f369334a647c95c75e1665ebcd67d009d8154c9a8bc02736b91c65901ce80fe",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1924-03-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SP000008181/current.json",
         "revision": "89c1f4e57ea91eca4e659d91279f915a73d95c8a2a99cb805f986010f8122c25",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-28"
       },
@@ -927,19 +927,19 @@
       "history": {
         "path": "ghcn-SP000008027/history.json",
         "revision": "335b3d446ba506623b4f5e92fb8f116a7ec7131876f5f366bbfe167c252ec91d",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1916-04-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SP000008027/current.json",
-        "revision": "9ce79973e212c84f704118fe03599cd60d8965bdd4769220f3884f64c32db779",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "efd5063c1567c3701dcaf6e5a670a0d3ad7bf1433c4254009d125f2027aafe02",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-20"
+        "to": "2026-10-24"
       },
       "coverage": {
-        "lastReported": "2026-10-20",
+        "lastReported": "2026-10-24",
         "lastUsable": "2026-09-28",
         "lastContinuous": "2026-01-22",
         "missingOrUnusableDays": 15
@@ -951,19 +951,19 @@
       "history": {
         "path": "ghcn-SZ000003700/history.json",
         "revision": "514fac66aabcc0d20d8865c4b681708b716b64937eb7e0e6d980c6858a4bec53",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1901-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SZ000003700/current.json",
-        "revision": "53a959f68745a5252ff84b2c295102dcd4b9bfff7739fb4e6e0c7896cb81aadf",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "db17daae1e35aec766811a6d10347f4f7d243707889ee9734d21dfcb31233c76",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-21"
+        "to": "2026-10-24"
       },
       "coverage": {
-        "lastReported": "2026-10-21",
+        "lastReported": "2026-10-24",
         "lastUsable": "2026-09-30",
         "lastContinuous": "2026-09-30",
         "missingOrUnusableDays": 0
@@ -975,14 +975,14 @@
       "history": {
         "path": "ghcn-SZ000008390/history.json",
         "revision": "d68d3accb72401860a3fbb2f71286dbdd29e037deb1edc6c05fdf74a7709bf93",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1901-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SZ000008390/current.json",
         "revision": "454089c1c25f1e045ca17b9b6de3350ee9c2acd6c84f3ec1c2be60c9c9688f83",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-07-31"
       },
@@ -999,14 +999,14 @@
       "history": {
         "path": "ghcn-SZ000009480/history.json",
         "revision": "543d33da5cbd074a012c9aa3a1e74d25af4539551c463534cb2a9b9b2528dfc6",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1901-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-SZ000009480/current.json",
         "revision": "f8c5928e8e0b0b836ae05de559f0f6dbd093a16615f1b76248676f917ba83703",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -1023,19 +1023,19 @@
       "history": {
         "path": "ghcn-AU000005901/history.json",
         "revision": "039b0ac6f55dffdf2e4f5b7172dbb202f39ba4ebc8aefd8eaa4b4c50ca19f898",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1901-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-AU000005901/current.json",
-        "revision": "c225a9968373a2d5b534c558d2450a93475b09dabb559750cbe40de7cdc09922",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "5943cfec8466c9c7f2e13f780102728f55ead9214efcba909b499817c7163a35",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-21"
+        "to": "2026-10-24"
       },
       "coverage": {
-        "lastReported": "2026-10-21",
+        "lastReported": "2026-10-24",
         "lastUsable": "2026-09-30",
         "lastContinuous": "2026-09-30",
         "missingOrUnusableDays": 0
@@ -1047,14 +1047,14 @@
       "history": {
         "path": "ghcn-AU000006306/history.json",
         "revision": "b545ef26b331fd079815f64303ed7020e0a01d2b6793894c6863245cd0f09997",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1901-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-AU000006306/current.json",
         "revision": "c993864735c9672ea03a04acf9e992622a4f4198ac3183cab3721a7e49909dc0",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -1071,14 +1071,14 @@
       "history": {
         "path": "ghcn-AU000011801/history.json",
         "revision": "35d357b6dfe7ed2c47dac883c3eff42c03d1b5a7cc02af043c9f257efa7976cc",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1901-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-AU000011801/current.json",
         "revision": "ddd18dd3eefb40349375eacc17bb6b012086d3e3d38938234ba6a27ca6460ec0",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-30"
       },
@@ -1095,14 +1095,14 @@
       "history": {
         "path": "ghcn-EI000003969/history.json",
         "revision": "45678ba7f971d0eb044d252c758a443cc9419aa6955709b3f2d53a3c54f21708",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1867-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-EI000003969/current.json",
         "revision": "fe9ddce594158840bea4674c49738d9397141959a90fe7693bc93b52b4835b28",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-07-31"
       },
@@ -1119,14 +1119,14 @@
       "history": {
         "path": "ghcn-EI000003980/history.json",
         "revision": "615b2bdec93489d2dd6fd20871db1cc81be4aeb17565120a9b738a51e9ca441c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1885-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-EI000003980/current.json",
         "revision": "228f8ec714ab757d979491b62105245b774707c6771ccb2fa7397c6b97d0086e",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-09"
       },
@@ -1143,19 +1143,19 @@
       "history": {
         "path": "ghcn-NO000001026/history.json",
         "revision": "095726560451db591856c94d78aeeb89d8c40991091210e4026332f29fa26938",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1920-07-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-NO000001026/current.json",
-        "revision": "5d2be00ce718396887d27b9157556f1c73fe8645c4c036dc01e737ac2a0a4d78",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "revision": "a1979aa85e336d4284d6874dff4ae19544d8401020da13153335ff4e7fc1b020",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
-        "to": "2026-10-21"
+        "to": "2026-10-24"
       },
       "coverage": {
-        "lastReported": "2026-10-21",
+        "lastReported": "2026-10-24",
         "lastUsable": "2026-09-29",
         "lastContinuous": "2026-09-29",
         "missingOrUnusableDays": 0
@@ -1167,14 +1167,14 @@
       "history": {
         "path": "ghcn-NOE00109680/history.json",
         "revision": "ab7f1b078c5492cdd10decbec518856e5d1912f4b61d1396793651fab2b66430",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1941-08-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-NOE00109680/current.json",
         "revision": "70052f77c3c51ffeb9d7d92ddb534caa741e22e13a47a1f5e465fdee42399252",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-29"
       },
@@ -1191,14 +1191,14 @@
       "history": {
         "path": "ghcn-NOE00100574/history.json",
         "revision": "489dc2a5372762ff5b34313617606a11de9d1d6297f0c7a70956808d87e58f2f",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1895-06-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "ghcn-NOE00100574/current.json",
         "revision": "40ddf8252500afee486af9a358d16edafdffbb73fac3851c91289cf5cb0390ed",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-09-29"
       },
@@ -1215,14 +1215,14 @@
       "history": {
         "path": "knmi-260/history.json",
         "revision": "dd811f7a5399e607aebf2e57fc8ac9c9624ee573855e59c37a761b1b286e11ee",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1901-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "knmi-260/current.json",
         "revision": "96783f60d80c62ef46883c15b29cffdb5034a4855ffef403fd4e0c947fc1a306",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -1239,14 +1239,14 @@
       "history": {
         "path": "knmi-235/history.json",
         "revision": "06c83822bf06ef5e06508aaa27921efb9151d99b11d5f2c218082608e73dd48f",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1906-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "knmi-235/current.json",
         "revision": "aa6ebfb18815f87b7d16e705f375d9f87d8f585b4deb8b9fb3148aee4cfde7ab",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -1263,14 +1263,14 @@
       "history": {
         "path": "knmi-240/history.json",
         "revision": "f35e2903fd533b12ec1ec27999fce4ff0faec3ac823f2b5a722d351014ed4767",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1951-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "knmi-240/current.json",
         "revision": "a867f161bd539788287e08721c53b9ea20974b0413a3856134357a121a994909",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -1287,14 +1287,14 @@
       "history": {
         "path": "knmi-280/history.json",
         "revision": "ea00ecacc45b7ade149b243edbccb5b69e4a2173a1bb449fcdc45f4fa8b27635",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1906-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "knmi-280/current.json",
         "revision": "494fd9df16525b1073a233d9d3da6d324d475be4aed2c7431df20a91f3d8970c",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -1311,14 +1311,14 @@
       "history": {
         "path": "knmi-310/history.json",
         "revision": "01a1a5485756346f896849625622a2b678b69a48aa3356f5179ffeba360a044d",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1906-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "knmi-310/current.json",
         "revision": "faa5c40d6c835f525a90275dfa6aee603ebe5b75dc75411b7554e90bd4c1b0e2",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
@@ -1335,14 +1335,14 @@
       "history": {
         "path": "knmi-380/history.json",
         "revision": "b58701e719dc1ab63413bf5973484986cde1a91bd28142baa6b3c764f4eed4ec",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "1906-01-01",
         "to": "2025-12-31"
       },
       "current": {
         "path": "knmi-380/current.json",
         "revision": "3f62ac82c46edeacb0bc0edce4c91b4123b197cb5eb84c1f41719ded6f91d05e",
-        "fetchedAt": "2026-10-27T18:06:20.231Z",
+        "fetchedAt": "2026-10-28T05:55:46.355Z",
         "from": "2026-01-01",
         "to": "2026-10-26"
       },
