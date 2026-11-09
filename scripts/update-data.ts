@@ -4,7 +4,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { stations, type Station } from "../src/lib/stations.ts";
 import { summarizeCoverage, validateDataset, type Dataset, type DatasetReference, type StationManifest } from "../src/lib/datasets.ts";
 import { endpoint, fetchJMA } from "./jma.ts";
-import { assertNoRegression, makeDataset } from "./dataset.ts";
+import { makeDataset } from "./dataset.ts";
+import { fetchWithoutRegression } from "./update-retry.ts";
 import { fetchDWD, fetchDWDIndex } from "./dwd.ts";
 import { fetchGHCN } from "./ghcn.ts";
 import { fetchKNMI } from "./knmi.ts";
@@ -41,12 +42,13 @@ function reference(data: Dataset, period: string): DatasetReference {
 export async function updateData({
   directory = dataDirectory, now = new Date(), selectedStations = stations,
   fetchRows = fetchJMA, refreshHistory = false, fetchGermanData = fetchDWD, loadGermanIndex = fetchDWDIndex,
-  fetchGlobalData = fetchGHCN, fetchDutchData = fetchKNMI,
+  fetchGlobalData = fetchGHCN, fetchDutchData = fetchKNMI, diagnosticsDirectory, waitBeforeRetry,
 }: {
   directory?: string; now?: Date; selectedStations?: Station[];
   fetchRows?: typeof fetchJMA; refreshHistory?: boolean;
   fetchGermanData?: typeof fetchDWD; loadGermanIndex?: typeof fetchDWDIndex;
   fetchGlobalData?: typeof fetchGHCN; fetchDutchData?: typeof fetchKNMI;
+  diagnosticsDirectory?: string; waitBeforeRetry?: (milliseconds: number) => Promise<unknown>;
 } = {}) {
   const { historyEnd } = dateBounds(now);
   const manifest: StationManifest = {
@@ -60,38 +62,42 @@ export async function updateData({
     console.log(`Updating ${station.name} (${station.id})`);
     const previousHistory = await readDataset(directory, station.id, "history");
     const previousCurrent = await readDataset(directory, station.id, "current");
-    let history: Dataset;
-    let current: Dataset;
-    if (station.provider === "dwd") {
-      ({ history, current } = await fetchGermanData(station, bounds, now, germanIndex));
-    } else if (station.provider === 'ghcn') {
-      ({ history, current } = await fetchGlobalData(station, bounds, now));
-    } else if (station.provider === 'knmi') {
-      ({ history, current } = await fetchDutchData(station, bounds, now));
-    } else {
-      if (previousHistory && (previousHistory.from !== station.historyStart || previousHistory.to > historyEnd)) {
-        throw new Error(`Unexpected historical coverage for ${station.id}.`);
-      }
-      if (!refreshHistory && previousHistory?.to === historyEnd) {
-        history = previousHistory;
-      } else {
-        const rows = refreshHistory ? [] : [...(previousHistory?.rows ?? [])];
-        let from = rows.length
-          ? new Date(Date.parse(rows.at(-1)![0]) + 86_400_000).toISOString().slice(0, 10)
-          : station.historyStart;
-        while (from <= historyEnd) {
-          const to = `${Math.min(Number(from.slice(0, 4)) + 29, Number(historyEnd.slice(0, 4)))}-12-31`;
-          console.log(`  History ${from} to ${to}`);
-          rows.push(...await fetchRows(station, from, to));
-          from = `${Number(to.slice(0, 4)) + 1}-01-01`;
+    const { history, current } = await fetchWithoutRegression({
+      station, previous: { history: previousHistory, current: previousCurrent }, diagnosticsDirectory, waitBeforeRetry,
+      fetchData: async () => {
+        let history: Dataset;
+        let current: Dataset;
+        if (station.provider === "dwd") {
+          ({ history, current } = await fetchGermanData(station, bounds, now, germanIndex));
+        } else if (station.provider === 'ghcn') {
+          ({ history, current } = await fetchGlobalData(station, bounds, now));
+        } else if (station.provider === 'knmi') {
+          ({ history, current } = await fetchDutchData(station, bounds, now));
+        } else {
+          if (previousHistory && (previousHistory.from !== station.historyStart || previousHistory.to > historyEnd)) {
+            throw new Error(`Unexpected historical coverage for ${station.id}.`);
+          }
+          if (!refreshHistory && previousHistory?.to === historyEnd) {
+            history = previousHistory;
+          } else {
+            const rows = refreshHistory ? [] : [...(previousHistory?.rows ?? [])];
+            let from = rows.length
+              ? new Date(Date.parse(rows.at(-1)![0]) + 86_400_000).toISOString().slice(0, 10)
+              : station.historyStart;
+            while (from <= historyEnd) {
+              const to = `${Math.min(Number(from.slice(0, 4)) + 29, Number(historyEnd.slice(0, 4)))}-12-31`;
+              console.log(`  History ${from} to ${to}`);
+              rows.push(...await fetchRows(station, from, to));
+              from = `${Number(to.slice(0, 4)) + 1}-01-01`;
+            }
+            history = makeDataset(station.id, station.historyStart, historyEnd, rows, now.toISOString(), endpoint);
+          }
+          const currentRows = yesterday < currentStart ? [] : await fetchRows(station, currentStart, yesterday);
+          current = makeDataset(station.id, currentStart, yesterday, currentRows, now.toISOString(), endpoint);
         }
-        history = makeDataset(station.id, station.historyStart, historyEnd, rows, now.toISOString(), endpoint);
-      }
-      const currentRows = yesterday < currentStart ? [] : await fetchRows(station, currentStart, yesterday);
-      current = makeDataset(station.id, currentStart, yesterday, currentRows, now.toISOString(), endpoint);
-    }
-    assertNoRegression(previousHistory, history, station.provider);
-    assertNoRegression(previousCurrent, current, station.provider);
+        return { history, current };
+      },
+    });
     pending.set(`${station.id}/history.json`, history);
     pending.set(`${station.id}/current.json`, current);
     manifest.stations.push({
@@ -116,5 +122,8 @@ export async function updateData({
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
   const args = process.argv.slice(2);
   if (args.some(arg => arg !== "--refresh-history")) throw new Error("Only --refresh-history is supported.");
-  await updateData({ refreshHistory: args.includes("--refresh-history") });
+  const diagnosticsDirectory = process.env.DATA_UPDATE_DIAGNOSTICS_DIR ??
+    fileURLToPath(new URL(`../.cache/data-update-diagnostics/${new Date().toISOString().replaceAll(":", "-")}/`, import.meta.url));
+  await updateData({ refreshHistory: args.includes("--refresh-history"), diagnosticsDirectory });
 }
+
