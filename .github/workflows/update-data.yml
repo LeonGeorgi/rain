@@ -37,12 +37,22 @@ jobs:
       - name: Fetch and validate JMA, DWD, NOAA and KNMI measurements
         env:
           REFRESH_HISTORY: ${{ inputs.refresh_history || false }}
+          DATA_UPDATE_DIAGNOSTICS_DIR: ${{ runner.temp }}/rain-data-update-diagnostics
         run: |
           if [ "$REFRESH_HISTORY" = true ]; then
             pnpm data:update --refresh-history
           else
             pnpm data:update
           fi
+      - name: Preserve rejected data for regression diagnosis
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rain-data-update-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/rain-data-update-diagnostics/*.json
+          if-no-files-found: ignore
+          retention-days: 7
       - run: pnpm data:validate
       - name: Summarize station coverage
         run: pnpm data:coverage >> "$GITHUB_STEP_SUMMARY"
@@ -70,3 +80,4 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       ref: ${{ needs.update.outputs.commit }}
+
